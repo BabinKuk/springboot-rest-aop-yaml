@@ -8,7 +8,7 @@ import org.babinkuk.vo.diff.Diffable;
 /**
  * instance of this class is used to represent review data
  * 
- * @author Nikola
+ * @author BabinKuk
  *
  */
 @Diffable(id = "id")
