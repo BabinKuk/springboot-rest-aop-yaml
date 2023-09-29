@@ -47,8 +47,8 @@ public interface CourseMapper {
 	public StudentMapper studentMapperInstance = Mappers.getMapper(StudentMapper.class);
 	public InstructorMapper instructorMapperInstance = Mappers.getMapper(InstructorMapper.class);
 	
-//	@BeforeMapping
-//	default void beforeMap(@MappingTarget Course entity, CourseVO courseVO) {
+	@BeforeMapping
+	default void beforeMap(@MappingTarget Course entity, CourseVO courseVO) {
 //		System.out.println("beforeMapInstructor");
 //		// instructor
 //		if (courseVO.getInstructorVO() != null) {
@@ -70,18 +70,18 @@ public interface CourseMapper {
 //			entity.setStudents(students);
 //		}
 //		
-//		System.out.println("beforeMapReviews");
-//		// reviews
-//		if (!CollectionUtils.isEmpty(courseVO.getReviewsVO())) {
-//			List<Review> reviewList = new ArrayList<Review>();
-//			for (ReviewVO reviewVO : courseVO.getReviewsVO()) {
-//				Review review = reviewMapperInstance.toEntity(reviewVO);
-//				reviewList.add(review);
-//			}
-//			entity.setReviews(reviewList);
-//		}
-//		System.out.println(entity.toString());
-//	}
+		System.out.println("beforeMapReviews");
+		// reviews
+		if (!CollectionUtils.isEmpty(courseVO.getReviewsVO())) {
+			List<Review> reviewList = new ArrayList<Review>();
+			for (ReviewVO reviewVO : courseVO.getReviewsVO()) {
+				Review review = reviewMapperInstance.toEntity(reviewVO);
+				reviewList.add(review);
+			}
+			entity.setReviews(reviewList);
+		}
+		System.out.println(entity.toString());
+	}
 //	
 //	@AfterMapping
 //	default void afterMap(@MappingTarget CourseVO courseVO, Course entity) {
