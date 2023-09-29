@@ -5,11 +5,12 @@ import java.util.Objects;
 import org.apache.commons.lang.StringUtils;
 import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.InstructorDetail;
-//import org.babinkuk.vo.CourseVO;
+import org.babinkuk.vo.CourseVO;
 //import org.babinkuk.vo.InstructorDetailVO;
 import org.babinkuk.vo.InstructorVO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
+import org.mapstruct.BeforeMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,39 +36,39 @@ public interface InstructorMapper {
 	public InstructorMapper instructorMapperInstance = Mappers.getMapper(InstructorMapper.class);
 	public InstructorDetailMapper instructorDetailMapperInstance = Mappers.getMapper(InstructorDetailMapper.class);
 	
-//	@BeforeMapping
-//	default void beforeMapInstructorDetail(@MappingTarget Instructor entity, InstructorVO instructorVO) {
-//		System.out.println("beforeMapInstructorDetail");
-//		if (StringUtils.isNotBlank(instructorVO.getYoutubeChannel()) && StringUtils.isNotBlank(instructorVO.getHobby())) {
-//			InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
-//			instructorDetail.setInstructor(entity);
-//			entity.setInstructorDetail(instructorDetail);
-//		}
-//		System.out.println(instructorDetail.toString());
-//		System.out.println(entity.toString());
-//	}
-//	
-//	@Named("setDetails")
-//	default InstructorDetail setDetails(InstructorVO instructorVO) {
-//		System.out.println("default setDetails");
-//		// instructor details
-//		InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
-//		Instructor entity = new Instructor();
-//		entity.setId(instructorVO.getId());
-//		instructorDetail.setInstructor(entity);
-//		System.out.println(instructorDetail.toString());
-//		return instructorDetail;
-//	}
+	@BeforeMapping
+	default void beforeMapInstructorDetail(@MappingTarget Instructor entity, InstructorVO instructorVO) {
+		System.out.println("beforeMapInstructorDetail");
+		if (StringUtils.isNotBlank(instructorVO.getYoutubeChannel()) && StringUtils.isNotBlank(instructorVO.getHobby())) {
+			InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
+			instructorDetail.setInstructor(entity);
+			entity.setInstructorDetail(instructorDetail);
+			System.out.println(instructorDetail.toString());
+		}
+		System.out.println(entity.toString());
+	}
+	
+	@Named("setDetails")
+	default InstructorDetail setDetails(InstructorVO instructorVO) {
+		System.out.println("default setDetails");
+		// instructor details
+		InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
+		Instructor entity = new Instructor();
+		entity.setId(instructorVO.getId());
+		instructorDetail.setInstructor(entity);
+		System.out.println(instructorDetail.toString());
+		return instructorDetail;
+	}
 	
 	@AfterMapping
 	default void afterMapInstructor(@MappingTarget Instructor entity, InstructorVO instructorVO) {
-		System.out.println("toEntity afterMapInstructor");
+		//System.out.println("toEntity afterMapInstructor");
 		
 		// instructor details
 		InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO, entity);
 		instructorDetail.setInstructor(entity);
 		entity.setInstructorDetail(instructorDetail);
-		System.out.println(entity.toString());
+		//System.out.println(entity.toString());
 	}
 	
 	// for insert
@@ -81,13 +82,13 @@ public interface InstructorMapper {
 //	@Mapping(source = "email", target = "email")
 	Instructor toEntity(InstructorVO instructorVO, @MappingTarget Instructor instructor);
 	
-//	// when saving course
-//	@Named("toEntity")
-//	@Mapping(target = "firstName", ignore= true)
-//	@Mapping(target = "lastName", ignore= true)
-//	@Mapping(target = "email", ignore= true)
-//	@Mapping(target = "instructorDetail", ignore= true)
-//	Instructor toEntity(CourseVO courseVO);
+	// when saving course
+	@Named("toEntity")
+	@Mapping(target = "firstName", ignore= true)
+	@Mapping(target = "lastName", ignore= true)
+	@Mapping(target = "email", ignore= true)
+	@Mapping(target = "instructorDetail", ignore= true)
+	Instructor toEntity(CourseVO courseVO);
     
 	@Named("toVO")
 //	@Mapping(source = "email", target = "email")

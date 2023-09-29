@@ -49,14 +49,14 @@ public interface CourseMapper {
 	
 	@BeforeMapping
 	default void beforeMap(@MappingTarget Course entity, CourseVO courseVO) {
-//		System.out.println("beforeMapInstructor");
-//		// instructor
-//		if (courseVO.getInstructorVO() != null) {
-//			Instructor instructor = instructorMapperInstance.toEntity(courseVO);
-//			instructor.add(entity);
-//			entity.setInstructor(instructor);
-//		}
-//		
+		System.out.println("beforeMapInstructor");
+		// instructor
+		if (courseVO.getInstructorVO() != null) {
+			Instructor instructor = instructorMapperInstance.toEntity(courseVO);
+			//instructor.add(entity);
+			entity.setInstructor(instructor);
+		}
+		
 //		System.out.println("beforeMapStudents");
 //		// students
 //		if (!CollectionUtils.isEmpty(courseVO.getStudentsVO())) {
@@ -69,8 +69,8 @@ public interface CourseMapper {
 //			}
 //			entity.setStudents(students);
 //		}
-//		
-		System.out.println("beforeMapReviews");
+		
+		//System.out.println("beforeMapReviews");
 		// reviews
 		if (!CollectionUtils.isEmpty(courseVO.getReviewsVO())) {
 			List<Review> reviewList = new ArrayList<Review>();
@@ -80,7 +80,7 @@ public interface CourseMapper {
 			}
 			entity.setReviews(reviewList);
 		}
-		System.out.println(entity.toString());
+		//System.out.println(entity.toString());
 	}
 //	
 //	@AfterMapping
