@@ -126,7 +126,7 @@ public class InstructorServiceImpl implements InstructorService {
 			instructor = instructorMapper.toEntity(instructorVO, instructor);
 		} else {
 			// instructor not found
-			log.info("mapping for insert");
+			//log.info("mapping for insert");
 			
 			// mapping
 			instructor = instructorMapper.toEntity(instructorVO);

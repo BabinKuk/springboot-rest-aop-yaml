@@ -22,7 +22,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * mapper for the entity @link {@link Instructor} and its DTO {@link InstructorVO}
  * 
- * @author Nikola
+ * @author BabinKuk
  */
 @Mapper
 (
@@ -38,19 +38,19 @@ public interface InstructorMapper {
 	
 	@BeforeMapping
 	default void beforeMapInstructorDetail(@MappingTarget Instructor entity, InstructorVO instructorVO) {
-		System.out.println("beforeMapInstructorDetail");
-		if (StringUtils.isNotBlank(instructorVO.getYoutubeChannel()) && StringUtils.isNotBlank(instructorVO.getHobby())) {
-			InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
-			instructorDetail.setInstructor(entity);
-			entity.setInstructorDetail(instructorDetail);
-			System.out.println(instructorDetail.toString());
-		}
-		System.out.println(entity.toString());
+//		System.out.println(StringUtils.stripToEmpty("@BeforeMapping instructor: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
+//		if (StringUtils.isNotBlank(instructorVO.getYoutubeChannel()) && StringUtils.isNotBlank(instructorVO.getHobby())) {
+//			InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
+//			instructorDetail.setInstructor(entity);
+//			entity.setInstructorDetail(instructorDetail);
+//			System.out.println(instructorDetail.toString());
+//		}
+//		System.out.println(entity.toString());
 	}
 	
 	@Named("setDetails")
 	default InstructorDetail setDetails(InstructorVO instructorVO) {
-		System.out.println("default setDetails");
+		System.out.println(StringUtils.stripToEmpty("setDetails instructor: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 		// instructor details
 		InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
 		Instructor entity = new Instructor();
@@ -62,7 +62,7 @@ public interface InstructorMapper {
 	
 	@AfterMapping
 	default void afterMapInstructor(@MappingTarget Instructor entity, InstructorVO instructorVO) {
-		//System.out.println("toEntity afterMapInstructor");
+		System.out.println(StringUtils.stripToEmpty("@AfterMapping instructor: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 		
 		// instructor details
 		InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO, entity);
@@ -74,7 +74,7 @@ public interface InstructorMapper {
 	// for insert
 	@Named("toEntity")
 //	@Mapping(source = "email", target = "email")
-	//@Mapping(source = "instructorVO", target= "instructorDetail", qualifiedByName = "setDetails")
+	@Mapping(source = "instructorVO", target= "instructorDetail", qualifiedByName = "setDetails")
 	Instructor toEntity(InstructorVO instructorVO);
 	
 	// for update

@@ -18,7 +18,7 @@ import org.mapstruct.factory.Mappers;
 /**
  * mapper for the entity @link {@link InstructorDetail} and its DTO {@link InstructorDetailVO}
  * 
- * @author Nikola
+ * @author BabinKuk
  */
 @Mapper
 (
@@ -30,6 +30,13 @@ import org.mapstruct.factory.Mappers;
 public interface InstructorDetailMapper {
 	
 	public InstructorDetailMapper instructorDetailMapperInstance = Mappers.getMapper(InstructorDetailMapper.class);
+	
+	@BeforeMapping
+	default void beforeMapInstructorDetail(Instructor entity, InstructorVO instructorVO) {
+		System.out.println(StringUtils.stripToEmpty("@BeforeMapping instructorDetail: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
+		System.out.println(instructorVO.toString());
+		System.out.println(entity.toString());
+	}
 	
 	@Named("toEntity")
 	@Mapping(source = "instructor.instructorDetail.id", target = "id")
