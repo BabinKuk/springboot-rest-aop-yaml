@@ -3,16 +3,11 @@ package org.babinkuk.mapper;
 import java.util.Objects;
 
 import org.apache.commons.lang.StringUtils;
-import org.babinkuk.entity.Course;
-import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.Review;
-import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.mapstruct.BeanMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;

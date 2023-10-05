@@ -6,11 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.InstructorDetail;
 import org.babinkuk.vo.InstructorVO;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -30,13 +27,6 @@ import org.mapstruct.factory.Mappers;
 public interface InstructorDetailMapper {
 	
 	public InstructorDetailMapper instructorDetailMapperInstance = Mappers.getMapper(InstructorDetailMapper.class);
-	
-	@BeforeMapping
-	default void beforeMapInstructorDetail(Instructor entity, InstructorVO instructorVO) {
-		System.out.println(StringUtils.stripToEmpty("@BeforeMapping instructorDetail: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
-		System.out.println(instructorVO.toString());
-		System.out.println(entity.toString());
-	}
 	
 	@Named("toEntity")
 	@Mapping(source = "instructor.instructorDetail.id", target = "id")

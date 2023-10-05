@@ -1,21 +1,12 @@
 package org.babinkuk.mapper;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 import org.babinkuk.entity.Address;
-import org.babinkuk.entity.Course;
-import org.babinkuk.entity.Instructor;
-import org.babinkuk.entity.InstructorDetail;
 import org.babinkuk.entity.Student;
-//import org.babinkuk.vo.CourseVO;
-import org.babinkuk.vo.InstructorVO;
 import org.babinkuk.vo.StudentVO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -23,7 +14,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
-import org.springframework.util.CollectionUtils;
 
 /**
  * mapper for the entity @link {@link Student} and its DTO {@link StudentVO}
@@ -54,13 +44,14 @@ public interface StudentMapper {
 	
 	@AfterMapping
 	default void afterMapStudent(@MappingTarget Student entity, StudentVO studentVO) {
-		System.out.println("toEntity afterMapStudent");
+		System.out.println(StringUtils.stripToEmpty("@AfterMapping student: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 		
 		// address
 		Address address = addressMapperInstance.toEntity(studentVO, entity);
 		entity.setAddress(address);
 		//System.out.println(entity.toString());
 	}
+	
 	// for insert
 	@Named("toEntity")
 //	@Mapping(source = "email", target = "email")

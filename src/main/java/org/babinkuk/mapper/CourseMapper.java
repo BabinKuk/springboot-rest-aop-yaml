@@ -49,7 +49,7 @@ public interface CourseMapper {
 	
 	@BeforeMapping
 	default void beforeMap(@MappingTarget Course entity, CourseVO courseVO) {
-		System.out.println("beforeMapInstructor");
+		System.out.println(StringUtils.stripToEmpty("@BeforeMapping course: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 		// instructor
 		if (courseVO.getInstructorVO() != null) {
 			Instructor instructor = instructorMapperInstance.toEntity(courseVO);

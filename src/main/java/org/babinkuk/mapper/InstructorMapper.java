@@ -6,7 +6,6 @@ import org.apache.commons.lang.StringUtils;
 import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.InstructorDetail;
 import org.babinkuk.vo.CourseVO;
-//import org.babinkuk.vo.InstructorDetailVO;
 import org.babinkuk.vo.InstructorVO;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeanMapping;
@@ -36,8 +35,8 @@ public interface InstructorMapper {
 	public InstructorMapper instructorMapperInstance = Mappers.getMapper(InstructorMapper.class);
 	public InstructorDetailMapper instructorDetailMapperInstance = Mappers.getMapper(InstructorDetailMapper.class);
 	
-	@BeforeMapping
-	default void beforeMapInstructorDetail(@MappingTarget Instructor entity, InstructorVO instructorVO) {
+//	@BeforeMapping
+//	default void beforeMapInstructorDetail(@MappingTarget Instructor entity, InstructorVO instructorVO) {
 //		System.out.println(StringUtils.stripToEmpty("@BeforeMapping instructor: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 //		if (StringUtils.isNotBlank(instructorVO.getYoutubeChannel()) && StringUtils.isNotBlank(instructorVO.getHobby())) {
 //			InstructorDetail instructorDetail = instructorDetailMapperInstance.toEntity(instructorVO);
@@ -46,7 +45,7 @@ public interface InstructorMapper {
 //			System.out.println(instructorDetail.toString());
 //		}
 //		System.out.println(entity.toString());
-	}
+//	}
 	
 	@Named("setDetails")
 	default InstructorDetail setDetails(InstructorVO instructorVO) {
@@ -102,7 +101,7 @@ public interface InstructorMapper {
 	default void setDetails(@MappingTarget InstructorVO instructorVO, Instructor entity) {
 		// instructor details
 		if (entity.getInstructorDetail() != null) {
-			System.out.println(entity.getInstructorDetail());
+			//System.out.println(entity.getInstructorDetail());
 			instructorVO.setYoutubeChannel(entity.getInstructorDetail().getYoutubeChannel());
 			instructorVO.setHobby(entity.getInstructorDetail().getHobby());
 		}
