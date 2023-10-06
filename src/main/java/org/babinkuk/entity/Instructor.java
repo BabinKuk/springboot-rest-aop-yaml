@@ -119,7 +119,6 @@ public class Instructor extends User {
 				+ ", status=" + status + ", images=" + images
 				+ ", email=" + email + ", instructorDetail=" + instructorDetail
 				//+ ", courses=" + courses // DO NOT LOG NestedServletException
-				
 				+ "]";
 	}
 }

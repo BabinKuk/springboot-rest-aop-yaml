@@ -62,5 +62,4 @@ public interface InstructorService {
 	 * @throws ObjectException
 	 */
 	public ApiResponse setCourse(InstructorVO instructorVO, CourseVO courseVO, ActionType action) throws ObjectException;
-		
 }

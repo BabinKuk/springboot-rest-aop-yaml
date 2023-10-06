@@ -61,9 +61,42 @@ public class Student extends User {
 			courses = new ArrayList<Course>();
 		}
 		
-		courses.add(course);
+		boolean add = true;
+		
+		for (Course obj : courses) {
+	        if (obj.getId() == (course.getId())) {
+	        	System.out.println("course already exist");
+	        	add = false;
+	        }
+	    }
+		
+		if (add) {
+			courses.add(course);
+			System.out.println("course NOT exist. course ADDED");
+		}
 	}
-
+	
+	// convenience method for bi-directional relationship
+	public void removeCourse(Course course) {
+		if (courses == null) {
+			courses = new ArrayList<Course>();
+		}
+		
+		boolean remove = false;
+		
+		for (Course obj : courses) {
+	        if (obj.getId() == (course.getId())) {
+	        	System.out.println("course already exist");
+	        	remove = true;
+	        }
+	    }
+		
+		if (remove) {
+			courses.remove(course);
+			System.out.println("course exist. course REMOVED");
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "Student [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName

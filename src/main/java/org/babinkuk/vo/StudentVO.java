@@ -1,5 +1,7 @@
 package org.babinkuk.vo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedMap;
 
 import org.babinkuk.entity.Status;
@@ -39,7 +41,8 @@ public class StudentVO extends UserVO {
 	@DiffField
 	private String zipCode;
 	
-//	private List<CourseVO> coursesVO = new HashSet<CourseVO>();
+	@DiffField
+	private List<CourseVO> coursesVO = new ArrayList<CourseVO>();
 	
 	public StudentVO() {
 		// TODO Auto-generated constructor stub
@@ -83,13 +86,13 @@ public class StudentVO extends UserVO {
 		this.email = email;
 	}
 
-//	public Set<CourseVO> getCoursesVO() {
-//		return coursesVO;
-//	}
-//
-//	public void setCoursesVO(Set<CourseVO> coursesVO) {
-//		this.coursesVO = coursesVO;
-//	}
+	public List<CourseVO> getCoursesVO() {
+		return coursesVO;
+	}
+
+	public void setCoursesVO(List<CourseVO> coursesVO) {
+		this.coursesVO = coursesVO;
+	}
 	
 	public void setStatus(Status status) {
 		this.status = status;
@@ -139,5 +142,4 @@ public class StudentVO extends UserVO {
 				//+ ", courses=" + coursesVO
 				+ "]";
 	}
-
 }

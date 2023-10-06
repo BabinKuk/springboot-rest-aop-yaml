@@ -2,14 +2,20 @@ package org.babinkuk.service;
 
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.common.ApiResponse;
+import org.babinkuk.dao.CourseRepository;
 import org.babinkuk.dao.StudentRepository;
+import org.babinkuk.entity.Course;
 import org.babinkuk.entity.Student;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.mapper.StudentMapper;
+import org.babinkuk.validator.ActionType;
+import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.StudentVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,6 +37,9 @@ public class StudentServiceImpl implements StudentService {
 	private StudentRepository studentRepository;
 	
 	@Autowired
+	private CourseRepository courseRepository;
+
+	@Autowired
 	private ObjectMapper mapper;
 		
 	@Autowired
@@ -40,8 +49,9 @@ public class StudentServiceImpl implements StudentService {
 	private MessageSource messageSource;
 	
 	@Autowired
-	public StudentServiceImpl(StudentRepository studentRepository) {
+	public StudentServiceImpl(StudentRepository studentRepository, CourseRepository courseRepository) {
 		this.studentRepository = studentRepository;
+		this.courseRepository = courseRepository;
 	}
 	
 	public StudentServiceImpl() {
@@ -53,6 +63,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
+	@Transactional
 	public StudentVO findById(int id) throws ObjectNotFoundException {
 		
 		Optional<Student> result = studentRepository.findById(id);
@@ -78,6 +89,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
+	@Transactional
 	public StudentVO findByEmail(String email) {
 		
 		Optional<Student> result = studentRepository.findByEmail(email);
@@ -102,6 +114,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 		
 	@Override
+	@Transactional
 	public ApiResponse saveStudent(StudentVO studentVO) throws ObjectException {
 		
 		ApiResponse response = new ApiResponse();
@@ -135,6 +148,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
+	@Transactional
 	public ApiResponse deleteStudent(int id) throws ObjectNotFoundException {
 		
 		ApiResponse response = new ApiResponse();
@@ -148,7 +162,63 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	@Transactional
 	public Iterable<StudentVO> getAllStudents() {
 		return studentMapper.toVO(studentRepository.findAll());
+	}
+
+	@Override
+	@Transactional
+	public ApiResponse setCourse(StudentVO studentVO, CourseVO courseVO, ActionType action) throws ObjectException {
+		
+		ApiResponse response = new ApiResponse();
+		
+		response.setStatus(HttpStatus.OK);
+		response.setMessage(getMessage(STUDENT_SAVE_SUCCESS));
+		
+		Optional<Student> result = studentRepository.findById(studentVO.getId());
+		
+		Student student = null;
+		
+		if (result.isPresent()) {
+			student = result.get();
+			//log.info("student ({})", student);
+		} else {
+			// not found
+			String message = String.format(getMessage("error_code_student_id_not_found"), studentVO.getId());
+			log.warn(message);
+			throw new ObjectNotFoundException(message);
+		}
+		
+		Optional<Course> entity = courseRepository.findById(courseVO.getId());
+		
+		Course course = null;
+		
+		if (entity.isPresent()) {
+			course = entity.get();
+			//log.info("courseVO ({})", courseVO);
+			
+			// mapping
+			//course = courseMapper.toEntity(courseVO, course);
+		} else {
+			// not found
+			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
+			log.warn(message);
+			throw new ObjectNotFoundException(message);
+		}
+		
+		if (action.equals(ActionType.ENROLL)) {
+			student.addCourse(course);
+		}
+		
+		if (action.equals(ActionType.WITHDRAW)) {
+			student.removeCourse(course);
+		}
+		
+		log.info("saving student");
+		studentRepository.save(student);
+		//entityManager.persist(instructor);
+		
+		return response;
 	}
 }

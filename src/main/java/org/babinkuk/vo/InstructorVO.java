@@ -1,5 +1,6 @@
 package org.babinkuk.vo;
 
+import java.util.List;
 import java.util.SortedMap;
 
 import org.babinkuk.entity.Status;
@@ -41,6 +42,9 @@ public class InstructorVO extends UserVO {
 	@DiffField
 	private String hobby;
 	
+	@DiffField
+	private List<CourseVO> courses;
+		
 	public InstructorVO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -130,12 +134,22 @@ public class InstructorVO extends UserVO {
 	public void setSalary(Double salary) {
 		this.salary = salary;
 	}
+	
+	public List<CourseVO> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(List<CourseVO> courses) {
+		this.courses = courses;
+	}
 
 	@Override
 	public String toString() {
 		return "InstructorVO [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", images=" + images	+ ", status=" + status + ", salary=" + salary
-				+ ", youtubeChannel=" + youtubeChannel+ ", hobby=" + hobby + "]";
+				+ ", images=" + images + ", status=" + status + ", salary=" + salary
+				+ ", courses=" + courses
+				+ ", youtubeChannel=" + youtubeChannel+ ", hobby=" + hobby
+				+ "]";
 	}
 
 }

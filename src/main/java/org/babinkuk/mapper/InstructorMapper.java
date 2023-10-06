@@ -91,6 +91,9 @@ public interface InstructorMapper {
     
 	@Named("toVO")
 //	@Mapping(source = "email", target = "email")
+	//@Mapping(target = "courses.instructorVO", ignore= true)
+	//@Mapping(target = "courses.reviewsVO", ignore= true)
+	//@Mapping(target = "courses.studentsVO", ignore= true)
 	InstructorVO toVO(Instructor instructor);
 	
 	@IterableMapping(qualifiedByName = "toVO")

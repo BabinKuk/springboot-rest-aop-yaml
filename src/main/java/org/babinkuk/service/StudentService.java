@@ -3,6 +3,8 @@ package org.babinkuk.service;
 import org.babinkuk.common.ApiResponse;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
+import org.babinkuk.validator.ActionType;
+import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.StudentVO;
 
 public interface StudentService {
@@ -49,4 +51,15 @@ public interface StudentService {
 	 * @throws ObjectNotFoundException
 	 */
 	public ApiResponse deleteStudent(int id) throws ObjectNotFoundException;
+
+	/**
+	 * associate student with the course
+	 * 
+	 * @param studentVO
+	 * @param courseVO
+	 * @param action (enroll/withdraw)
+	 * @return
+	 * @throws ObjectException
+	 */
+	public ApiResponse setCourse(StudentVO studentVO, CourseVO courseVO, ActionType action) throws ObjectException;
 }

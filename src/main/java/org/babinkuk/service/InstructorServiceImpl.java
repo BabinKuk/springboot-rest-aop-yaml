@@ -236,10 +236,7 @@ public class InstructorServiceImpl implements InstructorService {
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
-
-		log.info(instructor);
-		log.info(course);
-
+		
 		if (action.equals(ActionType.ENROLL)) {
 			log.info(ActionType.ENROLL);
 			instructor.addCourse(course);

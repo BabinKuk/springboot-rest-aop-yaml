@@ -167,66 +167,6 @@ public class CourseController {
 		return ResponseEntity.of(Optional.ofNullable(courseService.deleteCourse(courseId)));
 	}
 	
-	/**
-	 * enroll student on a course
-	 * expose PUT "/{courseId}/student/{studentId}/enroll"
-	 * 
-	 * @param courseId
-	 * @param studentId
-	 * @param validationRole
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	@PutMapping("/{courseId}/student/{studentId}/enroll")
-	public ResponseEntity<ApiResponse> enrollStudent(
-			@PathVariable int courseId,
-			@PathVariable int studentId,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
-		//log.info("Called CourseController.enrollStudent(id={}) for courseId={}", studentId, courseId);
-		
-		// first find course
-		CourseVO courseVO = courseService.findById(courseId);
-		
-		// next find student
-		StudentVO studentVO = studentService.findById(studentId);
-		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.STUDENT);
-		
-		courseVO.addStudentVO(studentVO);
-		
-		return ResponseEntity.of(Optional.ofNullable(courseService.saveCourse(courseVO)));
-	}
-
-	/**
-	 * withdraw student from a course
-	 * expose PUT "/{courseId}/student/{studentId}/withdraw"
-	 * 
-	 * @param courseId
-	 * @param studentId
-	 * @param validationRole
-	 * @return
-	 * @throws JsonProcessingException
-	 */
-	@PutMapping("/{courseId}/student/{studentId}/withdraw")
-	public ResponseEntity<ApiResponse> withdrawStudent(
-			@PathVariable int courseId,
-			@PathVariable int studentId,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
-		//log.info("Called CourseController.withdrawStudent(id={}) for courseId={}", studentId, courseId);
-		
-		// first find course
-		CourseVO courseVO = courseService.findById(courseId);
-		
-		// next find student
-		StudentVO studentVO = studentService.findById(studentId);
-		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.STUDENT);
-		
-		courseVO.removeStudentVO(studentVO);
-		
-		return ResponseEntity.of(Optional.ofNullable(courseService.saveCourse(courseVO)));
-	}
-	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(Exception exc) {
 		
