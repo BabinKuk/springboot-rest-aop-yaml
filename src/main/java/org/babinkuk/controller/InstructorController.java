@@ -1,10 +1,12 @@
 package org.babinkuk.controller;
 
+import org.babinkuk.service.CourseService;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.validator.ActionType;
 //import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
+import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.InstructorVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -43,6 +45,8 @@ public class InstructorController {
 	// service
 	private InstructorService instructorService;
 	
+	private CourseService courseService;
+	
 //	@Autowired
 //	private ValidatorFactory validatorFactory;
 	
@@ -54,8 +58,9 @@ public class InstructorController {
 	}
 
 	@Autowired
-	public InstructorController(InstructorService instructorService) {
+	public InstructorController(InstructorService instructorService, CourseService courseService) {
 		this.instructorService = instructorService;
+		this.courseService = courseService;
 	}
 
 	/**
@@ -146,7 +151,67 @@ public class InstructorController {
 		
 		return ResponseEntity.of(Optional.ofNullable(instructorService.deleteInstructor(instructorId)));
 	}
+	
+	/**
+	 * enroll instructor on a course
+	 * expose PUT "/{instructorId}/enroll/{courseId}"
+	 * 
+	 * @param instructorId
+	 * @param courseId
+	 * @param validationRole
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@PutMapping("/{instructorId}/enroll/{courseId}")
+	public ResponseEntity<ApiResponse> enrollCourse(
+			@PathVariable int instructorId,
+			@PathVariable int courseId,
+			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+		//log.info("Called CourseController.enrollInstructor(id={}) for courseId={}", instructorId, courseId);
+		
+		// first find course
+		CourseVO courseVO = courseService.findById(courseId);
+		
+		// next find instructor
+		InstructorVO instructorVO = instructorService.findById(instructorId);
+		
+//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.INSTRUCTOR);
+		
+		//courseVO.setInstructorVO(instructorVO);
+		
+		return ResponseEntity.of(Optional.ofNullable(instructorService.setCourse(instructorVO, courseVO, ActionType.ENROLL)));
+	}
+	
+	/**
+	 * withdraw instructor from a course
+	 * expose PUT "/{instructorId}/withdraw/{courseId}"
+	 * 
+	 * @param instructorId
+	 * @param courseId
+	 * @param validationRole
+	 * @return
+	 * @throws JsonProcessingException
+	 */
+	@PutMapping("/{instructorId}/withdraw/{courseId}")
+	public ResponseEntity<ApiResponse> withdrawCourse(
+			@PathVariable int instructorId,
+			@PathVariable int courseId,
+			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+		log.info("Called CourseController.withdrawInstructor(id={}) for courseId={}", instructorId, courseId);
+		
+		// first find course
+		CourseVO courseVO = courseService.findById(courseId);
+		
+		// next find instructor
+		InstructorVO instructorVO = instructorService.findById(instructorId);
 
+//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.INSTRUCTOR);
+
+		//courseVO.setInstructorVO(null);
+		
+		return ResponseEntity.of(Optional.ofNullable(instructorService.setCourse(instructorVO, courseVO, ActionType.WITHDRAW)));
+	}
+	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(Exception exc) {
 		
