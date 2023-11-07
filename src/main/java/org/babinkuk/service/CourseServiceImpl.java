@@ -104,8 +104,6 @@ public class CourseServiceImpl implements CourseService {
 			course = courseMapper.toEntity(courseVO);
 		}
 
-		//log.info("course ({})", course);
-
 		courseRepository.save(course);
 		
 		return response;

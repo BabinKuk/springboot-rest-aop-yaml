@@ -43,7 +43,7 @@ public class InstructorServiceImpl implements InstructorService {
 	
 	@Autowired
 	private ObjectMapper mapper;
-		
+	
 	@Autowired
 	private InstructorMapper instructorMapper;
 	
@@ -227,9 +227,6 @@ public class InstructorServiceImpl implements InstructorService {
 		if (entity.isPresent()) {
 			course = entity.get();
 			//log.info("courseVO ({})", courseVO);
-			
-			// mapping
-			//course = courseMapper.toEntity(courseVO, course);
 		} else {
 			// not found
 			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
@@ -238,20 +235,17 @@ public class InstructorServiceImpl implements InstructorService {
 		}
 		
 		if (action.equals(ActionType.ENROLL)) {
-			log.info(ActionType.ENROLL);
+			//log.info(ActionType.ENROLL);
 			instructor.addCourse(course);
-			//course.setInstructor(instructor);
 		}
 		
 		if (action.equals(ActionType.WITHDRAW)) {
-			log.info(ActionType.WITHDRAW);
+			//log.info(ActionType.WITHDRAW);
 			instructor.removeCourse(course);
-			//course.setInstructor(null);
 		}
 		
-		log.info("saving instructor");
-		//instructorRepository.save(instructor);
-		entityManager.persist(instructor);
+		//log.info("saving instructor");
+		instructorRepository.save(instructor);
 		
 		return response;
 	}

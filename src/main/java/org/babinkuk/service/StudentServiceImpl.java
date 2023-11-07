@@ -139,8 +139,6 @@ public class StudentServiceImpl implements StudentService {
 			// mapping
 			student = studentMapper.toEntity(studentVO);
 		}
-
-		//log.info("student ({})", student);
 		
 		studentRepository.save(student);
 		
@@ -197,9 +195,6 @@ public class StudentServiceImpl implements StudentService {
 		if (entity.isPresent()) {
 			course = entity.get();
 			//log.info("courseVO ({})", courseVO);
-			
-			// mapping
-			//course = courseMapper.toEntity(courseVO, course);
 		} else {
 			// not found
 			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
@@ -215,9 +210,8 @@ public class StudentServiceImpl implements StudentService {
 			student.removeCourse(course);
 		}
 		
-		log.info("saving student");
+		//log.info("saving student");
 		studentRepository.save(student);
-		//entityManager.persist(instructor);
 		
 		return response;
 	}

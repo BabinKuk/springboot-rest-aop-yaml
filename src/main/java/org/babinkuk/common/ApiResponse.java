@@ -7,6 +7,10 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(value = Include.NON_EMPTY)
 public class ApiResponse {
 	
 	private LocalDateTime timestamp = LocalDateTime.now();

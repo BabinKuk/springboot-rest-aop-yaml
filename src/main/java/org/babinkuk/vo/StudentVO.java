@@ -7,12 +7,16 @@ import java.util.SortedMap;
 import org.babinkuk.entity.Status;
 import org.babinkuk.vo.diff.DiffField;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * instance of this class is used to represent student data
  * 
  * @author BabinKuk
  *
  */
+@JsonInclude(value = Include.NON_EMPTY)
 public class StudentVO extends UserVO {
 	
 	private int id;

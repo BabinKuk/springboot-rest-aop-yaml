@@ -5,6 +5,9 @@ import javax.validation.constraints.NotBlank;
 import org.babinkuk.vo.diff.DiffField;
 import org.babinkuk.vo.diff.Diffable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 /**
  * instance of this class is used to represent review data
  * 
@@ -12,6 +15,7 @@ import org.babinkuk.vo.diff.Diffable;
  *
  */
 @Diffable(id = "id")
+@JsonInclude(value = Include.NON_EMPTY)
 public class ReviewVO {
 
 	private int id;

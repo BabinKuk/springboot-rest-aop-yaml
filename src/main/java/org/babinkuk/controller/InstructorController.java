@@ -197,7 +197,7 @@ public class InstructorController {
 			@PathVariable int instructorId,
 			@PathVariable int courseId,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
-		log.info("Called CourseController.withdrawInstructor(id={}) for courseId={}", instructorId, courseId);
+		//log.info("Called CourseController.withdrawInstructor(id={}) for courseId={}", instructorId, courseId);
 		
 		// first find course
 		CourseVO courseVO = courseService.findById(courseId);
