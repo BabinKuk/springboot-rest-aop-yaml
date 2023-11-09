@@ -2,6 +2,9 @@ package org.babinkuk.vo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+
 import org.babinkuk.vo.diff.DiffField;
 import org.babinkuk.vo.diff.Diffable;
 
@@ -21,6 +24,7 @@ public class CourseVO {
 	private int id;
 
 	@DiffField
+	@NotBlank(message = "error_code_title_empty")
 	private String title;
 	
 	@DiffField

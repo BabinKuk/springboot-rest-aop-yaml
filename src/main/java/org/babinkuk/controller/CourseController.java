@@ -38,6 +38,8 @@ import static org.babinkuk.config.Api.ROOT;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(ROOT + COURSES)
 public class CourseController {
@@ -107,7 +109,7 @@ public class CourseController {
 	 */
 	@PostMapping("")
 	public ResponseEntity<ApiResponse> addCourse(
-			@RequestBody CourseVO courseVO,
+			@Valid @RequestBody CourseVO courseVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called CourseController.addCourse({})", mapper.writeValueAsString(courseVO));
 		
@@ -167,11 +169,11 @@ public class CourseController {
 		return ResponseEntity.of(Optional.ofNullable(courseService.deleteCourse(courseId)));
 	}
 	
-	@ExceptionHandler
-	public ResponseEntity<ApiResponse> handleException(Exception exc) {
-		
-		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
-	}
+//	@ExceptionHandler
+//	public ResponseEntity<ApiResponse> handleException(Exception exc) {
+//		
+//		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
+//	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(ObjectException exc) {
