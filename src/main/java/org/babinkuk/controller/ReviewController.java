@@ -11,10 +11,12 @@ import org.babinkuk.vo.ReviewVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.common.ApiResponse;
+import org.babinkuk.config.MessagePool;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.exception.ObjectValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.babinkuk.config.Api.REVIEWS;
 import static org.babinkuk.config.Api.ROOT;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -107,9 +110,11 @@ public class ReviewController {
 	@PostMapping("/{courseId}")
 	public ResponseEntity<ApiResponse> addReview(
 			@PathVariable int courseId,
-			@RequestBody ReviewVO reviewVO,
+			@Valid @RequestBody ReviewVO reviewVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called ReviewController.addReview({}) for courseId={}", mapper.writeValueAsString(reviewVO), courseId);
+		
+		log.info(MessagePool.getMessage("error_code_review_empty", new Object[] {}, LocaleContextHolder.getLocale()));
 		
 		// first find course
 		CourseVO courseVO = courseService.findById(courseId);
@@ -123,6 +128,7 @@ public class ReviewController {
 //		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.CREATE, ValidatorType.REVIEW);
 		
 		return ResponseEntity.of(Optional.ofNullable(reviewService.saveReview(courseVO)));
+		//return new ApiResponse(HttpStatus.OK, "").toEntity(); 
 	}
 	
 	/**
@@ -136,7 +142,7 @@ public class ReviewController {
 	 */
 	@PutMapping("")
 	public ResponseEntity<ApiResponse> updateReview(
-			@RequestBody ReviewVO reviewVO,
+			@Valid @RequestBody ReviewVO reviewVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called ReviewController.updateReview({})", mapper.writeValueAsString(reviewVO));
 		
@@ -163,11 +169,11 @@ public class ReviewController {
 		return ResponseEntity.of(Optional.ofNullable(reviewService.deleteReview(reviewId)));
 	}
 
-	@ExceptionHandler
-	public ResponseEntity<ApiResponse> handleException(Exception exc) {
-		
-		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
-	}
+//	@ExceptionHandler
+//	public ResponseEntity<ApiResponse> handleException(Exception exc) {
+//		
+//		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
+//	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(ObjectException exc) {
