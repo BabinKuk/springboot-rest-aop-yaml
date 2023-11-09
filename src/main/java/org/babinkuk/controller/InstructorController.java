@@ -34,7 +34,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static org.babinkuk.config.Api.INSTRUCTORS;
 import static org.babinkuk.config.Api.ROOT;
 
-import java.util.Optional;;
+import java.util.Optional;
+
+import javax.validation.Valid;;
 
 @RestController
 @RequestMapping(ROOT + INSTRUCTORS)
@@ -102,7 +104,8 @@ public class InstructorController {
 	 */
 	@PostMapping("")
 	public ResponseEntity<ApiResponse> addInstructor(
-			@RequestBody InstructorVO instructorVO,@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@Valid @RequestBody InstructorVO instructorVO,
+			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called InstructorController.addInstructor({})", mapper.writeValueAsString(instructorVO));
 		
 		// in case id is passed in json, set to 0
@@ -125,7 +128,7 @@ public class InstructorController {
 	 */
 	@PutMapping("")
 	public ResponseEntity<ApiResponse> updateInstructor(
-			@RequestBody InstructorVO instructorVO,
+			@Valid @RequestBody InstructorVO instructorVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called InstructorController.updateInstructor({})", mapper.writeValueAsString(instructorVO));
 
@@ -212,11 +215,11 @@ public class InstructorController {
 		return ResponseEntity.of(Optional.ofNullable(instructorService.setCourse(instructorVO, courseVO, ActionType.WITHDRAW)));
 	}
 	
-	@ExceptionHandler
-	public ResponseEntity<ApiResponse> handleException(Exception exc) {
-		
-		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
-	}
+//	@ExceptionHandler
+//	public ResponseEntity<ApiResponse> handleException(Exception exc) {
+//		
+//		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
+//	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(ObjectException exc) {

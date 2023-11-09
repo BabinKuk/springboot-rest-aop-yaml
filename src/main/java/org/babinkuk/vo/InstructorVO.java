@@ -3,6 +3,10 @@ package org.babinkuk.vo;
 import java.util.List;
 import java.util.SortedMap;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import org.babinkuk.entity.Status;
 import org.babinkuk.vo.diff.DiffField;
 import org.babinkuk.vo.diff.Diffable;
@@ -23,15 +27,20 @@ public class InstructorVO extends UserVO {
 	private int id;
 	
 	@DiffField
+	@NotBlank(message = "error_code_first_name_empty")
 	private String firstName;
 	
 	@DiffField
+	@NotBlank(message = "error_code_last_name_empty")
 	private String lastName;
 	
 	@DiffField
+	@NotBlank(message = "error_code_email_empty")
+	@Email(message = "error_code_email_invalid", regexp="[A-Za-z0-9._%-+]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}")
 	private String email;
 	
 	@DiffField
+	@NotNull(message = "error_code_status_invalid")
 	private Status status;
 	
 	@DiffField
