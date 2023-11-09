@@ -37,6 +37,8 @@ import static org.babinkuk.config.Api.STUDENTS;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(ROOT + STUDENTS)
 public class StudentController {
@@ -102,7 +104,7 @@ public class StudentController {
 	 */
 	@PostMapping("")
 	public ResponseEntity<ApiResponse> addStudent(
-			@RequestBody StudentVO studentVO,
+			@Valid @RequestBody StudentVO studentVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called StudentController.addStudent({})", mapper.writeValueAsString(studentVO));
 		
@@ -126,7 +128,7 @@ public class StudentController {
 	 */
 	@PutMapping("")
 	public ResponseEntity<ApiResponse> updateStudent(
-			@RequestBody StudentVO studentVO,
+			@Valid @RequestBody StudentVO studentVO,
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called StudentController.updateStudent({})", mapper.writeValueAsString(studentVO));
 
@@ -213,11 +215,11 @@ public class StudentController {
 		return ResponseEntity.of(Optional.ofNullable(studentService.setCourse(studentVO, courseVO, ActionType.WITHDRAW)));
 	}
 	
-	@ExceptionHandler
-	public ResponseEntity<ApiResponse> handleException(Exception exc) {
-		
-		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
-	}
+//	@ExceptionHandler
+//	public ResponseEntity<ApiResponse> handleException(Exception exc) {
+//		
+//		return new ApiResponse(HttpStatus.BAD_REQUEST, exc.getMessage()).toEntity();
+//	}
 	
 	@ExceptionHandler
 	public ResponseEntity<ApiResponse> handleException(ObjectException exc) {
