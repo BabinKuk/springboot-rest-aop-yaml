@@ -3,7 +3,7 @@ package org.babinkuk.controller;
 import org.babinkuk.service.CourseService;
 import org.babinkuk.service.ReviewService;
 import org.babinkuk.validator.ActionType;
-//import org.babinkuk.validator.ValidatorFactory;
+import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
 import org.babinkuk.vo.CourseVO;
@@ -53,8 +53,8 @@ public class ReviewController {
 	
 	private CourseService courseService;
 	
-//	@Autowired
-//	private ValidatorFactory validatorFactory;
+	@Autowired
+	private ValidatorFactory validatorFactory;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -123,10 +123,9 @@ public class ReviewController {
 		
 		courseVO.addReviewVO(reviewVO);
 		
-//		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.CREATE, ValidatorType.REVIEW);
+		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.CREATE, ValidatorType.REVIEW);
 		
 		return ResponseEntity.of(Optional.ofNullable(reviewService.saveReview(courseVO)));
-		//return new ApiResponse(HttpStatus.OK, "").toEntity(); 
 	}
 	
 	/**
@@ -144,7 +143,7 @@ public class ReviewController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called ReviewController.updateReview({})", mapper.writeValueAsString(reviewVO));
 		
-//		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.UPDATE, ValidatorType.REVIEW);
+		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.UPDATE, ValidatorType.REVIEW);
 
 		return ResponseEntity.of(Optional.ofNullable(reviewService.saveReview(reviewVO)));
 	}
@@ -162,7 +161,7 @@ public class ReviewController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
 		//log.info("Called ReviewController.deleteReview(reviewId={}, validationType={})", reviewId, validationRole);
 		
-//		validatorFactory.getValidator(validationRole).validate(reviewId, ActionType.DELETE, ValidatorType.REVIEW);
+		validatorFactory.getValidator(validationRole).validate(reviewId, ActionType.DELETE, ValidatorType.REVIEW);
 		
 		return ResponseEntity.of(Optional.ofNullable(reviewService.deleteReview(reviewId)));
 	}
