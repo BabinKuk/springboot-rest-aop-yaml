@@ -4,7 +4,7 @@ import org.babinkuk.service.CourseService;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.service.StudentService;
 import org.babinkuk.validator.ActionType;
-//import org.babinkuk.validator.ValidatorFactory;
+import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
 import org.babinkuk.vo.CourseVO;
@@ -53,8 +53,8 @@ public class CourseController {
 	
 	private InstructorService instructorService;
 	
-//	@Autowired
-//	private ValidatorFactory validatorFactory;
+	@Autowired
+	private ValidatorFactory validatorFactory;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -117,7 +117,7 @@ public class CourseController {
 		// this is to force a save of new item ... instead of update
 		courseVO.setId(0);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.CREATE, ValidatorType.COURSE);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.CREATE, ValidatorType.COURSE);
 		
 		return ResponseEntity.of(Optional.ofNullable(courseService.saveCourse(courseVO)));
 	}
@@ -146,7 +146,7 @@ public class CourseController {
 		// next set new title
 		courseVO.setTitle(courseTitle);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.UPDATE, ValidatorType.COURSE);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.UPDATE, ValidatorType.COURSE);
 
 		return ResponseEntity.of(Optional.ofNullable(courseService.saveCourse(courseVO)));
 	}
@@ -164,7 +164,7 @@ public class CourseController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
 		//log.info("Called CourseController.deleteCourse(courseId={}, validationRole={})", courseId, validationRole);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseId, ActionType.DELETE, ValidatorType.COURSE);
+		validatorFactory.getValidator(validationRole).validate(courseId, ActionType.DELETE, ValidatorType.COURSE);
 		
 		return ResponseEntity.of(Optional.ofNullable(courseService.deleteCourse(courseId)));
 	}

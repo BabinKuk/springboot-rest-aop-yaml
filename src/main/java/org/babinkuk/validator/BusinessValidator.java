@@ -167,9 +167,9 @@ public class BusinessValidator {
 		if (dbVO == null) {
 			// title not found
 			// that's ok
-			log.info("title not found");
+			//log.info("title not found");
 		} else {
-			log.info("title found");
+			//log.info("title found");
 			if (dbVO.getId() == vo.getId()) {
 				// same course, title has not changed
 				log.info("belongs to same course, title has not changed");
