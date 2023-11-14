@@ -3,7 +3,7 @@ package org.babinkuk.controller;
 import org.babinkuk.service.CourseService;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.validator.ActionType;
-//import org.babinkuk.validator.ValidatorFactory;
+import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
 import org.babinkuk.vo.CourseVO;
@@ -49,8 +49,8 @@ public class InstructorController {
 	
 	private CourseService courseService;
 	
-//	@Autowired
-//	private ValidatorFactory validatorFactory;
+	@Autowired
+	private ValidatorFactory validatorFactory;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -112,7 +112,7 @@ public class InstructorController {
 		// this is to force a save of new item ... instead of update
 		instructorVO.setId(0);
 		
-//		validatorFactory.getValidator(validationRole).validate(instructorVO, ActionType.CREATE, ValidatorType.INSTRUCTOR);
+		validatorFactory.getValidator(validationRole).validate(instructorVO, ActionType.CREATE, ValidatorType.INSTRUCTOR);
 		
 		return ResponseEntity.of(Optional.ofNullable(instructorService.saveInstructor(instructorVO)));
 	}
@@ -132,7 +132,7 @@ public class InstructorController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called InstructorController.updateInstructor({})", mapper.writeValueAsString(instructorVO));
 
-//		validatorFactory.getValidator(validationRole).validate(instructorVO, ActionType.UPDATE, ValidatorType.INSTRUCTOR);
+		validatorFactory.getValidator(validationRole).validate(instructorVO, ActionType.UPDATE, ValidatorType.INSTRUCTOR);
 
 		return ResponseEntity.of(Optional.ofNullable(instructorService.saveInstructor(instructorVO)));
 	}
@@ -178,7 +178,7 @@ public class InstructorController {
 		// next find instructor
 		InstructorVO instructorVO = instructorService.findById(instructorId);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.INSTRUCTOR);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.INSTRUCTOR);
 		
 		//courseVO.setInstructorVO(instructorVO);
 		
@@ -208,7 +208,7 @@ public class InstructorController {
 		// next find instructor
 		InstructorVO instructorVO = instructorService.findById(instructorId);
 
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.INSTRUCTOR);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.INSTRUCTOR);
 
 		//courseVO.setInstructorVO(null);
 		
