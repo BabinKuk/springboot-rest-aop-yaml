@@ -1,10 +1,9 @@
 package org.babinkuk.controller;
 
-
 import org.babinkuk.service.CourseService;
 import org.babinkuk.service.StudentService;
 import org.babinkuk.validator.ActionType;
-//import org.babinkuk.validator.ValidatorFactory;
+import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
 import org.babinkuk.vo.CourseVO;
@@ -49,8 +48,9 @@ public class StudentController {
 	private StudentService studentService;
 	
 	private CourseService courseService;
-//	@Autowired
-//	private ValidatorFactory validatorFactory;
+
+	@Autowired
+	private ValidatorFactory validatorFactory;
 	
 	@Autowired
 	private ObjectMapper mapper;
@@ -112,7 +112,7 @@ public class StudentController {
 		// this is to force a save of new item ... instead of update
 		studentVO.setId(0);
 		
-//		validatorFactory.getValidator(validationRole).validate(studentVO, ActionType.CREATE, ValidatorType.STUDENT);
+		validatorFactory.getValidator(validationRole).validate(studentVO, ActionType.CREATE, ValidatorType.STUDENT);
 		
 		return ResponseEntity.of(Optional.ofNullable(studentService.saveStudent(studentVO)));
 	}
@@ -132,7 +132,7 @@ public class StudentController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called StudentController.updateStudent({})", mapper.writeValueAsString(studentVO));
 
-//		validatorFactory.getValidator(validationRole).validate(studentVO, ActionType.UPDATE, ValidatorType.STUDENT);
+		validatorFactory.getValidator(validationRole).validate(studentVO, ActionType.UPDATE, ValidatorType.STUDENT);
 
 		return ResponseEntity.of(Optional.ofNullable(studentService.saveStudent(studentVO)));
 	}
@@ -150,7 +150,7 @@ public class StudentController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
 		//log.info("Called StudentController.deleteStudent(studentId={}, validationType={})", studentId, validationRole);
 		
-//		validatorFactory.getValidator(validationRole).validate(studentId, ActionType.DELETE, ValidatorType.STUDENT);
+		validatorFactory.getValidator(validationRole).validate(studentId, ActionType.DELETE, ValidatorType.STUDENT);
 		
 		return ResponseEntity.of(Optional.ofNullable(studentService.deleteStudent(studentId)));
 	}
@@ -178,7 +178,7 @@ public class StudentController {
 		// next find student
 		StudentVO studentVO = studentService.findById(studentId);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.STUDENT);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.ENROLL, ValidatorType.STUDENT);
 		
 		//courseVO.addStudentVO(studentVO);
 		
@@ -208,7 +208,7 @@ public class StudentController {
 		// next find student
 		StudentVO studentVO = studentService.findById(studentId);
 		
-//		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.STUDENT);
+		validatorFactory.getValidator(validationRole).validate(courseVO, ActionType.WITHDRAW, ValidatorType.STUDENT);
 		
 		//courseVO.removeStudentVO(studentVO);
 		
