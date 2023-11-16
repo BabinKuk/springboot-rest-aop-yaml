@@ -150,7 +150,7 @@ public class InstructorController {
 			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
 		//log.info("Called InstructorController.deleteInstructor(InstructorId={}, validationRole={})", instructorId, validationRole);
 		
-//		validatorFactory.getValidator(validationRole).validate(instructorId, ActionType.DELETE, ValidatorType.INSTRUCTOR);
+		validatorFactory.getValidator(validationRole).validate(instructorId, ActionType.DELETE, ValidatorType.INSTRUCTOR);
 		
 		return ResponseEntity.of(Optional.ofNullable(instructorService.deleteInstructor(instructorId)));
 	}

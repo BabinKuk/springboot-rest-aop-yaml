@@ -44,7 +44,7 @@ public interface StudentMapper {
 	
 	@AfterMapping
 	default void afterMapStudent(@MappingTarget Student entity, StudentVO studentVO) {
-		System.out.println(StringUtils.stripToEmpty("@AfterMapping student: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
+//		System.out.println(StringUtils.stripToEmpty("@AfterMapping student: " + new Throwable().getStackTrace()[0].getFileName() + ":" + (new Throwable().getStackTrace()[0].getLineNumber())));
 		
 		// address
 		Address address = addressMapperInstance.toEntity(studentVO, entity);

@@ -60,15 +60,25 @@ sql:
       insert: INSERT INTO course(id,title,instructor_id) values(1,'test course',null)
       delete: DELETE FROM course
       update: UPDATE course set instructor_id='1' where id=1
+    user:
+      insert-instructor: INSERT INTO user(id,first_name,last_name,email,status) values(1,'firstNameInstr','lastNameInstr','firstNameInstr@babinuk.com','ACTIVE')
+      insert-student: INSERT INTO user(id,first_name,last_name,email,status) values(2,'firstNameStudent','lastNameStudent','firstNameStudent@babinuk.com','ACTIVE')
+      delete: DELETE FROM user
     instructor:
-      insert: INSERT INTO instructor(id,first_name,last_name,email,instructor_detail_id) values(1,'firstNameInstr','lastNameInstr','firstNameInstr@babinuk.com',1)
+      insert: INSERT INTO instructor(id,salary,instructor_detail_id) values(1,1000,1)
       delete: DELETE FROM instructor
     instructor-detail:
       insert: INSERT INTO instructor_detail(id,youtube_channel,hobby) values(1,'ytb test','test hobby')
       delete: DELETE FROM instructor_detail
     student:
-      insert: INSERT INTO student(id,first_name,last_name,email) values(1,'firstNameStudent','lastNameStudent','firstNameStudent@babinuk.com')
+      insert: INSERT INTO student(id,street,city,zip_code) values(1,'Street','City','ZipCode')
       delete: DELETE FROM student
     course-student:
       insert: INSERT INTO course_student(course_id,student_id) values(1,1)
       delete: DELETE FROM course_student
+    image:
+      insert-instructor-1: INSERT INTO image(user_id,file_name,image_name) values(1,'file1','image1')
+      insert-instructor-2: INSERT INTO image(user_id,file_name,image_name) values(1,'file11','image11')
+      insert-student-1: INSERT INTO image(user_id,file_name,image_name) values(2,'file2','image2')
+      insert-student-2: INSERT INTO image(user_id,file_name,image_name) values(2,'file22','image22')
+      delete: DELETE FROM image
