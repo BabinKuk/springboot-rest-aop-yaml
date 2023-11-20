@@ -71,10 +71,10 @@ sql:
       insert: INSERT INTO instructor_detail(id,youtube_channel,hobby) values(1,'ytb test','test hobby')
       delete: DELETE FROM instructor_detail
     student:
-      insert: INSERT INTO student(id,street,city,zip_code) values(1,'Street','City','ZipCode')
+      insert: INSERT INTO student(id,street,city,zip_code) values(2,'Street','City','ZipCode')
       delete: DELETE FROM student
     course-student:
-      insert: INSERT INTO course_student(course_id,student_id) values(1,1)
+      insert: INSERT INTO course_student(course_id,student_id) values(1,2)
       delete: DELETE FROM course_student
     image:
       insert-instructor-1: INSERT INTO image(user_id,file_name,image_name) values(1,'file1','image1')

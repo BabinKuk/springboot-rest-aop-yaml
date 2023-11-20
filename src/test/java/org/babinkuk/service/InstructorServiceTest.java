@@ -13,15 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Collection;
@@ -44,15 +41,6 @@ public class InstructorServiceTest {
 	
 	@Autowired
 	private JdbcTemplate jdbc;
-	
-	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
-	private ReviewService reviewService;
-	
-	@Autowired
-	private CourseService courseService;
 	
 	@Value("${sql.script.review.insert}")
 	private String sqlAddReview;
@@ -320,10 +308,10 @@ public class InstructorServiceTest {
 		
 		// assert not existing instructor
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
-			instructorService.findById(2);
+			instructorService.findById(22);
 		});
 		
-		String expectedMessage = "Instructor with id=2 not found.";
+		String expectedMessage = "Instructor with id=22 not found.";
 		String actualMessage = exception.getMessage();
 
 	    assertTrue(actualMessage.contains(expectedMessage));
