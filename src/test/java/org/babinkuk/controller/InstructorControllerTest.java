@@ -46,11 +46,6 @@ public class InstructorControllerTest {
 	
 	public static final Logger log = LogManager.getLogger(InstructorControllerTest.class);
 	
-	private static String ROLE_ADMIN = "ROLE_ADMIN";
-	private static String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
-	private static String ROLE_STUDENT = "ROLE_STUDENT";
-	private static String ROLE_NOT_EXIST = "ROLE_NOT_EXIST";
-	
 	private static MockHttpServletRequest request;
 	
 	@PersistenceContext
@@ -190,7 +185,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, ROLE_ADMIN)
+				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_ADMIN)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -205,7 +200,7 @@ public class InstructorControllerTest {
 				
 		// get all instructors (different validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, ROLE_INSTRUCTOR)
+				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_INSTRUCTOR)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -214,7 +209,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors (different validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, ROLE_STUDENT)
+				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_STUDENT)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -223,7 +218,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors (without validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-			//	.param(TestUtils.VALIDATION_ROLE, "ROLE_STUDENT")
+			//	.param(TestUtils.VALIDATION_ROLE, "TestUtils.ROLE_STUDENT")
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -232,7 +227,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors (not existing validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, ROLE_NOT_EXIST)
+				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_NOT_EXIST)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -243,19 +238,19 @@ public class InstructorControllerTest {
 	@Test
 	void getInstructorRoleAdmin() throws Exception {
 
-		getInstructor(ROLE_ADMIN);
+		getInstructor(TestUtils.ROLE_ADMIN);
 	}
 	
 	@Test
 	void getInstructorRoleInstructor() throws Exception {
 
-		getInstructor(ROLE_INSTRUCTOR);
+		getInstructor(TestUtils.ROLE_INSTRUCTOR);
 	}
 	
 	@Test
 	void getInstructorRoleStudent() throws Exception {
 
-		getInstructor(ROLE_STUDENT);
+		getInstructor(TestUtils.ROLE_STUDENT);
 	}
 	
 	@Test
@@ -267,7 +262,7 @@ public class InstructorControllerTest {
 	@Test
 	void getInstructorRoleNotExist() throws Exception {
 
-		getInstructor(ROLE_NOT_EXIST);
+		getInstructor(TestUtils.ROLE_NOT_EXIST);
 	}
 	
 	private void getInstructor(String validationRole) throws Exception {
@@ -295,13 +290,13 @@ public class InstructorControllerTest {
 	@Test
 	void addInstructorRoleAdmin() throws Exception {
 
-		addInstructorSuccess(ROLE_ADMIN);
+		addInstructorSuccess(TestUtils.ROLE_ADMIN);
 	}
 
 	@Test
 	void addInstructorRoleInstructor() throws Exception {
 
-		addInstructorSuccess(ROLE_INSTRUCTOR);
+		addInstructorSuccess(TestUtils.ROLE_INSTRUCTOR);
 	}
 	
 	private void addInstructorSuccess(String validationRole) throws Exception {
@@ -345,7 +340,7 @@ public class InstructorControllerTest {
 	@Test
 	void addInstructorRoleStudent() throws Exception {
 
-		addInstructorFail(ROLE_STUDENT);
+		addInstructorFail(TestUtils.ROLE_STUDENT);
 	}
 	
 	@Test
@@ -357,7 +352,7 @@ public class InstructorControllerTest {
 	@Test
 	void addInstructorRoleNotExist() throws Exception {
 		
-		addInstructorFail(ROLE_NOT_EXIST);
+		addInstructorFail(TestUtils.ROLE_NOT_EXIST);
 	}
 	
 	private void addInstructorFail(String validationRole) throws Exception {
@@ -390,13 +385,13 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleAdmin() throws Exception {
 
-		updateInstructorSuccess(ROLE_ADMIN);
+		updateInstructorSuccess(TestUtils.ROLE_ADMIN);
 	}
 	
 	@Test
 	void updateInstructorRoleInstructor() throws Exception {
 
-		updateInstructorSuccess(ROLE_INSTRUCTOR);
+		updateInstructorSuccess(TestUtils.ROLE_INSTRUCTOR);
 	}
 	
 	private void updateInstructorSuccess(String validationRole) throws Exception {
@@ -444,7 +439,7 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleStudent() throws Exception {
 
-		updateInstructorFail(ROLE_STUDENT);
+		updateInstructorFail(TestUtils.ROLE_STUDENT);
 	}
 	
 	@Test
@@ -456,7 +451,7 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleNotExist() throws Exception {
 
-		updateInstructorFail(ROLE_NOT_EXIST);
+		updateInstructorFail(TestUtils.ROLE_NOT_EXIST);
 	}
 	
 	private	void updateInstructorFail(String validationRole) throws Exception {
@@ -502,19 +497,19 @@ public class InstructorControllerTest {
 	@Test
 	void deleteInstructorRoleAdmin() throws Exception {
 
-		deleteInstructorSuccess(ROLE_ADMIN);
+		deleteInstructorSuccess(TestUtils.ROLE_ADMIN);
 	}
 	
 	@Test
 	void deleteInstructorRoleInstructor() throws Exception {
 
-		deleteInstructorFail(ROLE_INSTRUCTOR);
+		deleteInstructorFail(TestUtils.ROLE_INSTRUCTOR);
 	}
 	
 	@Test
 	void deleteInstructorRoleStudent() throws Exception {
 
-		deleteInstructorFail(ROLE_STUDENT);
+		deleteInstructorFail(TestUtils.ROLE_STUDENT);
 	}
 
 	@Test
@@ -526,7 +521,7 @@ public class InstructorControllerTest {
 	@Test
 	void deleteInstructorRoleNotExist() throws Exception {
 
-		deleteInstructorFail(ROLE_NOT_EXIST);
+		deleteInstructorFail(TestUtils.ROLE_NOT_EXIST);
 	}
 	
 	private void deleteInstructorSuccess(String validationRole) throws Exception {

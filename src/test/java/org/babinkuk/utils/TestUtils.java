@@ -10,6 +10,14 @@ public class TestUtils {
 	public static final Logger log = LogManager.getLogger(TestUtils.class);
 	
 	public static final String VALIDATION_ROLE = "validationRole";
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
+	public static final String ROLE_STUDENT = "ROLE_STUDENT";
+	public static final String ROLE_NOT_EXIST = "ROLE_NOT_EXIST";
+		
+	public static final String REVIEW = "test review";
+	public static final String REVIEW_NEW = "new review";
+	public static final String REVIEW_UPDATE = "update test review";
 	
 	public static final String INSTRUCTOR_FIRSTNAME = "firstNameInstr";
 	public static final String INSTRUCTOR_LASTNAME = "lastNameInstr";

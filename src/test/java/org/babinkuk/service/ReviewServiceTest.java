@@ -3,6 +3,7 @@ package org.babinkuk.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.exception.ObjectNotFoundException;
+import org.babinkuk.utils.TestUtils;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.junit.jupiter.api.AfterEach;
@@ -36,9 +37,6 @@ public class ReviewServiceTest {
 	
 	@Autowired
 	private JdbcTemplate jdbc;
-	
-	@Autowired
-	private MessageSource messageSource;
 	
 	@Autowired
 	private ReviewService reviewService;
@@ -124,6 +122,28 @@ public class ReviewServiceTest {
 		jdbc.execute(sqlAddCourseStudent);
 	}
 	
+	@AfterEach
+	public void setupAfterTransaction() {
+		log.info("AfterEach");
+
+		jdbc.execute(sqlDeleteCourseStudent);
+		jdbc.execute(sqlDeleteStudent);
+		jdbc.execute(sqlDeleteReview);
+		jdbc.execute(sqlDeleteCourse);
+		jdbc.execute(sqlDeleteInstructor);
+		jdbc.execute(sqlDeleteInstructorDetail);
+		jdbc.execute(sqlDeleteImage);
+		jdbc.execute(sqlDeleteUser);
+		
+//		// check
+//		List<Map<String,Object>> userList = new ArrayList<Map<String,Object>>();
+//		userList = jdbc.queryForList("select * from user");
+//		log.info("size() " + userList.size());
+//		for (Map m : userList) {
+//			m.forEach((key, value) -> log.info(key + " : " + value));
+//		}
+	}
+	
 	@Test
 	void getReview() {
 		//log.info("getReview");
@@ -133,7 +153,7 @@ public class ReviewServiceTest {
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());
 		assertNotNull(reviewVO.getComment(),"reviewVO.getComment() null");
-		assertEquals("test review", reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
+		assertEquals(TestUtils.REVIEW, reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
 		
 		assertNotEquals("test review ", reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
 		
@@ -157,7 +177,7 @@ public class ReviewServiceTest {
 		
 		// create review
 		// set id 0: this is to force a save of new item ... instead of update
-		ReviewVO reviewVO = new ReviewVO("new review");
+		ReviewVO reviewVO = new ReviewVO(TestUtils.REVIEW_NEW);
 		reviewVO.setId(0);
 		
 		// add to course
@@ -180,7 +200,7 @@ public class ReviewServiceTest {
 		ReviewVO reviewVO = reviewService.findById(1);
 		
 		// update comment
-		String newComment = "update test review";
+		String newComment = TestUtils.REVIEW_UPDATE;
 		reviewVO.setComment(newComment);
 		
 		reviewService.saveReview(reviewVO);
@@ -239,7 +259,7 @@ public class ReviewServiceTest {
 		
 		// create review
 		// set id 0: this is to force a save of new item ... instead of update
-		ReviewVO reviewVO = new ReviewVO("new review");
+		ReviewVO reviewVO = new ReviewVO(TestUtils.REVIEW_NEW);
 		reviewVO.setId(0);
 		
 		// add to course
@@ -255,29 +275,4 @@ public class ReviewServiceTest {
 		}
 	}
 	
-	@AfterEach
-	public void setupAfterTransaction() {
-		log.info("AfterEach");
-
-		jdbc.execute(sqlDeleteCourseStudent);
-		jdbc.execute(sqlDeleteStudent);
-		jdbc.execute(sqlDeleteReview);
-		jdbc.execute(sqlDeleteCourse);
-		jdbc.execute(sqlDeleteInstructor);
-		jdbc.execute(sqlDeleteInstructorDetail);
-		jdbc.execute(sqlDeleteImage);
-		jdbc.execute(sqlDeleteUser);
-		
-//		// check
-//		List<Map<String,Object>> userList = new ArrayList<Map<String,Object>>();
-//		userList = jdbc.queryForList("select * from user");
-//		log.info("size() " + userList.size());
-//		for (Map m : userList) {
-//			m.forEach((key, value) -> log.info(key + " : " + value));
-//		}
-	}
-	
-	private String getMessage(String str) {
-		return messageSource.getMessage(str, new Object[] {}, LocaleContextHolder.getLocale());
-	}
 }
