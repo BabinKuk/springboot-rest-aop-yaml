@@ -66,7 +66,13 @@ public class StudentVO extends UserVO {
 		this.lastName = lastName;
 		this.email = email;
 	}
-
+	
+	public StudentVO(String firstName, String lastName, String email, Status status) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.status = status;
+	}
 	public int getId() {
 		return id;
 	}
