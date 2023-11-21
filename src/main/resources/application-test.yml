@@ -61,8 +61,8 @@ sql:
       delete: DELETE FROM course
       update: UPDATE course set instructor_id='1' where id=1
     user:
-      insert-instructor: INSERT INTO user(id,first_name,last_name,email,status) values(1,'firstNameInstr','lastNameInstr','firstNameInstr@babinuk.com','ACTIVE')
-      insert-student: INSERT INTO user(id,first_name,last_name,email,status) values(2,'firstNameStudent','lastNameStudent','firstNameStudent@babinuk.com','ACTIVE')
+      insert-instructor: INSERT INTO user(id,first_name,last_name,email,status) values(1,'firstNameInstr','lastNameInstr','firstNameInstr@babinkuk.com','ACTIVE')
+      insert-student: INSERT INTO user(id,first_name,last_name,email,status) values(2,'firstNameStudent','lastNameStudent','firstNameStudent@babinkuk.com','ACTIVE')
       delete: DELETE FROM user
     instructor:
       insert: INSERT INTO instructor(id,salary,instructor_detail_id) values(1,1000,1)

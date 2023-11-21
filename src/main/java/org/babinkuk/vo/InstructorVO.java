@@ -76,6 +76,15 @@ public class InstructorVO extends UserVO {
 		this.hobby = hobby;
 	}
 
+	public InstructorVO(String firstName, String lastName, String email, String youtubeChannel, String hobby, Status status) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.youtubeChannel = youtubeChannel;
+		this.hobby = hobby;
+		this.status = status;
+	}
+	
 	public int getId() {
 		return id;
 	}
