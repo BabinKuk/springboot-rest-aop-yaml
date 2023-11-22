@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.babinkuk.config.Api.INSTRUCTORS;
 import static org.babinkuk.config.Api.ROOT;
+import static org.babinkuk.config.Api.VALIDATION_ROLE;
 
 import java.util.Optional;
 
@@ -105,7 +106,7 @@ public class InstructorController {
 	@PostMapping("")
 	public ResponseEntity<ApiResponse> addInstructor(
 			@Valid @RequestBody InstructorVO instructorVO,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called InstructorController.addInstructor({})", mapper.writeValueAsString(instructorVO));
 		
 		// in case id is passed in json, set to 0
@@ -129,7 +130,7 @@ public class InstructorController {
 	@PutMapping("")
 	public ResponseEntity<ApiResponse> updateInstructor(
 			@Valid @RequestBody InstructorVO instructorVO,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called InstructorController.updateInstructor({})", mapper.writeValueAsString(instructorVO));
 
 		validatorFactory.getValidator(validationRole).validate(instructorVO, ActionType.UPDATE, ValidatorType.INSTRUCTOR);
@@ -147,7 +148,7 @@ public class InstructorController {
 	@DeleteMapping("/{instructorId}")
 	public ResponseEntity<ApiResponse> deleteInstructor(
 			@PathVariable int instructorId, 
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) {
 		//log.info("Called InstructorController.deleteInstructor(InstructorId={}, validationRole={})", instructorId, validationRole);
 		
 		validatorFactory.getValidator(validationRole).validate(instructorId, ActionType.DELETE, ValidatorType.INSTRUCTOR);
@@ -169,7 +170,7 @@ public class InstructorController {
 	public ResponseEntity<ApiResponse> enrollCourse(
 			@PathVariable int instructorId,
 			@PathVariable int courseId,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called CourseController.enrollInstructor(id={}) for courseId={}", instructorId, courseId);
 		
 		// first find course
@@ -199,7 +200,7 @@ public class InstructorController {
 	public ResponseEntity<ApiResponse> withdrawCourse(
 			@PathVariable int instructorId,
 			@PathVariable int courseId,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called CourseController.withdrawInstructor(id={}) for courseId={}", instructorId, courseId);
 		
 		// first find course

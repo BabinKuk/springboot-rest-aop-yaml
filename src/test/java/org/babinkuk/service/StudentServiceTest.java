@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.entity.Status;
 import org.babinkuk.exception.ObjectNotFoundException;
-import org.babinkuk.utils.TestUtils;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.StudentVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.Matchers.contains;
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 
 import java.util.Collection;
 
@@ -153,7 +154,7 @@ public class StudentServiceTest {
 	void getStudentByEmail() {
 		//log.info("getStudentByEmail");
 		
-		StudentVO studentVO  = studentService.findByEmail(TestUtils.STUDENT_EMAIL);
+		StudentVO studentVO  = studentService.findByEmail(STUDENT_EMAIL);
 
 		validatePrimaryStudent(studentVO);
 	}
@@ -164,11 +165,11 @@ public class StudentServiceTest {
 		
 		// first create student
 		// set id 0: this is to force a save of new item ... instead of update
-		StudentVO studentVO = TestUtils.createStudent();
+		StudentVO studentVO = ApplicationTestUtils.createStudent();
 		
 		studentService.saveStudent(studentVO);
 		
-		StudentVO studentVO2 = studentService.findByEmail(TestUtils.STUDENT_EMAIL_NEW);
+		StudentVO studentVO2 = studentService.findByEmail(STUDENT_EMAIL_NEW);
 		
 		//log.info(studentVO2);
 
@@ -186,7 +187,7 @@ public class StudentServiceTest {
 		StudentVO studentVO = studentService.findById(2);
 		
 		// update with new data
-		TestUtils.updateExistingStudent(studentVO);
+		ApplicationTestUtils.updateExistingStudent(studentVO);
 		
 		studentService.saveStudent(studentVO);
 		
@@ -195,17 +196,17 @@ public class StudentServiceTest {
 		
 		// assert
 		assertEquals(studentVO.getId(), studentVO2.getId());
-		assertEquals(TestUtils.STUDENT_FIRSTNAME_UPDATED, studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(TestUtils.STUDENT_LASTNAME_UPDATED, studentVO2.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(TestUtils.STUDENT_EMAIL_UPDATED, studentVO2.getEmail(),"studentVO.getEmailAddress() NOK");
-		assertEquals(TestUtils.STUDENT_STREET_UPDATED, studentVO.getStreet(),"studentVO.getStreet() NOK");
-		assertEquals(TestUtils.STUDENT_CITY_UPDATED, studentVO.getCity(),"studentVO.getCity() NOK");
-		assertEquals(TestUtils.STUDENT_ZIPCODE_UPDATED, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
-		assertEquals(TestUtils.STUDENT_STATUS_UPDATED, studentVO.getStatus(),"studentVO.getStatus() NOK");
+		assertEquals(STUDENT_FIRSTNAME_UPDATED, studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME_UPDATED, studentVO2.getLastName(),"studentVO.getLastName() NOK");
+		assertEquals(STUDENT_EMAIL_UPDATED, studentVO2.getEmail(),"studentVO.getEmailAddress() NOK");
+		assertEquals(STUDENT_STREET_UPDATED, studentVO.getStreet(),"studentVO.getStreet() NOK");
+		assertEquals(STUDENT_CITY_UPDATED, studentVO.getCity(),"studentVO.getCity() NOK");
+		assertEquals(STUDENT_ZIPCODE_UPDATED, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
+		assertEquals(STUDENT_STATUS_UPDATED, studentVO.getStatus(),"studentVO.getStatus() NOK");
 		assertEquals(3, studentVO.getImages().size(), "studentVO.getImages size not 2");
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(TestUtils.STUDENT_FILE_2, TestUtils.STUDENT_IMAGE_2));
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(TestUtils.STUDENT_FILE_22, TestUtils.STUDENT_IMAGE_22));
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(TestUtils.STUDENT_FILE_UPDATED, TestUtils.STUDENT_IMAGE_UPDATED));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_UPDATED, STUDENT_IMAGE_UPDATED));
 		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");
 	}
 	
@@ -252,7 +253,7 @@ public class StudentServiceTest {
 		}
 		
 		// create student
-		StudentVO studentVO = TestUtils.createStudent();
+		StudentVO studentVO = ApplicationTestUtils.createStudent();
 		
 		studentService.saveStudent(studentVO);
 		
@@ -272,16 +273,16 @@ public class StudentServiceTest {
 		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
 		assertNotNull(studentVO.getLastName(),"studentVO.getLastName() null");
 		assertNotNull(studentVO.getEmail(),"studentVO.getEmail() null");
-		assertEquals(TestUtils.STUDENT_FIRSTNAME, studentVO.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(TestUtils.STUDENT_LASTNAME, studentVO.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(TestUtils.STUDENT_EMAIL, studentVO.getEmail(),"studentVO.getEmail() NOK");
-		assertEquals(TestUtils.STUDENT_STREET, studentVO.getStreet(),"studentVO.getStreet() NOK");
-		assertEquals(TestUtils.STUDENT_CITY, studentVO.getCity(),"studentVO.getCity() NOK");
-		assertEquals(TestUtils.STUDENT_ZIPCODE, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
-		assertEquals(TestUtils.STUDENT_STATUS, studentVO.getStatus(),"studentVO.getStatus() NOK");
+		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"studentVO.getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME, studentVO.getLastName(),"studentVO.getLastName() NOK");
+		assertEquals(STUDENT_EMAIL, studentVO.getEmail(),"studentVO.getEmail() NOK");
+		assertEquals(STUDENT_STREET, studentVO.getStreet(),"studentVO.getStreet() NOK");
+		assertEquals(STUDENT_CITY, studentVO.getCity(),"studentVO.getCity() NOK");
+		assertEquals(STUDENT_ZIPCODE, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
+		assertEquals(STUDENT_STATUS, studentVO.getStatus(),"studentVO.getStatus() NOK");
 		assertEquals(2, studentVO.getImages().size(), "studentVO.getImages size not 2");
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(TestUtils.STUDENT_FILE_2, TestUtils.STUDENT_IMAGE_2));
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(TestUtils.STUDENT_FILE_22, TestUtils.STUDENT_IMAGE_22));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
 		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");
 //		assertThat(studentVO.getCoursesVO(), contains(
 //		    hasProperty("id", is(1))
@@ -290,7 +291,7 @@ public class StudentServiceTest {
 //			hasProperty("title", is("test course"))
 //		));
 		assertTrue(studentVO.getCoursesVO().stream().anyMatch(course ->
-			course.getTitle().equals(TestUtils.COURSE) && course.getId() == 1
+			course.getTitle().equals(COURSE) && course.getId() == 1
 		));
 		
 		// not neccessary

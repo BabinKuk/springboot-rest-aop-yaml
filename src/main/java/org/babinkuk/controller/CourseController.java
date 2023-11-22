@@ -8,8 +8,6 @@ import org.babinkuk.validator.ValidatorFactory;
 import org.babinkuk.validator.ValidatorRole;
 import org.babinkuk.validator.ValidatorType;
 import org.babinkuk.vo.CourseVO;
-import org.babinkuk.vo.InstructorVO;
-import org.babinkuk.vo.StudentVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.common.ApiResponse;
@@ -33,8 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.babinkuk.config.Api.COURSES;
-import static org.babinkuk.config.Api.ROOT;
+import static org.babinkuk.config.Api.*;
 
 import java.util.Optional;
 
@@ -110,7 +107,7 @@ public class CourseController {
 	@PostMapping("")
 	public ResponseEntity<ApiResponse> addCourse(
 			@Valid @RequestBody CourseVO courseVO,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called CourseController.addCourse({})", mapper.writeValueAsString(courseVO));
 		
 		// in case id is passed in json, set to 0
@@ -136,8 +133,8 @@ public class CourseController {
 	public ResponseEntity<ApiResponse> updateCourse(
 			//@RequestBody CourseVO courseVO,
 			@PathVariable int courseId,
-			@RequestParam(name="title", required = true) String courseTitle,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=COURSE_TITLE, required = true) String courseTitle,
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called CourseController.updateCourse(id={}) newTitle={}", courseId, courseTitle);
 
 		// first find course
@@ -161,7 +158,7 @@ public class CourseController {
 	@DeleteMapping("/{courseId}")
 	public ResponseEntity<ApiResponse> deleteCourse(
 			@PathVariable int courseId, 
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) {
 		//log.info("Called CourseController.deleteCourse(courseId={}, validationRole={})", courseId, validationRole);
 		
 		validatorFactory.getValidator(validationRole).validate(courseId, ActionType.DELETE, ValidatorType.COURSE);

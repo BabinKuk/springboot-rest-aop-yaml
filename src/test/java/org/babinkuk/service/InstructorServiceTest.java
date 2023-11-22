@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.entity.Status;
 import org.babinkuk.exception.ObjectNotFoundException;
-import org.babinkuk.utils.TestUtils;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.InstructorVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 
 import java.util.Collection;
 
@@ -156,7 +157,7 @@ public class InstructorServiceTest {
 	void getInstructorByEmail() {
 		//log.info("getInstructorByEmail");
 		
-		InstructorVO instructorVO = instructorService.findByEmail(TestUtils.INSTRUCTOR_EMAIL);
+		InstructorVO instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL);
 		log.info(instructorVO);
 		validatePrimaryInstructor(instructorVO);
 	}
@@ -166,11 +167,11 @@ public class InstructorServiceTest {
 		//log.info("addInstructor");
 		
 		// create instructor
-		InstructorVO instructorVO = TestUtils.createInstructor();
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
 		
 		instructorService.saveInstructor(instructorVO);
 		
-		InstructorVO instructorVO2 = instructorService.findByEmail(TestUtils.INSTRUCTOR_EMAIL_NEW);
+		InstructorVO instructorVO2 = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
 		
 		//log.info(instructorVO2);
 
@@ -190,7 +191,7 @@ public class InstructorServiceTest {
 		InstructorVO instructorVO = instructorService.findById(1);
 				
 		// update with new data
-		instructorVO = TestUtils.updateExistingInstructor(instructorVO);
+		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
 		
 		instructorService.saveInstructor(instructorVO);
 		
@@ -199,15 +200,15 @@ public class InstructorServiceTest {
 		
 		// assert
 		assertEquals(instructorVO.getId(), instructorVO2.getId());
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME_UPDATED, instructorVO2.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_LASTNAME_UPDATED, instructorVO2.getLastName(),"instructorVO.getLastName() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_EMAIL_UPDATED, instructorVO2.getEmail(),"instructorVO.getEmail() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_YOUTUBE_UPDATED, instructorVO2.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_HOBBY_UPDATED, instructorVO2.getHobby(),"instructorVO.getHobby() NOK");
+		assertEquals(INSTRUCTOR_FIRSTNAME_UPDATED, instructorVO2.getFirstName(),"instructorVO.getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME_UPDATED, instructorVO2.getLastName(),"instructorVO.getLastName() NOK");
+		assertEquals(INSTRUCTOR_EMAIL_UPDATED, instructorVO2.getEmail(),"instructorVO.getEmail() NOK");
+		assertEquals(INSTRUCTOR_YOUTUBE_UPDATED, instructorVO2.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
+		assertEquals(INSTRUCTOR_HOBBY_UPDATED, instructorVO2.getHobby(),"instructorVO.getHobby() NOK");
 		assertEquals(3, instructorVO.getImages().size(), "instructors.getImages size not 3");
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(TestUtils.INSTRUCTOR_FILE_1, TestUtils.INSTRUCTOR_IMAGE_1));
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(TestUtils.INSTRUCTOR_FILE_11, TestUtils.INSTRUCTOR_IMAGE_11));
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(TestUtils.INSTRUCTOR_FILE_UPDATED, TestUtils.INSTRUCTOR_IMAGE_UPDATED));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_1, INSTRUCTOR_IMAGE_1));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_11, INSTRUCTOR_IMAGE_11));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_UPDATED, INSTRUCTOR_IMAGE_UPDATED));
 	}
 	
 	@Test
@@ -253,7 +254,7 @@ public class InstructorServiceTest {
 		
 		// add another instructor
 		// set id 0: this is to force a save of new item ... instead of update
-		InstructorVO instructorVO = TestUtils.createInstructor();
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
 				
 		instructorService.saveInstructor(instructorVO);
 		
@@ -278,16 +279,16 @@ public class InstructorServiceTest {
 		assertNotNull(instructorVO.getImages(),"instructorVO.getImages() null");
 		assertNotNull(instructorVO.getYoutubeChannel(),"instructorVO.getYoutubeChannel() null");
 		assertNotNull(instructorVO.getHobby(),"instructorVO.getHobby() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_LASTNAME, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_EMAIL, instructorVO.getEmail(),"instructorVO.getEmail() NOK");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
+		assertEquals(INSTRUCTOR_EMAIL, instructorVO.getEmail(),"instructorVO.getEmail() NOK");
 		assertEquals(1000, instructorVO.getSalary(),"instructorVO.getSalary() NOK");
 		assertEquals(Status.ACTIVE, instructorVO.getStatus(),"instructorVO.getStatus() NOK");
 		assertEquals(2, instructorVO.getImages().size(), "instructors.getImages size not 2");
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(TestUtils.INSTRUCTOR_FILE_1, TestUtils.INSTRUCTOR_IMAGE_1));
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(TestUtils.INSTRUCTOR_FILE_11, TestUtils.INSTRUCTOR_IMAGE_11));
-		assertEquals(TestUtils.INSTRUCTOR_YOUTUBE, instructorVO.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_HOBBY, instructorVO.getHobby(),"instructorVO.getHobby() NOK");
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_1, INSTRUCTOR_IMAGE_1));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_11, INSTRUCTOR_IMAGE_11));
+		assertEquals(INSTRUCTOR_YOUTUBE, instructorVO.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
+		assertEquals(INSTRUCTOR_HOBBY, instructorVO.getHobby(),"instructorVO.getHobby() NOK");
 		// not neccessary
 		assertNotEquals("test hobb", instructorVO.getHobby(),"instructorVO.getHobby() NOK");
 		

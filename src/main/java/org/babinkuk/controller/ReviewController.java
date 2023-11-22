@@ -11,15 +11,12 @@ import org.babinkuk.vo.ReviewVO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.common.ApiResponse;
-import org.babinkuk.config.MessagePool;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.exception.ObjectValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.babinkuk.config.Api.REVIEWS;
 import static org.babinkuk.config.Api.ROOT;
+import static org.babinkuk.config.Api.VALIDATION_ROLE;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -111,7 +108,7 @@ public class ReviewController {
 	public ResponseEntity<ApiResponse> addReview(
 			@PathVariable int courseId,
 			@Valid @RequestBody ReviewVO reviewVO,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called ReviewController.addReview({}) for courseId={}", mapper.writeValueAsString(reviewVO), courseId);
 		
 		// first find course
@@ -140,7 +137,7 @@ public class ReviewController {
 	@PutMapping("")
 	public ResponseEntity<ApiResponse> updateReview(
 			@Valid @RequestBody ReviewVO reviewVO,
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) throws JsonProcessingException {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) throws JsonProcessingException {
 		//log.info("Called ReviewController.updateReview({})", mapper.writeValueAsString(reviewVO));
 		
 		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.UPDATE, ValidatorType.REVIEW);
@@ -158,7 +155,7 @@ public class ReviewController {
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<ApiResponse> deleteReview(
 			@PathVariable int reviewId, 
-			@RequestParam(name="validationRole", required = false) ValidatorRole validationRole) {
+			@RequestParam(name=VALIDATION_ROLE, required = false) ValidatorRole validationRole) {
 		//log.info("Called ReviewController.deleteReview(reviewId={}, validationType={})", reviewId, validationRole);
 		
 		validatorFactory.getValidator(validationRole).validate(reviewId, ActionType.DELETE, ValidatorType.REVIEW);

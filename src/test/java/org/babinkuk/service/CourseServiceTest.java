@@ -3,6 +3,7 @@ package org.babinkuk.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.exception.ObjectNotFoundException;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.InstructorVO;
 import org.babinkuk.vo.StudentVO;
@@ -12,17 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.MessageSource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.hamcrest.Matchers.contains;
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 
 import java.util.Collection;
 
@@ -35,9 +32,6 @@ public class CourseServiceTest {
 	
 	@Autowired
 	private JdbcTemplate jdbc;
-	
-	@Autowired
-	private MessageSource messageSource;
 	
 	@Autowired
 	private CourseService courseService;
@@ -126,20 +120,42 @@ public class CourseServiceTest {
 		jdbc.execute(sqlAddCourseStudent);
 	}
 	
+	@AfterEach
+	public void setupAfterTransaction() {
+		log.info("AfterEach");
+
+		jdbc.execute(sqlDeleteCourseStudent);
+		jdbc.execute(sqlDeleteStudent);
+		jdbc.execute(sqlDeleteReview);
+		jdbc.execute(sqlDeleteCourse);
+		jdbc.execute(sqlDeleteInstructor);
+		jdbc.execute(sqlDeleteInstructorDetail);
+		jdbc.execute(sqlDeleteImage);
+		jdbc.execute(sqlDeleteUser);
+		
+//		// check
+//		List<Map<String,Object>> userList = new ArrayList<Map<String,Object>>();
+//		userList = jdbc.queryForList("select * from user");
+//		log.info("size() " + userList.size());
+//		for (Map m : userList) {
+//			m.forEach((key, value) -> log.info(key + " : " + value));
+//		}
+	}
+	
 	@Test
 	void getCourse() {
-		log.info("getCourse");
+		//log.info("getCourse");
 		
 		CourseVO courseVO = courseService.findById(1);
 		
-		log.info(courseVO.toString());
+		//log.info(courseVO.toString());
 		
 		assertNotNull(courseVO,"courseVO null");
 		assertEquals(1, courseVO.getId());
 		assertNotNull(courseVO.getTitle(),"courseVO.courseVO() null");
 		assertNotNull(courseVO.getStudentsVO(),"courseVO.getStudentsVO() null");
 		assertNull(courseVO.getInstructorVO(),"courseVO.getInstructorVO() not null");
-		assertEquals("test course", courseVO.getTitle(),"courseVO.getTitle() NOK");
+		assertEquals(COURSE, courseVO.getTitle(),"courseVO.getTitle() NOK");
 		
 		// assert not existing course
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
@@ -154,18 +170,16 @@ public class CourseServiceTest {
 	
 	@Test
 	void addCourse() {
-		log.info("addCourse");
+		//log.info("addCourse");
 		
 		// create course
-		// set id 0: this is to force a save of new item ... instead of update
-		CourseVO courseVO = new CourseVO("tecaj");
-		courseVO.setId(0);
+		CourseVO courseVO = ApplicationTestUtils.createCourse();
 		
 		courseService.saveCourse(courseVO);
 		
 		CourseVO courseVO2 = courseService.findById(2);
 		
-		log.info(courseVO2);
+		//log.info(courseVO2);
 
 		// assert
 		assertEquals(2, courseVO2.getId());
@@ -175,27 +189,21 @@ public class CourseServiceTest {
 	
 	@Test
 	void updateCourse() {
-		log.info("updateCourse");
+		//log.info("updateCourse");
 		
 		CourseVO courseVO = courseService.findById(1);
-		
-		// update with new data
-		String title = "naslov";
 		
 		InstructorVO instructorVO = instructorService.findById(1);
 		
 		// create student
-		// set id 0: this is to force a save of new item ... instead of update
-		StudentVO studentVO = new StudentVO("firstName", "lastName", "emailAddress");
-		studentVO.setId(0);
+		StudentVO studentVO = ApplicationTestUtils.createStudent();
 		
 		studentService.saveStudent(studentVO);
 				
-		StudentVO studentVO2 = studentService.findByEmail("emailAddress");
+		StudentVO studentVO2 = studentService.findByEmail(STUDENT_EMAIL_NEW);
 		
-		courseVO.setTitle(title);
-		courseVO.setInstructorVO(instructorVO);
-		courseVO.addStudentVO(studentVO2);
+		// update with new data
+		courseVO = ApplicationTestUtils.updateExistingCourse(courseVO, studentVO2, instructorVO);
 
 		courseService.saveCourse(courseVO);
 		
@@ -204,7 +212,7 @@ public class CourseServiceTest {
 		
 		// assert
 		assertEquals(courseVO.getId(), courseVO2.getId());
-		assertEquals(title, courseVO2.getTitle(),"courseVO.getTitle() NOK");
+		assertEquals(COURSE_UPDATED, courseVO2.getTitle(),"courseVO.getTitle() NOK");
 		assertEquals(instructorVO.getId(), courseVO2.getInstructorVO().getId(),"courseVO.getInstructorVO().getId() NOK");
 		assertEquals(2, courseVO2.getStudentsVO().size(),"courseVO.getStudentsVO().size() NOK");
 		assertEquals(1, courseVO2.getReviewsVO().size(),"courseVO.getReviewsVO().size() NOK");
@@ -212,7 +220,7 @@ public class CourseServiceTest {
 	
 	@Test
 	void deleteCourse() {
-		log.info("deleteCourse");
+		//log.info("deleteCourse");
 		
 		// first get course
 		CourseVO courseVO = courseService.findById(1);
@@ -242,7 +250,7 @@ public class CourseServiceTest {
 	
 	@Test
 	void getAllCourses() {
-		log.info("getAllCourses");
+		//log.info("getAllCourses");
 		
 		Iterable<CourseVO> courses = courseService.getAllCourses();
 		
@@ -252,9 +260,7 @@ public class CourseServiceTest {
 		}
 		
 		// create course
-		// set id 0: this is to force a save of new item ... instead of update
-		CourseVO courseVO = new CourseVO("tecaj");
-		courseVO.setId(0);
+		CourseVO courseVO = ApplicationTestUtils.createCourse();
 		
 		courseService.saveCourse(courseVO);
 		
@@ -269,7 +275,7 @@ public class CourseServiceTest {
 		courseService.deleteCourse(1);
 		
 		courses = courseService.getAllCourses();
-		log.info("after delete " + courses.toString());
+		//log.info("after delete " + courses.toString());
 		
 		// assert
 		if (courses instanceof Collection<?>) {
@@ -277,25 +283,4 @@ public class CourseServiceTest {
 		}
 	}
 	
-	@AfterEach
-	public void setupAfterTransaction() {
-		log.info("AfterEach");
-
-		jdbc.execute(sqlDeleteCourseStudent);
-		jdbc.execute(sqlDeleteStudent);
-		jdbc.execute(sqlDeleteReview);
-		jdbc.execute(sqlDeleteCourse);
-		jdbc.execute(sqlDeleteInstructor);
-		jdbc.execute(sqlDeleteInstructorDetail);
-		jdbc.execute(sqlDeleteImage);
-		jdbc.execute(sqlDeleteUser);
-		
-//		// check
-//		List<Map<String,Object>> userList = new ArrayList<Map<String,Object>>();
-//		userList = jdbc.queryForList("select * from user");
-//		log.info("size() " + userList.size());
-//		for (Map m : userList) {
-//			m.forEach((key, value) -> log.info(key + " : " + value));
-//		}
-	}
 }

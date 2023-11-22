@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.service.InstructorServiceImpl;
-import org.babinkuk.utils.TestUtils;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.InstructorVO;
 import org.hamcrest.collection.IsMapWithSize;
 import org.junit.jupiter.api.AfterEach;
@@ -32,8 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.babinkuk.config.Api.INSTRUCTORS;
-import static org.babinkuk.config.Api.ROOT;
+import static org.babinkuk.config.Api.*;
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -185,7 +185,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_ADMIN)
+				.param(VALIDATION_ROLE, ROLE_ADMIN)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -194,13 +194,13 @@ public class InstructorControllerTest {
 
 		// add another instructor
 		// set id 0: this is to force a save of new item ... instead of update
-		InstructorVO instructorVO = TestUtils.createInstructor();
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
 		
 		instructorService.saveInstructor(instructorVO);
 				
 		// get all instructors (different validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_INSTRUCTOR)
+				.param(VALIDATION_ROLE, ROLE_INSTRUCTOR)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -209,7 +209,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors (different validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_STUDENT)
+				.param(VALIDATION_ROLE, ROLE_STUDENT)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -227,7 +227,7 @@ public class InstructorControllerTest {
 		
 		// get all instructors (not existing validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, TestUtils.ROLE_NOT_EXIST)
+				.param(VALIDATION_ROLE, ROLE_NOT_EXIST)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -238,19 +238,19 @@ public class InstructorControllerTest {
 	@Test
 	void getInstructorRoleAdmin() throws Exception {
 
-		getInstructor(TestUtils.ROLE_ADMIN);
+		getInstructor(ROLE_ADMIN);
 	}
 	
 	@Test
 	void getInstructorRoleInstructor() throws Exception {
 
-		getInstructor(TestUtils.ROLE_INSTRUCTOR);
+		getInstructor(ROLE_INSTRUCTOR);
 	}
 	
 	@Test
 	void getInstructorRoleStudent() throws Exception {
 
-		getInstructor(TestUtils.ROLE_STUDENT);
+		getInstructor(ROLE_STUDENT);
 	}
 	
 	@Test
@@ -262,7 +262,7 @@ public class InstructorControllerTest {
 	@Test
 	void getInstructorRoleNotExist() throws Exception {
 
-		getInstructor(TestUtils.ROLE_NOT_EXIST);
+		getInstructor(ROLE_NOT_EXIST);
 	}
 	
 	private void getInstructor(String validationRole) throws Exception {
@@ -270,16 +270,16 @@ public class InstructorControllerTest {
 		
 		// get instructor with id=1
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
-			.andExpect(jsonPath("$.firstName", is(TestUtils.INSTRUCTOR_FIRSTNAME))) // verify json element
+			.andExpect(jsonPath("$.firstName", is(INSTRUCTOR_FIRSTNAME))) // verify json element
 			;
 
 		// get instructor with id=2 (non existing)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 2)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -290,23 +290,23 @@ public class InstructorControllerTest {
 	@Test
 	void addInstructorRoleAdmin() throws Exception {
 
-		addInstructorSuccess(TestUtils.ROLE_ADMIN);
+		addInstructorSuccess(ROLE_ADMIN);
 	}
 
 	@Test
 	void addInstructorRoleInstructor() throws Exception {
 
-		addInstructorSuccess(TestUtils.ROLE_INSTRUCTOR);
+		addInstructorSuccess(ROLE_INSTRUCTOR);
 	}
 	
 	private void addInstructorSuccess(String validationRole) throws Exception {
 		//log.info("addInstructorSuccess {}", validationRole);
 		
 		// create instructor
-		InstructorVO instructorVO = TestUtils.createInstructor();
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
 		
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(instructorVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
@@ -317,7 +317,7 @@ public class InstructorControllerTest {
 		// additional check
 		// get all instructors
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -325,7 +325,7 @@ public class InstructorControllerTest {
 			;
 		
 		// additional check
-		instructorVO = instructorService.findByEmail(TestUtils.INSTRUCTOR_EMAIL_NEW);
+		instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
 		
 		log.info(instructorVO.toString());
 		
@@ -333,14 +333,14 @@ public class InstructorControllerTest {
 		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
 		assertNotNull(instructorVO.getLastName(),"instructorVO.getLastName() null");
 		assertNotNull(instructorVO.getEmail(),"instructorVO.getEmail() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME_NEW, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(TestUtils.INSTRUCTOR_LASTNAME_NEW, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
+		assertEquals(INSTRUCTOR_FIRSTNAME_NEW, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME_NEW, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
 	}
 	
 	@Test
 	void addInstructorRoleStudent() throws Exception {
 
-		addInstructorFail(TestUtils.ROLE_STUDENT);
+		addInstructorFail(ROLE_STUDENT);
 	}
 	
 	@Test
@@ -352,17 +352,17 @@ public class InstructorControllerTest {
 	@Test
 	void addInstructorRoleNotExist() throws Exception {
 		
-		addInstructorFail(TestUtils.ROLE_NOT_EXIST);
+		addInstructorFail(ROLE_NOT_EXIST);
 	}
 	
 	private void addInstructorFail(String validationRole) throws Exception {
 		//log.info("addInstructorFail {}", validationRole);
 		
 		// create instructor
-		InstructorVO instructorVO = TestUtils.createInstructor();
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
 		
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(instructorVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
@@ -374,7 +374,7 @@ public class InstructorControllerTest {
 		// additional check
 		// get all instructors
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -385,13 +385,13 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleAdmin() throws Exception {
 
-		updateInstructorSuccess(TestUtils.ROLE_ADMIN);
+		updateInstructorSuccess(ROLE_ADMIN);
 	}
 	
 	@Test
 	void updateInstructorRoleInstructor() throws Exception {
 
-		updateInstructorSuccess(TestUtils.ROLE_INSTRUCTOR);
+		updateInstructorSuccess(ROLE_INSTRUCTOR);
 	}
 	
 	private void updateInstructorSuccess(String validationRole) throws Exception {
@@ -404,13 +404,13 @@ public class InstructorControllerTest {
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
 		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
 		
 		// update instructor
-		instructorVO = TestUtils.updateExistingInstructor(instructorVO);
+		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
 		
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(instructorVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
@@ -421,17 +421,17 @@ public class InstructorControllerTest {
 		// additional check
 		// get instructor with id=1
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
-			.andExpect(jsonPath("$.firstName", is(TestUtils.INSTRUCTOR_FIRSTNAME_UPDATED))) // verify json element
-			.andExpect(jsonPath("$.lastName", is(TestUtils.INSTRUCTOR_LASTNAME_UPDATED))) // verify json element
-			.andExpect(jsonPath("$.email", is(TestUtils.INSTRUCTOR_EMAIL_UPDATED))) // verify json element
-			.andExpect(jsonPath("$.youtubeChannel", is(TestUtils.INSTRUCTOR_YOUTUBE_UPDATED))) // verify json element
-			.andExpect(jsonPath("$.hobby", is(TestUtils.INSTRUCTOR_HOBBY_UPDATED))) // verify json element
-			.andExpect(jsonPath("$.status", is(TestUtils.INSTRUCTOR_STATUS_UPDATED.label))) // verify json element
-			.andExpect(jsonPath("$.salary", is(TestUtils.INSTRUCTOR_SALARY_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.firstName", is(INSTRUCTOR_FIRSTNAME_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.lastName", is(INSTRUCTOR_LASTNAME_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.email", is(INSTRUCTOR_EMAIL_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.youtubeChannel", is(INSTRUCTOR_YOUTUBE_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.hobby", is(INSTRUCTOR_HOBBY_UPDATED))) // verify json element
+			.andExpect(jsonPath("$.status", is(INSTRUCTOR_STATUS_UPDATED.label))) // verify json element
+			.andExpect(jsonPath("$.salary", is(INSTRUCTOR_SALARY_UPDATED))) // verify json element
 			.andExpect(jsonPath("$.images", IsMapWithSize.aMapWithSize(3))) // verify json element
 			;
 	}
@@ -439,7 +439,7 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleStudent() throws Exception {
 
-		updateInstructorFail(TestUtils.ROLE_STUDENT);
+		updateInstructorFail(ROLE_STUDENT);
 	}
 	
 	@Test
@@ -451,7 +451,7 @@ public class InstructorControllerTest {
 	@Test
 	void updateInstructorRoleNotExist() throws Exception {
 
-		updateInstructorFail(TestUtils.ROLE_NOT_EXIST);
+		updateInstructorFail(ROLE_NOT_EXIST);
 	}
 	
 	private	void updateInstructorFail(String validationRole) throws Exception {
@@ -464,13 +464,13 @@ public class InstructorControllerTest {
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
 		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
 		
 		// update instructor
-		instructorVO = TestUtils.updateExistingInstructor(instructorVO);
+		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
 				
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + INSTRUCTORS)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(instructorVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
@@ -482,34 +482,34 @@ public class InstructorControllerTest {
 		// additional check
 		// get instructor with id=1
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
-			.andExpect(jsonPath("$.firstName", is(TestUtils.INSTRUCTOR_FIRSTNAME))) // verify json element
-			.andExpect(jsonPath("$.lastName", is(TestUtils.INSTRUCTOR_LASTNAME))) // verify json element
-			.andExpect(jsonPath("$.email", is(TestUtils.INSTRUCTOR_EMAIL))) // verify json element
-			.andExpect(jsonPath("$.youtubeChannel", is(TestUtils.INSTRUCTOR_YOUTUBE))) // verify json element
-			.andExpect(jsonPath("$.hobby", is(TestUtils.INSTRUCTOR_HOBBY))) // verify json element
+			.andExpect(jsonPath("$.firstName", is(INSTRUCTOR_FIRSTNAME))) // verify json element
+			.andExpect(jsonPath("$.lastName", is(INSTRUCTOR_LASTNAME))) // verify json element
+			.andExpect(jsonPath("$.email", is(INSTRUCTOR_EMAIL))) // verify json element
+			.andExpect(jsonPath("$.youtubeChannel", is(INSTRUCTOR_YOUTUBE))) // verify json element
+			.andExpect(jsonPath("$.hobby", is(INSTRUCTOR_HOBBY))) // verify json element
 			;
 	}
 	
 	@Test
 	void deleteInstructorRoleAdmin() throws Exception {
 
-		deleteInstructorSuccess(TestUtils.ROLE_ADMIN);
+		deleteInstructorSuccess(ROLE_ADMIN);
 	}
 	
 	@Test
 	void deleteInstructorRoleInstructor() throws Exception {
 
-		deleteInstructorFail(TestUtils.ROLE_INSTRUCTOR);
+		deleteInstructorFail(ROLE_INSTRUCTOR);
 	}
 	
 	@Test
 	void deleteInstructorRoleStudent() throws Exception {
 
-		deleteInstructorFail(TestUtils.ROLE_STUDENT);
+		deleteInstructorFail(ROLE_STUDENT);
 	}
 
 	@Test
@@ -521,7 +521,7 @@ public class InstructorControllerTest {
 	@Test
 	void deleteInstructorRoleNotExist() throws Exception {
 
-		deleteInstructorFail(TestUtils.ROLE_NOT_EXIST);
+		deleteInstructorFail(ROLE_NOT_EXIST);
 	}
 	
 	private void deleteInstructorSuccess(String validationRole) throws Exception {
@@ -535,11 +535,11 @@ public class InstructorControllerTest {
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
 		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
 				
 		// delete instructor
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + INSTRUCTORS + "/{id}", id)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -549,7 +549,7 @@ public class InstructorControllerTest {
 		
 		// get instructor with id=1 (non existing)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", id)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -569,11 +569,11 @@ public class InstructorControllerTest {
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
 		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertEquals(TestUtils.INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
 				
 		// delete instructor
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + INSTRUCTORS + "/{id}", id)
-				.param(TestUtils.VALIDATION_ROLE, validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().is4xxClientError())

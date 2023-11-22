@@ -3,7 +3,7 @@ package org.babinkuk.service;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.exception.ObjectNotFoundException;
-import org.babinkuk.utils.TestUtils;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +23,7 @@ import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -153,7 +154,7 @@ public class ReviewServiceTest {
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());
 		assertNotNull(reviewVO.getComment(),"reviewVO.getComment() null");
-		assertEquals(TestUtils.REVIEW, reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
+		assertEquals(REVIEW, reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
 		
 		assertNotEquals("test review ", reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
 		
@@ -177,7 +178,7 @@ public class ReviewServiceTest {
 		
 		// create review
 		// set id 0: this is to force a save of new item ... instead of update
-		ReviewVO reviewVO = new ReviewVO(TestUtils.REVIEW_NEW);
+		ReviewVO reviewVO = new ReviewVO(REVIEW_NEW);
 		reviewVO.setId(0);
 		
 		// add to course
@@ -200,7 +201,7 @@ public class ReviewServiceTest {
 		ReviewVO reviewVO = reviewService.findById(1);
 		
 		// update comment
-		String newComment = TestUtils.REVIEW_UPDATE;
+		String newComment = REVIEW_UPDATE;
 		reviewVO.setComment(newComment);
 		
 		reviewService.saveReview(reviewVO);
@@ -259,7 +260,7 @@ public class ReviewServiceTest {
 		
 		// create review
 		// set id 0: this is to force a save of new item ... instead of update
-		ReviewVO reviewVO = new ReviewVO(TestUtils.REVIEW_NEW);
+		ReviewVO reviewVO = new ReviewVO(REVIEW_NEW);
 		reviewVO.setId(0);
 		
 		// add to course
