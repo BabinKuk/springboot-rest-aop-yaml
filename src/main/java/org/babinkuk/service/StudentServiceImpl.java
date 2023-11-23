@@ -25,13 +25,12 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.babinkuk.config.Api.*;
+
 @Service
 public class StudentServiceImpl implements StudentService {
 	
 	private final Logger log = LogManager.getLogger(getClass());
-	
-	public static String STUDENT_SAVE_SUCCESS = "student_save_success";
-	public static String STUDENT_DELETE_SUCCESS = "student_delete_success";
 	
 	@Autowired
 	private StudentRepository studentRepository;

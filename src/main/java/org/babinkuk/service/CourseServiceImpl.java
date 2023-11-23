@@ -19,13 +19,12 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.babinkuk.config.Api.*;
+
 @Service
 public class CourseServiceImpl implements CourseService {
 	
 	private final Logger log = LogManager.getLogger(getClass());
-	
-	public static String COURSE_SAVE_SUCCESS = "course_save_success";
-	public static String COURSE_DELETE_SUCCESS = "course_delete_success";
 	
 	@Autowired
 	private CourseRepository courseRepository;

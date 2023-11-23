@@ -27,13 +27,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.transaction.Transactional;
 import javax.persistence.EntityManager;
 
+import static org.babinkuk.config.Api.*;
+
 @Service
 public class InstructorServiceImpl implements InstructorService {
 	
 	private final Logger log = LogManager.getLogger(getClass());
-	
-	public static String INSTRUCTOR_SAVE_SUCCESS = "instructor_save_success";
-	public static String INSTRUCTOR_DELETE_SUCCESS = "instructor_delete_success";
 	
 	@Autowired
 	private InstructorRepository instructorRepository;

@@ -315,7 +315,7 @@ public class StudentControllerTest {
 				.content(objectMApper.writeValueAsString(studentVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(getMessage(StudentServiceImpl.STUDENT_SAVE_SUCCESS)))) // verify json element
+			.andExpect(jsonPath("$.message", is(getMessage(STUDENT_SAVE_SUCCESS)))) // verify json element
 			;
 		
 		// additional check
@@ -446,7 +446,7 @@ public class StudentControllerTest {
 				.content(objectMApper.writeValueAsString(studentVO)) // generate json from java object
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(getMessage(StudentServiceImpl.STUDENT_SAVE_SUCCESS)))) // verify json element
+			.andExpect(jsonPath("$.message", is(getMessage(STUDENT_SAVE_SUCCESS)))) // verify json element
 			;
 		
 		// additional check
@@ -545,7 +545,7 @@ public class StudentControllerTest {
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(getMessage(StudentServiceImpl.STUDENT_DELETE_SUCCESS)))) // verify json element
+			.andExpect(jsonPath("$.message", is(getMessage(STUDENT_DELETE_SUCCESS)))) // verify json element
 			;
 		
 		// get student with id=2 (non existing)

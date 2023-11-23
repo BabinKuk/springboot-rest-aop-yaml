@@ -20,13 +20,12 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.babinkuk.config.Api.*;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
 	
 	private final Logger log = LogManager.getLogger(getClass());
-	
-	public static String REVIEW_SAVE_SUCCESS = "review_save_success";
-	public static String REVIEW_DELETE_SUCCESS = "review_delete_success";
 	
 	@Autowired
 	private ReviewRepository reviewRepository;

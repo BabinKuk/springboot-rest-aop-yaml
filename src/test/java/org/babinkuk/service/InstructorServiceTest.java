@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import org.babinkuk.entity.Status;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
+import org.babinkuk.validator.ActionType;
+import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.InstructorVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -37,6 +39,9 @@ public class InstructorServiceTest {
 	
 	@Autowired
 	private InstructorService instructorService;
+	
+	@Autowired
+	private CourseService courseService;
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -158,7 +163,7 @@ public class InstructorServiceTest {
 		//log.info("getInstructorByEmail");
 		
 		InstructorVO instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL);
-		log.info(instructorVO);
+		
 		validatePrimaryInstructor(instructorVO);
 	}
 	
@@ -266,6 +271,113 @@ public class InstructorServiceTest {
 		}
 	}
 	
+	@Test
+	void setCourse() {
+		//log.info("setCourse");
+		
+		InstructorVO instructorVO = instructorService.findById(1);
+		
+		validatePrimaryInstructor(instructorVO);
+		
+		CourseVO courseVO = courseService.findById(1);
+		
+		assertNotNull(courseVO,"courseVO null");
+		assertEquals(1, courseVO.getId());
+		assertNotNull(courseVO.getTitle(),"courseVO.courseVO() null");
+		assertNotNull(courseVO.getStudentsVO(),"courseVO.getStudentsVO() null");
+		assertNull(courseVO.getInstructorVO(),"courseVO.getInstructorVO() not null");
+		assertEquals(COURSE, courseVO.getTitle(),"courseVO.getTitle() NOK");
+		
+		// set course
+		instructorService.setCourse(instructorVO, courseVO, ActionType.ENROLL);
+		
+		// fetch again
+		instructorVO = instructorService.findById(1);
+		
+		// assert
+		validatePrimaryInstructor(instructorVO);
+		
+		// assert course
+		assertEquals(1, instructorVO.getCourses().size(), "instructors.getCourses size not 1");
+		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
+			course.getTitle().equals(COURSE) && course.getId() == 1
+		));
+		
+		// add another course
+		CourseVO courseVO2 = ApplicationTestUtils.createCourse();
+		
+		courseService.saveCourse(courseVO2);
+		
+		courseVO2 = courseService.findById(2);
+		
+		// set course
+		instructorService.setCourse(instructorVO, courseVO2, ActionType.ENROLL);
+		
+		// fetch again
+		instructorVO = instructorService.findById(1);
+		
+		// assert
+		validatePrimaryInstructor(instructorVO);
+		
+		// assert course
+		assertEquals(2, instructorVO.getCourses().size(), "instructors.getCourses size not 2");
+		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
+			course.getTitle().equals(COURSE) && course.getId() == 1
+		));
+		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
+			course.getTitle().equals(COURSE_NEW) && course.getId() == 2
+		));
+		
+		// now withdraw course
+		instructorService.setCourse(instructorVO, courseVO2, ActionType.WITHDRAW);
+		
+		// fetch again
+		instructorVO = instructorService.findById(1);
+		
+		// assert
+		validatePrimaryInstructor(instructorVO);
+		
+		// assert course
+		assertEquals(1, instructorVO.getCourses().size(), "instructors.getCourses size not 1");
+		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
+			course.getTitle().equals(COURSE) && course.getId() == 1
+		));
+		
+		// not mandatory
+		// setting non existing course
+		CourseVO courseVO3 = new CourseVO("non existing course");
+		courseVO3.setId(3);
+		
+		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
+		final InstructorVO insVO = instructorVO;
+		
+		// assert not existing course
+		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
+			instructorService.setCourse(insVO, courseVO3, ActionType.ENROLL);
+		});
+		
+		String expectedMessage = "Course with id=3 not found.";
+		String actualMessage = exception.getMessage();
+
+	    assertTrue(actualMessage.contains(expectedMessage));
+	    
+	    // not mandatory
+ 		// setting course to non existing instructor
+ 		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
+ 		final InstructorVO insVO2 = new InstructorVO("ime", "prezime", "ime@babinkuk.com");
+ 		insVO2.setId(22);
+ 		
+ 		// assert not existing instructor
+ 		exception = assertThrows(ObjectNotFoundException.class, () -> {
+ 			instructorService.setCourse(insVO2, courseVO, ActionType.ENROLL);
+ 		});
+ 		
+ 		expectedMessage = "Instructor with id=22 not found.";
+ 		actualMessage = exception.getMessage();
+
+ 	    assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
 	private void validatePrimaryInstructor(InstructorVO instructorVO) {
 		//log.info(instructorVO.toString());
 		
@@ -302,4 +414,5 @@ public class InstructorServiceTest {
 
 	    assertTrue(actualMessage.contains(expectedMessage));
 	}
+	
 }

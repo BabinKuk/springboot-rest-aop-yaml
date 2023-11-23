@@ -346,7 +346,7 @@ public class ReviewControllerTest {
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is(getMessage(ReviewServiceImpl.REVIEW_SAVE_SUCCESS)))) // verify json element
+				.andExpect(jsonPath("$.message", is(getMessage(REVIEW_SAVE_SUCCESS)))) // verify json element
 				;
 			
 			// additional check
@@ -438,7 +438,7 @@ public class ReviewControllerTest {
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is(getMessage(ReviewServiceImpl.REVIEW_SAVE_SUCCESS)))) // verify json element
+				.andExpect(jsonPath("$.message", is(getMessage(REVIEW_SAVE_SUCCESS)))) // verify json element
 				;
 			
 			// additional check
@@ -536,7 +536,7 @@ public class ReviewControllerTest {
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is(getMessage(ReviewServiceImpl.REVIEW_DELETE_SUCCESS)))) // verify json element
+				.andExpect(jsonPath("$.message", is(getMessage(REVIEW_DELETE_SUCCESS)))) // verify json element
 				;
 			
 			// get review with id=1 (non existing)

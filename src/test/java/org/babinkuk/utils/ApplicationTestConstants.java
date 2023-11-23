@@ -9,10 +9,10 @@ public final class ApplicationTestConstants {
 	public static final String ROLE_STUDENT = "ROLE_STUDENT";
 	public static final String ROLE_NOT_EXIST = "ROLE_NOT_EXIST";
 	
-	private static final String INSTRUCTOR_ENROLL = "/instructor" + "/{instructorId}" + "/enroll";
-	private static final String INSTRUCTOR_WITHDRAW = "/instructor" + "/{instructorId}" + "/withdraw";
-	private static final String STUDENT_ENROLL = "/student" + "/{studentId}" + "/enroll";
-	private static final String STUDENT_WITHDRAW = "/student" + "/{studentId}" + "/withdraw";
+	public static final String INSTRUCTOR_ENROLL = "/{instructorId}/enroll/{courseId}";
+	public static final String INSTRUCTOR_WITHDRAW = "/{instructorId}/withdraw/{courseId}";
+	public static final String STUDENT_ENROLL = "/student" + "/{studentId}" + "/enroll";
+	public static final String STUDENT_WITHDRAW = "/student" + "/{studentId}" + "/withdraw";
 		
 	public static final String REVIEW = "test review";
 	public static final String REVIEW_NEW = "new review";

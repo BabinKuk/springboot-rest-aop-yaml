@@ -46,10 +46,6 @@ public class CourseController {
 	// services
 	private CourseService courseService;
 	
-	private StudentService studentService;
-	
-	private InstructorService instructorService;
-	
 	@Autowired
 	private ValidatorFactory validatorFactory;
 	
@@ -61,10 +57,8 @@ public class CourseController {
 	}
 
 	@Autowired
-	public CourseController(CourseService courseService, StudentService studentService, InstructorService instructorService) {
+	public CourseController(CourseService courseService) {
 		this.courseService = courseService;
-		this.studentService = studentService;
-		this.instructorService = instructorService;
 	}
 
 	/**
