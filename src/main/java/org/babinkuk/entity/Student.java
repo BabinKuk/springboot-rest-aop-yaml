@@ -30,7 +30,7 @@ public class Student extends User {
 			name = "course_student",
 			joinColumns = @JoinColumn(name = "student_id"),
 			inverseJoinColumns = @JoinColumn(name = "course_id"))
-	private List<Course> courses;
+	private List<Course> courses = new ArrayList<Course>();
 	
 	public Student(String firstName, String lastName, String email, Status status) {
 		super(firstName, lastName, email, status);
@@ -92,9 +92,10 @@ public class Student extends User {
 	    }
 		
 		if (remove) {
-			courses.remove(course);
-			System.out.println("course exist. course REMOVED");
+			boolean removeCourse = courses.remove(course);
+			System.out.println("course exist. course REMOVED " + removeCourse);
 		}
+		System.out.println(courses.size());
 	}
 	
 	@Override

@@ -56,7 +56,7 @@ public class Course {
 			name = "course_student",
 			joinColumns = @JoinColumn(name = "course_id"),
 			inverseJoinColumns = @JoinColumn(name = "student_id"))
-	private List<Student> students;
+	private List<Student> students = new ArrayList<Student>();
 	
 	public Course(String title, Instructor instructor) {
 		this.title = title;
@@ -126,6 +126,15 @@ public class Course {
 		}
 		
 		students.add(student);
+	}
+	
+	// convenience method for bi-directional relationship
+	public void removeStudent(Student student) {
+		if (students == null) {
+			students = new ArrayList<Student>();
+		}
+		
+		students.remove(student);
 	}
 
 	@Override
