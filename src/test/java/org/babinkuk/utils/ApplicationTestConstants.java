@@ -11,8 +11,8 @@ public final class ApplicationTestConstants {
 	
 	public static final String INSTRUCTOR_ENROLL = "/{instructorId}/enroll/{courseId}";
 	public static final String INSTRUCTOR_WITHDRAW = "/{instructorId}/withdraw/{courseId}";
-	public static final String STUDENT_ENROLL = "/student" + "/{studentId}" + "/enroll";
-	public static final String STUDENT_WITHDRAW = "/student" + "/{studentId}" + "/withdraw";
+	public static final String STUDENT_ENROLL = "/{studentId}/enroll/{courseId}";
+	public static final String STUDENT_WITHDRAW = "/{studentId}/withdraw/{courseId}";
 		
 	public static final String REVIEW = "test review";
 	public static final String REVIEW_NEW = "new review";
