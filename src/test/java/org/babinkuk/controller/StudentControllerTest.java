@@ -2,18 +2,10 @@ package org.babinkuk.controller;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpSession;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.dao.CourseRepository;
-import org.babinkuk.dao.StudentRepository;
-import org.babinkuk.entity.Course;
-import org.babinkuk.entity.Student;
-import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.service.CourseService;
 import org.babinkuk.service.StudentService;
-import org.babinkuk.service.StudentServiceImpl;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.validator.ValidatorCodes;
@@ -49,11 +41,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @SpringBootTest
 @ActiveProfiles("test")

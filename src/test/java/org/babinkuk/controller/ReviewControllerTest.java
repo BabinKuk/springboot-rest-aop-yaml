@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.service.CourseService;
 import org.babinkuk.service.ReviewService;
-import org.babinkuk.service.ReviewServiceImpl;
-import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.validator.ValidatorCodes;
 import org.babinkuk.vo.CourseVO;
@@ -137,15 +135,13 @@ public class ReviewControllerTest {
 	
 	@BeforeAll
 	public static void setup() {
-		log.info("BeforeAll");
-
+		
 		// init
 		request = new MockHttpServletRequest();
 	}
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 		
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -163,8 +159,7 @@ public class ReviewControllerTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
-
+		
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
 		jdbc.execute(sqlDeleteReview);
@@ -507,12 +502,12 @@ public class ReviewControllerTest {
 	}
 
 	private void deleteReview(String validationRole) throws Exception {
-		log.info("deleteReview {}", validationRole);
+		//log.info("deleteReview {}", validationRole);
 		
 		// check if review id 1 exists
 		int id = 1;
 		ReviewVO reviewVO = reviewService.findById(id);
-		log.info(reviewVO.toString());
+		//log.info(reviewVO.toString());
 		
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());
