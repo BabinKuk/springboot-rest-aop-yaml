@@ -37,6 +37,8 @@ public final class ApplicationTestConstants {
 	public static final String INSTRUCTOR_YOUTUBE_NEW = "youtubeChannel";
 	public static final Status INSTRUCTOR_STATUS_NEW = Status.ACTIVE;
 	public static final Double INSTRUCTOR_SALARY_NEW = 1500.0;
+	public static final String INSTRUCTOR_FILE_NEW = "fileInstrNew";
+	public static final String INSTRUCTOR_IMAGE_NEW = "imageInstrNew";
 	
 	public static final String INSTRUCTOR_FIRSTNAME_UPDATED = "firstNameInstrUpdate";
 	public static final String INSTRUCTOR_LASTNAME_UPDATED = "lastNameInstrUpdate";
@@ -67,6 +69,8 @@ public final class ApplicationTestConstants {
 	public static final String STUDENT_STREET_NEW = "New Street";
 	public static final String STUDENT_CITY_NEW = "New City";
 	public static final String STUDENT_ZIPCODE_NEW = "New ZipCode";
+	public static final String STUDENT_FILE_NEW = "fileStudNew";
+	public static final String STUDENT_IMAGE_NEW = "imageStudNew";
 	
 	public static final String STUDENT_FIRSTNAME_UPDATED = "firstNameStudentUpdate";
 	public static final String STUDENT_LASTNAME_UPDATED = "lastNameStudentUpdate";
