@@ -105,8 +105,6 @@ public class ReviewRepositoryTest {
 	@Value("${sql.script.image.delete}")
 	private String sqlDeleteImage;
 	
-	public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON;
-	
 	@BeforeAll
 	public static void setup() {
 		
@@ -151,7 +149,7 @@ public class ReviewRepositoryTest {
 	}
 		
 	@Test
-	void getAllReviews() throws Exception {
+	void getAllReviews() {
 		
 		// get all reviews
 		Iterable<Review> reviews = reviewRepository.findAll();
@@ -173,47 +171,45 @@ public class ReviewRepositoryTest {
 	}
 	
 	@Test
-	void getReview() throws Exception {
+	void getReview() {
 		
 		// get review id=1
 		Optional<Review> review = reviewRepository.findById(1);
-		//log.info(review);
 		
 		// assert
 		assertTrue(review.isPresent());
 		assertNotNull(review,"review null");
-		assertEquals(REVIEW, review.get().getComment(),"assertEquals review.getComment() failure");
-		assertEquals(1, review.get().getId(),"assertEquals review.getId() failure");
+		assertEquals(REVIEW, review.get().getComment(),"getComment() failure");
+		assertEquals(1, review.get().getId(),"getId() failure");
 		
 		// get non-existing review id=2
 		review = reviewRepository.findById(2);
-		//log.info(review);
 		
 		// assert
 		assertFalse(review.isPresent());
 	}
 
 	@Test
-	void updateReview() throws Exception {
+	void updateReview() {
 		
 		// create review
-		// set id 1: this is to force an update of existing item
-		Review review = new Review(REVIEW_NEW);
+		// set id=1: this is to force an update of existing item
+		Review review = new Review(REVIEW_UPDATE);
 		review.setId(1);
 		
 		Review savedReview = reviewRepository.save(review);
 		
 		// assert
 		assertNotNull(savedReview,"savedReview null");
-		assertEquals(REVIEW_NEW, savedReview.getComment(),"assertEquals savedReview.getComment() failure");
-		assertEquals(1, savedReview.getId(),"assertEquals savedReview.getId() failure");
+		assertEquals(REVIEW_UPDATE, savedReview.getComment(),"savedReview.getComment() failure");
+		assertEquals(1, savedReview.getId(),"savedReview.getId() failure");
 	}
 	
 	@Test
-	void addReview() throws Exception {
+	void addReview() {
 		
 		// create review
-		// set id 0: this is to force a save of new item
+		// set id=0: this is to force a save of new item
 		Review review = new Review(REVIEW_NEW);
 		review.setId(0);
 		
@@ -232,6 +228,7 @@ public class ReviewRepositoryTest {
 		// save course
 		courseRepository.save(course.get());
 		
+		// clear persistence context and sync with db
 		entityManager.flush();
 		entityManager.clear();
 		
@@ -239,7 +236,7 @@ public class ReviewRepositoryTest {
 		Iterable<Review> reviews = reviewRepository.findAll();
 		//log.info(reviews);
 		
-		// assert new review
+		// assert
 		assertNotNull(reviews,"reviews null");
 		
 		if (reviews instanceof Collection) {
@@ -258,7 +255,7 @@ public class ReviewRepositoryTest {
 	}
 
 	@Test
-	void deleteReview() throws Exception {
+	void deleteReview() {
 		
 		// set course for instructor
 		jdbc.execute(sqlUpdateCourse);
@@ -277,6 +274,7 @@ public class ReviewRepositoryTest {
 		// assert
 		assertFalse(review.isPresent());
 		
+		// clear persistence context and sync with db
 		entityManager.flush();
 		entityManager.clear();
 		
@@ -295,5 +293,5 @@ public class ReviewRepositoryTest {
 		assertTrue(course.get().getStudents().stream().anyMatch(student ->
 			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
 		));
-	}	
+	}
 }

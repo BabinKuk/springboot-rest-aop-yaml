@@ -2,16 +2,9 @@ package org.babinkuk.dao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.aspectj.util.IStructureModel;
 import org.babinkuk.entity.Address;
 import org.babinkuk.entity.Course;
-import org.babinkuk.entity.Instructor;
-import org.babinkuk.entity.InstructorDetail;
-import org.babinkuk.entity.Review;
-import org.babinkuk.entity.Status;
 import org.babinkuk.entity.Student;
-import org.babinkuk.exception.ObjectNotFoundException;
-import org.babinkuk.vo.InstructorVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,8 +21,6 @@ import static org.babinkuk.utils.ApplicationTestConstants.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.*;
-import java.util.Map.Entry;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -117,8 +108,6 @@ public class StudentRepositoryTest {
 	@Value("${sql.script.image.delete}")
 	private String sqlDeleteImage;
 	
-	public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON;
-	
 	@BeforeAll
 	public static void setup() {
 		
@@ -163,7 +152,7 @@ public class StudentRepositoryTest {
 	}
 		
 	@Test
-	void getAllStudents() throws Exception {
+	void getAllStudents() {
 		
 		// get all students
 		Iterable<Student> students = studentRepository.findAll();
@@ -179,21 +168,21 @@ public class StudentRepositoryTest {
 		students.forEach(studentList::add);
 
 		assertTrue(studentList.stream().anyMatch(student ->
-		student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
+			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
 		));
 	}
 	
 	@Test
-	void getStudentById() throws Exception {
+	void getStudentById() {
 		
-		// get student id=1
+		// get student id=2
 		Optional<Student> student = studentRepository.findById(2);
 		
 		// assert
 		assertTrue(student.isPresent());
 		validateExistingStudent(student.get());
 		
-		// get non.existing instructor id=22
+		// get non-existing student id=22
 		student = studentRepository.findById(22);
 		
 		// assert
@@ -201,16 +190,16 @@ public class StudentRepositoryTest {
 	}
 	
 	@Test
-	void getStudentByEmail() throws Exception {
+	void getStudentByEmail() {
 		
-		// get instructor id=1
+		// get student
 		Optional<Student> student = studentRepository.findByEmail(STUDENT_EMAIL);
 		
 		// assert
 		assertTrue(student.isPresent());
 		validateExistingStudent(student.get());
 		
-		// get non.existing instructor id=2
+		// get non-existing student
 		student = studentRepository.findByEmail(INSTRUCTOR_EMAIL_NEW);
 		
 		// assert
@@ -218,9 +207,9 @@ public class StudentRepositoryTest {
 	}
 	
 	@Test
-	void updateStudent() throws Exception {
+	void updateStudent() {
 		
-		// get student id=1
+		// get student id=2
 		Optional<Student> student = studentRepository.findById(2);
 		
 		// assert
@@ -228,44 +217,44 @@ public class StudentRepositoryTest {
 		validateExistingStudent(student.get());
 		
 		// update
-		// set id 1: this is to force an update of existing item
+		// set id=2: this is to force an update of existing item
 		Student updatedStudent = new Student();
 		updatedStudent = updateStudent(student.get());
 		
 		Student savedStudent = studentRepository.save(updatedStudent);
 		
 		// assert
-		assertNotNull(savedStudent,"savedReview null");
+		assertNotNull(savedStudent,"savedStudent null");
 		validateUpdatedStudent(savedStudent);
 	}
 	
 	@Test
-	void addStudent() throws Exception {
+	void addStudent() {
 		
 		// create student
-		// set id 0: this is to force a save of new item
+		// set id=0: this is to force a save of new item
 		Student student = createStudent();
 		
 		Student savedStudent = studentRepository.save(student);
 		
 		// assert
-		assertNotNull(savedStudent,"savedReview null");
+		assertNotNull(savedStudent,"savedStudent null");
 		validateNewStudent(savedStudent);
 	}
 
 	@Test
-	void deleteStudent() throws Exception {
+	void deleteStudent() {
 		
 		// set course for instructor
 		jdbc.execute(sqlUpdateCourse);
 		
-		// check if student id 1 exists
+		// check if student id=2 exists
 		Optional<Student> student = studentRepository.findById(2);
 		
 		// assert
 		assertTrue(student.isPresent());
 		
-		// delete instructor
+		// delete student
 		studentRepository.deleteById(2);
 		
 		student = studentRepository.findById(2);
@@ -273,10 +262,11 @@ public class StudentRepositoryTest {
 		// assert
 		assertFalse(student.isPresent());
 		
-		// check other cascading entities
+		// clear persistence context and sync with db
 		entityManager.flush();
 		entityManager.clear();
 		
+		// check other cascading entities
 		// get course with id=1
 		Optional<Course> course = courseRepository.findById(1);
 		
@@ -293,7 +283,7 @@ public class StudentRepositoryTest {
 //		));
 	}
 	
-	private void validateExistingStudent(Student student) {
+	public static void validateExistingStudent(Student student) {
 		
 		assertNotNull(student,"student null");
 		assertEquals(2, student.getId());
