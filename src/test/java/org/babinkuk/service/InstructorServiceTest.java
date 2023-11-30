@@ -2,6 +2,7 @@ package org.babinkuk.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.Status;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
@@ -24,7 +25,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.babinkuk.utils.ApplicationTestConstants.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -59,6 +62,9 @@ public class InstructorServiceTest {
 	
 	@Value("${sql.script.course.delete}")
 	private String sqlDeleteCourse;
+	
+	@Value("${sql.script.course.update}")
+	private String sqlUpdateCourse;
 	
 	@Value("${sql.script.user.insert-instructor}")
 	private String sqlAddUserInstructor;
@@ -110,7 +116,6 @@ public class InstructorServiceTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -128,7 +133,6 @@ public class InstructorServiceTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
@@ -149,106 +153,9 @@ public class InstructorServiceTest {
 	}
 	
 	@Test
-	void getInstructorById() {
-		//log.info("getInstructorByid");
-		
-		InstructorVO instructorVO = instructorService.findById(1);
-		
-		validatePrimaryInstructor(instructorVO);
-	}
-	
-	@Test
-	void getInstructorByEmail() {
-		//log.info("getInstructorByEmail");
-		
-		InstructorVO instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL);
-		
-		validatePrimaryInstructor(instructorVO);
-	}
-	
-	@Test
-	void addInstructor() {
-		//log.info("addInstructor");
-		
-		// create instructor
-		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
-		
-		instructorService.saveInstructor(instructorVO);
-		
-		InstructorVO instructorVO2 = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
-		
-		//log.info(instructorVO2);
-
-		// assert
-		//assertEquals(2, instructorVO2.getId());
-		assertEquals(instructorVO.getFirstName(), instructorVO2.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(instructorVO.getLastName(), instructorVO2.getLastName(),"instructorVO.getLastName() NOK");
-		assertEquals(instructorVO.getEmail(), instructorVO2.getEmail(),"instructorVO.getEmail() NOK");
-		assertEquals(instructorVO.getYoutubeChannel(), instructorVO2.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
-		assertEquals(instructorVO.getHobby(), instructorVO2.getHobby(),"instructorVO.getHobby() NOK");
-	}	
-	
-	@Test
-	void updateInstructor() {
-		//log.info("updateInstructor");
-		
-		InstructorVO instructorVO = instructorService.findById(1);
-				
-		// update with new data
-		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
-		
-		instructorService.saveInstructor(instructorVO);
-		
-		// fetch again
-		InstructorVO instructorVO2 = instructorService.findById(1);
-		
-		// assert
-		assertEquals(instructorVO.getId(), instructorVO2.getId());
-		assertEquals(INSTRUCTOR_FIRSTNAME_UPDATED, instructorVO2.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(INSTRUCTOR_LASTNAME_UPDATED, instructorVO2.getLastName(),"instructorVO.getLastName() NOK");
-		assertEquals(INSTRUCTOR_EMAIL_UPDATED, instructorVO2.getEmail(),"instructorVO.getEmail() NOK");
-		assertEquals(INSTRUCTOR_YOUTUBE_UPDATED, instructorVO2.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
-		assertEquals(INSTRUCTOR_HOBBY_UPDATED, instructorVO2.getHobby(),"instructorVO.getHobby() NOK");
-		assertEquals(3, instructorVO.getImages().size(), "instructors.getImages size not 3");
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_1, INSTRUCTOR_IMAGE_1));
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_11, INSTRUCTOR_IMAGE_11));
-		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_UPDATED, INSTRUCTOR_IMAGE_UPDATED));
-	}
-	
-	@Test
-	void deleteInstructor() {
-		//log.info("deleteInstructor");
-		
-		// first get instructor
-		InstructorVO instructorVO = instructorService.findById(1);
-		
-		// assert
-		assertNotNull(instructorVO, "return true");
-		assertEquals(1, instructorVO.getId());
-		
-		// delete
-		instructorService.deleteInstructor(1);
-		
-		// assert not existing instructor
-		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
-			instructorService.findById(1);
-		});
-				
-		String expectedMessage = "Instructor with id=1 not found.";
-		String actualMessage = exception.getMessage();
-		
-	    assertTrue(actualMessage.contains(expectedMessage));
-
-		// delete not existing instructor
-		exception = assertThrows(EmptyResultDataAccessException.class, () -> {
-			instructorService.deleteInstructor(2);
-		});
-	}
-	
-	@Test
 	void getAllInstructors() {
-		//log.info("getAllInstructors");
 		
+		// get all instructors
 		Iterable<InstructorVO> instructors = instructorService.getAllInstructors();
 		
 		// assert
@@ -257,10 +164,14 @@ public class InstructorServiceTest {
 		}
 		
 		// add another instructor
-		// set id 0: this is to force a save of new item ... instead of update
+		// set id=0: this is to force a save of new item ... instead of update
 		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
-				
+		
 		instructorService.saveInstructor(instructorVO);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		instructors = instructorService.getAllInstructors();
 		
@@ -271,36 +182,184 @@ public class InstructorServiceTest {
 	}
 	
 	@Test
-	void setCourse() {
-		//log.info("setCourse");
+	void getInstructorById() {
 		
+		// get instructor id=1
 		InstructorVO instructorVO = instructorService.findById(1);
 		
-		validatePrimaryInstructor(instructorVO);
+		validateExistingInstructor(instructorVO);
 		
-		CourseVO courseVO = courseService.findById(1);
+		// assert not existing review
+		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
+			instructorService.findById(11);
+		});
+				
+		String expectedMessage = "Instructor with id=11 not found.";
+		String actualMessage = exception.getMessage();
 		
-		assertNotNull(courseVO,"courseVO null");
-		assertEquals(1, courseVO.getId());
-		assertNotNull(courseVO.getTitle(),"courseVO.courseVO() null");
-		assertNotNull(courseVO.getStudentsVO(),"courseVO.getStudentsVO() null");
-		assertNull(courseVO.getInstructorVO(),"courseVO.getInstructorVO() not null");
-		assertEquals(COURSE, courseVO.getTitle(),"courseVO.getTitle() NOK");
+	    assertTrue(actualMessage.contains(expectedMessage));
+	}
+	
+	@Test
+	void getInstructorByEmail() {
 		
-		// set course
-		instructorService.setCourse(instructorVO, courseVO, ActionType.ENROLL);
+		// get instructor
+		InstructorVO instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL);
+		
+		validateExistingInstructor(instructorVO);
+		
+		// get not existing instructor
+		instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
+		
+		// assert
+		assertNull(instructorVO, "instructorVO null");
+	}
+	
+	@Test
+	void addInstructor() {
+		
+		// create instructor
+		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
+		
+		instructorService.saveInstructor(instructorVO);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
+		
+		// assert
+		//assertEquals(2, instructorVO2.getId());
+		validateNewInstructor(instructorVO);
+	}	
+	
+	@Test
+	void updateInstructor() {
+		
+		// get instructor id=1
+		InstructorVO instructorVO = instructorService.findById(1);
+				
+		// update with new data
+		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
+		
+		instructorService.saveInstructor(instructorVO);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		// fetch again
 		instructorVO = instructorService.findById(1);
 		
 		// assert
-		validatePrimaryInstructor(instructorVO);
+		validateUpdatedInstructor(instructorVO);
+	}
+	
+	@Test
+	void deleteInstructor() {
 		
-		// assert course
-		assertEquals(1, instructorVO.getCourses().size(), "instructors.getCourses size not 1");
+		// set course for instructor
+		jdbc.execute(sqlUpdateCourse);
+
+		// get instructor
+		InstructorVO instructorVO = instructorService.findById(1);
+		
+		// assert
+		assertNotNull(instructorVO, "return true");
+		assertEquals(1, instructorVO.getId());
+		
+		// delete instructor
+		instructorService.deleteInstructor(1);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// assert not existing instructor
+		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
+			instructorService.findById(1);
+		});
+		
+		String expectedMessage = "Instructor with id=1 not found.";
+		String actualMessage = exception.getMessage();
+		
+	    assertTrue(actualMessage.contains(expectedMessage));
+	    
+		// delete not existing instructor
+		exception = assertThrows(EmptyResultDataAccessException.class, () -> {
+			instructorService.deleteInstructor(2);
+		});
+		
+		// check other cascading entities
+		// get course with id=1
+		CourseVO courseVO = courseService.findById(1);
+		
+		// assert
+		// course must be unchanged (except instructor=null)
+		assertNotNull(courseVO, "courseVO null");
+		assertEquals(1, courseVO.getId(), "course.getId()");
+		assertEquals(COURSE, courseVO.getTitle(), "course.getTitle()");
+		assertEquals(1, courseVO.getReviewsVO().size(), "course.getReviews().size()");
+		assertTrue(courseVO.getReviewsVO().stream().anyMatch(review ->
+			review.getComment().equals(REVIEW) && review.getId() == 1
+		));
+		assertNull(courseVO.getInstructorVO(), "course.getInstructor() null");
+		assertEquals(1, courseVO.getStudentsVO().size(), "course.getStudents().size()");
+		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
+		));
+	}
+	
+	@Test
+	void setCourse() {
+		
+		// get instructor
+		InstructorVO instructorVO = instructorService.findById(1);
+		
+		validateExistingInstructor(instructorVO);
+		
+		// get course
+		CourseVO courseVO = courseService.findById(1);
+		
+		// assert
+		assertNotNull(courseVO,"courseVO null");
+		assertEquals(1, courseVO.getId());
+		assertNotNull(courseVO.getTitle(),"courseVO() null");
+		assertNotNull(courseVO.getStudentsVO(),"getStudentsVO() null");
+		assertNull(courseVO.getInstructorVO(),"getInstructorVO() not null");
+		assertEquals(COURSE, courseVO.getTitle(),"getTitle() NOK");
+		
+		// set course for instructor
+		instructorService.setCourse(instructorVO, courseVO, ActionType.ENROLL);
+
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// fetch again
+		instructorVO = instructorService.findById(1);
+		
+		// assert
+		validateExistingInstructor(instructorVO);
+		
+		// assert instructor -> course
+		assertEquals(1, instructorVO.getCourses().size(), "instrucrs.getCourses size not 1");
 		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
 			course.getTitle().equals(COURSE) && course.getId() == 1
 		));
+		
+		// get course again
+		courseVO = courseService.findById(1);
+		
+		// assert
+		assertNotNull(courseVO,"courseVO null");
+		assertEquals(1, courseVO.getId());
+		assertNotNull(courseVO.getTitle(),"courseVO() null");
+		assertNotNull(courseVO.getStudentsVO(),"getStudentsVO() null");
+		assertNotNull(courseVO.getInstructorVO(),"getInstructorVO() not null");
+		assertEquals(COURSE, courseVO.getTitle(),"getTitle() NOK");
+		assertEquals(INSTRUCTOR_FIRSTNAME, courseVO.getInstructorVO().getFirstName(),"getTitle() NOK");
 		
 		// add another course
 		CourseVO courseVO2 = ApplicationTestUtils.createCourse();
@@ -309,14 +368,18 @@ public class InstructorServiceTest {
 		
 		courseVO2 = courseService.findByTitle(COURSE_NEW);
 
-		// set course
+		// set course 
 		instructorService.setCourse(instructorVO, courseVO2, ActionType.ENROLL);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		// fetch again
 		instructorVO = instructorService.findById(1);
 		
 		// assert
-		validatePrimaryInstructor(instructorVO);
+		validateExistingInstructor(instructorVO);
 		
 		// assert course
 		assertEquals(2, instructorVO.getCourses().size(), "instructors.getCourses size not 2");
@@ -327,20 +390,53 @@ public class InstructorServiceTest {
 			course.getTitle().equals(COURSE_NEW)// && course.getId() == 2
 		));
 		
-		// now withdraw course
+		// get new course again
+		courseVO2 = courseService.findByTitle(COURSE_NEW);
+		
+		// assert
+		assertNotNull(courseVO2,"courseVO null");
+		//assertEquals(2, courseVO2.getId());
+		assertNotNull(courseVO2.getTitle(),"courseVO2() null");
+		assertNotNull(courseVO2.getStudentsVO(),"getStudentsVO() null");
+		assertNotNull(courseVO2.getInstructorVO(),"getInstructorVO() not null");
+		assertEquals(COURSE_NEW, courseVO2.getTitle(),"getTitle() NOK");
+		assertEquals(INSTRUCTOR_FIRSTNAME, courseVO2.getInstructorVO().getFirstName(),"getTitle() NOK");
+		
+		// now withdraw courses
+		instructorService.setCourse(instructorVO, courseVO, ActionType.WITHDRAW);
 		instructorService.setCourse(instructorVO, courseVO2, ActionType.WITHDRAW);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		// fetch again
 		instructorVO = instructorService.findById(1);
 		
 		// assert
-		validatePrimaryInstructor(instructorVO);
+		validateExistingInstructor(instructorVO);
 		
 		// assert course
-		assertEquals(1, instructorVO.getCourses().size(), "instructors.getCourses size not 1");
-		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
-			course.getTitle().equals(COURSE) && course.getId() == 1
-		));
+		assertEquals(0, instructorVO.getCourses().size(), "instructor.getCourses");
+		
+		// get courses again
+		courseVO = courseService.findById(1);
+		courseVO2 = courseService.findByTitle(COURSE_NEW);
+
+		// assert
+		assertNotNull(courseVO,"courseVO null");
+		assertEquals(1, courseVO.getId());
+		assertNotNull(courseVO.getTitle(),"courseVO() null");
+		assertNotNull(courseVO.getStudentsVO(),"getStudentsVO() null");
+		assertNull(courseVO.getInstructorVO(),"getInstructorVO() not null");
+		assertEquals(COURSE, courseVO.getTitle(),"getTitle() NOK");
+		
+		assertNotNull(courseVO2,"courseVO null");
+		//assertEquals(1, courseVO.getId());
+		assertNotNull(courseVO2.getTitle(),"courseVO() null");
+		assertNotNull(courseVO2.getStudentsVO(),"getStudentsVO() null");
+		assertNull(courseVO2.getInstructorVO(),"getInstructorVO() not null");
+		assertEquals(COURSE_NEW, courseVO2.getTitle(),"getTitle() NOK");
 		
 		// not mandatory
 		// setting non existing course
@@ -366,9 +462,10 @@ public class InstructorServiceTest {
  		final InstructorVO insVO2 = new InstructorVO("ime", "prezime", "ime@babinkuk.com");
  		insVO2.setId(22);
  		
+ 		final CourseVO crsVO2 = courseVO;
  		// assert not existing instructor
  		exception = assertThrows(ObjectNotFoundException.class, () -> {
- 			instructorService.setCourse(insVO2, courseVO, ActionType.ENROLL);
+ 			instructorService.setCourse(insVO2, crsVO2, ActionType.ENROLL);
  		});
  		
  		expectedMessage = "Instructor with id=22 not found.";
@@ -377,7 +474,7 @@ public class InstructorServiceTest {
  	    assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
-	private void validatePrimaryInstructor(InstructorVO instructorVO) {
+	private void validateExistingInstructor(InstructorVO instructorVO) {
 		//log.info(instructorVO.toString());
 		
 		assertNotNull(instructorVO,"instructorVO null");
@@ -414,4 +511,55 @@ public class InstructorServiceTest {
 	    assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
+	private void validateUpdatedInstructor(InstructorVO instructorVO) {
+		
+		assertNotNull(instructorVO,"instructor null");
+		assertEquals(1, instructorVO.getId());
+		assertNotNull(instructorVO.getFirstName(),"getFirstName() null");
+		assertNotNull(instructorVO.getLastName(),"getLastName() null");
+		assertNotNull(instructorVO.getEmail(),"getEmail() null");
+		assertNotNull(instructorVO.getSalary(),"getSalary() null");
+		assertNotNull(instructorVO.getStatus(),"getStatus() null");
+		assertNotNull(instructorVO.getImages(),"getImages() null");
+		assertNotNull(instructorVO.getYoutubeChannel(),"getYoutubeChannel() null");
+		assertNotNull(instructorVO.getHobby(),"getHobby() null");
+		assertEquals(INSTRUCTOR_FIRSTNAME_UPDATED, instructorVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME_UPDATED, instructorVO.getLastName(),".getLastName() NOK");
+		assertEquals(INSTRUCTOR_EMAIL_UPDATED, instructorVO.getEmail(),"getEmail() NOK");
+		assertEquals(INSTRUCTOR_SALARY_UPDATED, instructorVO.getSalary(),"getSalary() NOK");
+		assertEquals(INSTRUCTOR_STATUS_UPDATED, instructorVO.getStatus(),"getStatus() NOK");
+		assertEquals(3, instructorVO.getImages().size(), "getImages size not 2");
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_1, INSTRUCTOR_IMAGE_1));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_11, INSTRUCTOR_IMAGE_11));
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_UPDATED, INSTRUCTOR_IMAGE_UPDATED));
+		assertEquals(INSTRUCTOR_YOUTUBE_UPDATED, instructorVO.getYoutubeChannel(),"getYoutubeChannel() NOK");
+		assertEquals(INSTRUCTOR_HOBBY_UPDATED, instructorVO.getHobby(),"getHobby() NOK");
+		// not neccessary
+		assertNotEquals("test hobb", instructorVO.getHobby(),"getHobby() NOK");
+	}
+	
+	private void validateNewInstructor(InstructorVO instructorVO) {
+		
+		assertNotNull(instructorVO,"instructor null");
+		//assertEquals(1, instructor.getId());
+		assertNotNull(instructorVO.getFirstName(),"getFirstName() null");
+		assertNotNull(instructorVO.getLastName(),"getLastName() null");
+		assertNotNull(instructorVO.getEmail(),"getEmail() null");
+		assertNotNull(instructorVO.getSalary(),"getSalary() null");
+		assertNotNull(instructorVO.getStatus(),"getStatus() null");
+		assertNotNull(instructorVO.getImages(),"getImages() null");
+		assertNotNull(instructorVO.getYoutubeChannel(),"getYoutubeChannel() null");
+		assertNotNull(instructorVO.getHobby(),"getHobby() null");
+		assertEquals(INSTRUCTOR_FIRSTNAME_NEW, instructorVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME_NEW, instructorVO.getLastName(),"getLastName() NOK");
+		assertEquals(INSTRUCTOR_EMAIL_NEW, instructorVO.getEmail(),"getEmail() NOK");
+		assertEquals(INSTRUCTOR_SALARY_NEW, instructorVO.getSalary(),"getSalary() NOK");
+		assertEquals(INSTRUCTOR_STATUS_NEW, instructorVO.getStatus(),"getStatus() NOK");
+		assertEquals(1, instructorVO.getImages().size(), "getImages size not 1");
+		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_NEW, INSTRUCTOR_IMAGE_NEW));
+		assertEquals(INSTRUCTOR_YOUTUBE_NEW, instructorVO.getYoutubeChannel(),"getYoutubeChannel() NOK");
+		assertEquals(INSTRUCTOR_HOBBY_NEW, instructorVO.getHobby(),"getHobby() NOK");
+		// not neccessary
+		assertNotEquals("test hobb", instructorVO.getHobby(),"getHobby() NOK");
+	}
 }

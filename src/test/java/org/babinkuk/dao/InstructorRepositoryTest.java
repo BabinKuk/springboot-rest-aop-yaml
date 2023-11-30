@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.*;
@@ -252,6 +251,10 @@ public class InstructorRepositoryTest {
 		
 		// delete instructor
 		instructorRepository.deleteById(1);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		instructor = instructorRepository.findById(1);
 		

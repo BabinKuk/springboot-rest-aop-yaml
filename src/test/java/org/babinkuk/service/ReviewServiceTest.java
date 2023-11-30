@@ -2,9 +2,7 @@ package org.babinkuk.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.entity.Review;
 import org.babinkuk.exception.ObjectNotFoundException;
-import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.junit.jupiter.api.AfterEach;

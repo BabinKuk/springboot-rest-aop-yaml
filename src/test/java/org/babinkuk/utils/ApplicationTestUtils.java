@@ -8,6 +8,9 @@ import org.babinkuk.vo.StudentVO;
 
 import static org.babinkuk.utils.ApplicationTestConstants.*;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 public class ApplicationTestUtils {
 	
 	public static final Logger log = LogManager.getLogger(ApplicationTestUtils.class);
@@ -40,6 +43,12 @@ public class ApplicationTestUtils {
 				INSTRUCTOR_HOBBY_NEW,
 				INSTRUCTOR_STATUS_NEW);
 		instructorVO.setId(0);
+		instructorVO.setSalary(INSTRUCTOR_SALARY_NEW);
+		
+		SortedMap<String, String> images = new TreeMap<String, String>();
+		images.put(INSTRUCTOR_FILE_NEW, INSTRUCTOR_IMAGE_NEW);
+		
+		instructorVO.setImages(images);
 		
 		return instructorVO;
 	}
