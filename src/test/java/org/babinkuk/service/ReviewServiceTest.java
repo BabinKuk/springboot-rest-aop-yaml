@@ -2,7 +2,9 @@ package org.babinkuk.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.babinkuk.entity.Review;
 import org.babinkuk.exception.ObjectNotFoundException;
+import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.junit.jupiter.api.AfterEach;
@@ -16,7 +18,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -53,6 +58,9 @@ public class ReviewServiceTest {
 	
 	@Value("${sql.script.course.delete}")
 	private String sqlDeleteCourse;
+	
+	@Value("${sql.script.course.update}")
+	private String sqlUpdateCourse;
 	
 	@Value("${sql.script.user.insert-instructor}")
 	private String sqlAddUserInstructor;
@@ -104,8 +112,7 @@ public class ReviewServiceTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
-
+		
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
 		jdbc.execute(sqlAddInstructor);
@@ -122,8 +129,7 @@ public class ReviewServiceTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
-
+		
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
 		jdbc.execute(sqlDeleteReview);
@@ -143,17 +149,66 @@ public class ReviewServiceTest {
 	}
 	
 	@Test
-	void getReview() {
-		//log.info("getReview");
+	void getAllReviews() {
 		
+		// get all reviews
+		Iterable<ReviewVO> reviews = reviewService.getAllReviews();
+		
+		// assert
+		if (reviews instanceof Collection<?>) {
+			assertEquals(1, ((Collection<?>) reviews).size(), "reviews size not 1");
+		}
+		
+		// add new review
+		CourseVO courseVO = courseService.findById(1);
+		
+		// create review
+		// set id=0: this is to force a save of new item
+		ReviewVO reviewVO = new ReviewVO(REVIEW_NEW);
+		reviewVO.setId(0);
+		
+		// add to course
+		courseVO.addReviewVO(reviewVO);
+		
+		reviewService.saveReview(courseVO);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// get all reviews
+		reviews = reviewService.getAllReviews();
+		
+		// assert
+		assertNotNull(reviews,"reviews null");
+		
+		if (reviews instanceof Collection) {
+			assertEquals(2, ((Collection<?>) reviews).size(), "reviews size not 2");
+		}
+		
+		List<ReviewVO> reviewList = new ArrayList<ReviewVO>();
+		reviews.forEach(reviewList::add);
+		
+		assertTrue(reviewList.stream().anyMatch(rev ->
+			rev.getComment().equals(REVIEW) && rev.getId() == 1
+		));
+		assertTrue(reviewList.stream().anyMatch(rev ->
+			rev.getComment().equals(REVIEW_NEW) && rev.getId() == 2
+		));
+	}
+	
+	@Test
+	void getReview() {
+		
+		// get review id=1
 		ReviewVO reviewVO = reviewService.findById(1);
 		
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());
-		assertNotNull(reviewVO.getComment(),"reviewVO.getComment() null");
-		assertEquals(REVIEW, reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
+		assertNotNull(reviewVO.getComment(),"getComment() null");
+		assertEquals(REVIEW, reviewVO.getComment(),"getComment() failure");
 		
-		assertNotEquals("test review ", reviewVO.getComment(),"assertEquals reviewVO.getComment() failure");
+		assertNotEquals("test review ", reviewVO.getComment(),"getComment() intentional failure");
 		
 		// assert not existing review
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
@@ -168,7 +223,6 @@ public class ReviewServiceTest {
 	
 	@Test
 	void addReview() {
-		//log.info("addReview");
 		
 		// first find course
 		CourseVO courseVO = courseService.findById(1);
@@ -183,47 +237,90 @@ public class ReviewServiceTest {
 		
 		reviewService.saveReview(courseVO);
 		
-		// assert
-		assertEquals(2, courseVO.getReviewsVO().size());
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
-		for (ReviewVO reVo : courseVO.getReviewsVO()) {
-			assertNotNull(reVo.getComment());
+		// get all reviews
+		Iterable<ReviewVO> reviews = reviewService.getAllReviews();
+		//log.info(reviews);
+		
+		// assert
+		assertNotNull(reviews,"reviews null");
+		
+		if (reviews instanceof Collection) {
+			assertEquals(2, ((Collection<?>) reviews).size(), "reviews size not 2");
 		}
-	}	
+		
+		List<ReviewVO> reviewList = new ArrayList<ReviewVO>();
+		reviews.forEach(reviewList::add);
+		
+		assertTrue(reviewList.stream().anyMatch(rev ->
+			rev.getComment().equals(REVIEW) && rev.getId() == 1
+		));
+		assertTrue(reviewList.stream().anyMatch(rev ->
+			rev.getComment().equals(REVIEW_NEW)
+		));
+	}
 	
 	@Test
 	void updateReview() {
-		//log.info("updateReview");
 		
-		ReviewVO reviewVO = reviewService.findById(1);
+		// create review
+		// set id=1: this is to force an update of existing item
+		ReviewVO review = new ReviewVO(REVIEW_UPDATE);
+		review.setId(1);
 		
-		// update comment
-		String newComment = REVIEW_UPDATE;
-		reviewVO.setComment(newComment);
+		reviewService.saveReview(review);
 		
-		reviewService.saveReview(reviewVO);
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
-		// fetch again
-		reviewVO = reviewService.findById(1);
+		ReviewVO savedReview = reviewService.findById(1);
 		
 		// assert
-		assertEquals(newComment, reviewVO.getComment(), "find by id after update");
+		assertNotNull(savedReview,"savedReview null");
+		assertEquals(REVIEW_UPDATE, savedReview.getComment(),"savedReview.getComment() failure");
+		assertEquals(1, savedReview.getId(),"savedReview.getId() failure");
 	}
 	
 	@Test
 	void deleteReview() {
-		//log.info("deleteReview");
+		
+		// set course for instructor
+		jdbc.execute(sqlUpdateCourse);
 		
 		// first get review
 		ReviewVO reviewVO = reviewService.findById(1);
 		
 		// assert
-		assertNotNull(reviewVO, "return true");
+		assertNotNull(reviewVO, "return null");
 		assertEquals(1, reviewVO.getId());
-		assertNotNull(reviewVO.getComment(),"reviewVO.getComment() null");
+		assertNotNull(reviewVO.getComment(),"getComment() null");
 		
-		// delete
+		// delete review
 		reviewService.deleteReview(1);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// check other cascading entities
+		// get course with id=1
+		CourseVO courseVO = courseService.findById(1);
+		
+		// assert
+		// course must be unchanged except reviews (size=0)
+		assertNotNull(courseVO, "courseVO null");
+		assertEquals(1, courseVO.getId(), "course.getId()");
+		assertEquals(COURSE, courseVO.getTitle(), "course.getTitle()");
+		assertEquals(0, courseVO.getReviewsVO().size(), "course.getReviews().size()");
+		assertEquals(INSTRUCTOR_FIRSTNAME, courseVO.getInstructorVO().getFirstName(), "course.getInstructor().getFirstName()");
+		assertEquals(1, courseVO.getStudentsVO().size(), "course.getStudents().size()");
+		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
+		));
 		
 		// assert not existing review
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
@@ -240,37 +337,4 @@ public class ReviewServiceTest {
 			reviewService.deleteReview(2);
 		});
 	}
-	
-	@Test
-	void getAllReviews() {
-		log.info("getAllReviews");
-		
-		Iterable<ReviewVO> reviews = reviewService.getAllReviews();
-		
-		// assert
-		if (reviews instanceof Collection<?>) {
-			assertEquals(1, ((Collection<?>) reviews).size(), "reviews size not 1");
-		}
-		
-		// add new review
-		CourseVO courseVO = courseService.findById(1);
-		
-		// create review
-		// set id 0: this is to force a save of new item ... instead of update
-		ReviewVO reviewVO = new ReviewVO(REVIEW_NEW);
-		reviewVO.setId(0);
-		
-		// add to course
-		courseVO.addReviewVO(reviewVO);
-		
-		reviewService.saveReview(courseVO);
-		
-		reviews = reviewService.getAllReviews();
-		
-		// assert
-		if (reviews instanceof Collection<?>) {
-			assertEquals(2, ((Collection<?>) reviews).size(), "reviews size not 2");
-		}
-	}
-	
 }

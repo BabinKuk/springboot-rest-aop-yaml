@@ -2,7 +2,6 @@ package org.babinkuk.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.entity.Status;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.InstructorVO;
 import org.babinkuk.vo.StudentVO;
