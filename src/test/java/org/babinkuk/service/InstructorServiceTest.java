@@ -189,7 +189,7 @@ public class InstructorServiceTest {
 		
 		validateExistingInstructor(instructorVO);
 		
-		// assert not existing review
+		// assert not existing instructor
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
 			instructorService.findById(11);
 		});

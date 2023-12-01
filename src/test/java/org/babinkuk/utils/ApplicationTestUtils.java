@@ -84,6 +84,11 @@ public class ApplicationTestUtils {
 		studentVO.setCity(STUDENT_CITY_NEW);
 		studentVO.setZipCode(STUDENT_ZIPCODE_NEW);
 		
+		SortedMap<String, String> images = new TreeMap<String, String>();
+		images.put(STUDENT_FILE_NEW, STUDENT_IMAGE_NEW);
+		
+		studentVO.setImages(images);
+		
 		return studentVO;
 	}
 	

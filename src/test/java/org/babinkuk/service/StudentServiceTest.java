@@ -6,6 +6,7 @@ import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.vo.CourseVO;
+import org.babinkuk.vo.InstructorVO;
 import org.babinkuk.vo.StudentVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -108,7 +109,6 @@ public class StudentServiceTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -126,7 +126,6 @@ public class StudentServiceTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
@@ -147,48 +146,91 @@ public class StudentServiceTest {
 	}
 	
 	@Test
-	void getStudentById() {
-		//log.info("getStudentById");
+	void getAllStudents() {
 		
+		// get all students
+		Iterable<StudentVO> students = studentService.getAllStudents();
+		
+		// assert
+		if (students instanceof Collection<?>) {
+			assertEquals(1, ((Collection<?>) students).size(), "students size not 1");
+		}
+		
+		// add another student
+		StudentVO studentVO = ApplicationTestUtils.createStudent();
+		
+		studentService.saveStudent(studentVO);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		students = studentService.getAllStudents();
+		
+		// assert
+		if (students instanceof Collection<?>) {
+			assertEquals(2, ((Collection<?>) students).size(), "students size not 2 after insert");
+		}
+	}
+	
+	@Test
+	void getStudentById() {
+		
+		// get student id=2
 		StudentVO studentVO = studentService.findById(2);
 		
-		validatePrimaryStudent(studentVO);
+		// assert
+		validateExistingStudent(studentVO);
+		
+		// assert not existing student
+		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
+			studentService.findById(11);
+		});
+				
+		String expectedMessage = "Student with id=11 not found.";
+		String actualMessage = exception.getMessage();
+		
+	    assertTrue(actualMessage.contains(expectedMessage));
 	}
 	
 	@Test
 	void getStudentByEmail() {
-		//log.info("getStudentByEmail");
 		
+		// get student
 		StudentVO studentVO  = studentService.findByEmail(STUDENT_EMAIL);
 
-		validatePrimaryStudent(studentVO);
+		validateExistingStudent(studentVO);
+		
+		// get non existing student
+		studentVO  = studentService.findByEmail(STUDENT_EMAIL_NEW);
+		
+		// assert
+		assertNull(studentVO, "studentVO null");
 	}
 	
 	@Test
 	void addStudent() {
-		//log.info("addStudent");
 		
 		// first create student
 		// set id 0: this is to force a save of new item ... instead of update
 		StudentVO studentVO = ApplicationTestUtils.createStudent();
 		
 		studentService.saveStudent(studentVO);
-		
-		StudentVO studentVO2 = studentService.findByEmail(STUDENT_EMAIL_NEW);
-		
-		//log.info(studentVO2);
 
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+
+		studentVO = studentService.findByEmail(STUDENT_EMAIL_NEW);
+		
 		// assert
-		//assertEquals(2, studentVO2.getId());
-		assertEquals(studentVO.getFirstName(), studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(studentVO.getLastName(), studentVO2.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(studentVO.getEmail(), studentVO2.getEmail(),"studentVO.getEmail() NOK");
+		validateNewStudent(studentVO);
 	}
 	
 	@Test
 	void updateStudent() {
-		//log.info("updateStudent");
 		
+		// get student
 		StudentVO studentVO = studentService.findById(2);
 		
 		// update with new data
@@ -196,32 +238,22 @@ public class StudentServiceTest {
 		
 		studentService.saveStudent(studentVO);
 		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
 		// fetch again
-		StudentVO studentVO2 = studentService.findById(2);
+		studentVO = studentService.findById(2);
 		
 		// assert
-		assertEquals(studentVO.getId(), studentVO2.getId());
-		assertEquals(STUDENT_FIRSTNAME_UPDATED, studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(STUDENT_LASTNAME_UPDATED, studentVO2.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(STUDENT_EMAIL_UPDATED, studentVO2.getEmail(),"studentVO.getEmailAddress() NOK");
-		assertEquals(STUDENT_STREET_UPDATED, studentVO.getStreet(),"studentVO.getStreet() NOK");
-		assertEquals(STUDENT_CITY_UPDATED, studentVO.getCity(),"studentVO.getCity() NOK");
-		assertEquals(STUDENT_ZIPCODE_UPDATED, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
-		assertEquals(STUDENT_STATUS_UPDATED, studentVO.getStatus(),"studentVO.getStatus() NOK");
-		assertEquals(3, studentVO.getImages().size(), "studentVO.getImages size not 2");
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
-		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_UPDATED, STUDENT_IMAGE_UPDATED));
-		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");
+		validateUpdatedStudent(studentVO);
 	}
 	
 	@Test
 	void deleteStudent() {
-		//log.info("deleteStudent");
 		
-		// first get student
+		// get student
 		StudentVO studentVO = studentService.findById(2);
-		//log.info(studentVO);
 		
 		// assert
 		assertNotNull(studentVO, "return true");
@@ -229,6 +261,10 @@ public class StudentServiceTest {
 		
 		// delete
 		studentService.deleteStudent(2);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		// assert not existing student
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
@@ -246,30 +282,6 @@ public class StudentServiceTest {
 		});
 	}
 	
-	@Test
-	void getAllStudents() {
-		//log.info("getAllStudents");
-		
-		Iterable<StudentVO> students = studentService.getAllStudents();
-		
-		// assert
-		if (students instanceof Collection<?>) {
-			assertEquals(1, ((Collection<?>) students).size(), "students size not 1");
-		}
-		
-		// create student
-		StudentVO studentVO = ApplicationTestUtils.createStudent();
-		
-		studentService.saveStudent(studentVO);
-		
-		students = studentService.getAllStudents();
-		
-		// assert
-		if (students instanceof Collection<?>) {
-			assertEquals(2, ((Collection<?>) students).size(), "students size not 2 after insert");
-		}
-	}
-	
 	/**
 	 * testing scenario
 	 * 1. create new student
@@ -281,12 +293,11 @@ public class StudentServiceTest {
 	 */
 	@Test
 	void setCourse() {
-		//log.info("setCourse");
 		
 		// check existing student
 		StudentVO studentVO = studentService.findById(2);
 		
-		validatePrimaryStudent(studentVO);
+		validateExistingStudent(studentVO);
 		
 		// check existing course
 		CourseVO courseVO = courseService.findById(1);
@@ -308,18 +319,27 @@ public class StudentServiceTest {
 		
 		studentService.saveStudent(studentVO2);
 		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
 		studentVO2 = studentService.findByEmail(STUDENT_EMAIL_NEW);
 		
 		// assert
+		validateNewStudent(studentVO2);
 		//assertEquals(2, studentVO2.getId());
-		assertEquals(STUDENT_FIRSTNAME_NEW, studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(STUDENT_LASTNAME_NEW, studentVO2.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(STUDENT_EMAIL_NEW, studentVO2.getEmail(),"studentVO.getEmail() NOK");
+		assertEquals(STUDENT_FIRSTNAME_NEW, studentVO2.getFirstName(),"getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME_NEW, studentVO2.getLastName(),"getLastName() NOK");
+		assertEquals(STUDENT_EMAIL_NEW, studentVO2.getEmail(),"getEmail() NOK");
 		
 		// 2. create course
 		CourseVO courseVO2 = ApplicationTestUtils.createCourse();
 		
 		courseService.saveCourse(courseVO2);
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
 		
 		courseVO2 = courseService.findByTitle(COURSE_NEW);
 		
@@ -336,14 +356,18 @@ public class StudentServiceTest {
 		// set new course id=2 for old student
 		studentService.setCourse(studentVO, courseVO2, ActionType.ENROLL);
 		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
 		// fetch again old student
 		studentVO = studentService.findById(2);
 		
 		// assert
-		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(STUDENT_LASTNAME, studentVO.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(STUDENT_EMAIL, studentVO.getEmail(),"studentVO.getEmail() NOK");
-		assertEquals(2, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 2");
+		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME, studentVO.getLastName(),"getLastName() NOK");
+		assertEquals(STUDENT_EMAIL, studentVO.getEmail(),"getEmail() NOK");
+		assertEquals(2, studentVO.getCoursesVO().size(), "getCourses size not 2");
 		assertTrue(studentVO.getCoursesVO().stream().anyMatch(course ->
 			course.getTitle().equals(COURSE) && course.getId() == 1
 		));
@@ -355,10 +379,8 @@ public class StudentServiceTest {
 		studentVO2 = studentService.findByEmail(STUDENT_EMAIL_NEW);
 		
 		// assert
-		assertEquals(STUDENT_FIRSTNAME_NEW, studentVO2.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(STUDENT_LASTNAME_NEW, studentVO2.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(STUDENT_EMAIL_NEW, studentVO2.getEmail(),"studentVO.getEmail() NOK");
-		assertEquals(2, studentVO2.getCoursesVO().size(), "studentVO.getCourses size not 2");
+		validateNewStudent(studentVO2);
+		assertEquals(2, studentVO2.getCoursesVO().size(), "getCourses size not 2");
 		assertTrue(studentVO2.getCoursesVO().stream().anyMatch(course ->
 			course.getTitle().equals(COURSE) && course.getId() == 1
 		));
@@ -366,33 +388,35 @@ public class StudentServiceTest {
 			course.getTitle().equals(COURSE_NEW)// && course.getId() == 2
 		));
 		
+		// clear persistence context and sync with db
+		entityManager.flush();
 		entityManager.clear();
 		
-//		// fetch again courses
-//		courseVO = courseService.findById(1);
-//		courseVO2 = courseService.findById(2);
-//		
-//		// assert old course
-//		assertEquals(COURSE, courseVO.getTitle(),"courseVO.getTitle() NOK");
-//		assertNotNull(courseVO.getStudentsVO(),"courseVO.getStudentsVO() null");
-//		assertEquals(2, courseVO.getStudentsVO().size(), "courseVO.getStudentsVO() size not 2");
-//		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
-//			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
-//		));
-//		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
-//			student.getFirstName().equals(STUDENT_FIRSTNAME_NEW) && student.getLastName().equals(STUDENT_LASTNAME_NEW)
-//		));
-//		
-//		// assert new course
-//		assertEquals(COURSE_NEW, courseVO2.getTitle(),"courseVO2.getTitle() NOK");
-//		assertNotNull(courseVO2.getStudentsVO(),"courseVO2.getStudentsVO() null");
-//		assertEquals(2, courseVO2.getStudentsVO().size(), "courseVO2.getStudentsVO() size not 2");
-//		assertTrue(courseVO2.getStudentsVO().stream().anyMatch(student ->
-//			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
-//		));
-//		assertTrue(courseVO2.getStudentsVO().stream().anyMatch(student ->
-//			student.getFirstName().equals(STUDENT_FIRSTNAME_NEW) && student.getLastName().equals(STUDENT_LASTNAME_NEW)
-//		));
+		// fetch again courses
+		courseVO = courseService.findById(1);
+		courseVO2 = courseService.findById(2);
+		
+		// assert old course
+		assertEquals(COURSE, courseVO.getTitle(),"getTitle() NOK");
+		assertNotNull(courseVO.getStudentsVO(),"getStudentsVO() null");
+		assertEquals(2, courseVO.getStudentsVO().size(), "getStudentsVO() size not 2");
+		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
+		));
+		assertTrue(courseVO.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME_NEW) && student.getLastName().equals(STUDENT_LASTNAME_NEW)
+		));
+		
+		// assert new course
+		assertEquals(COURSE_NEW, courseVO2.getTitle(),"getTitle() NOK");
+		assertNotNull(courseVO2.getStudentsVO(),"getStudentsVO() null");
+		assertEquals(2, courseVO2.getStudentsVO().size(), "getStudentsVO() size not 2");
+		assertTrue(courseVO2.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME) && student.getId() == 2
+		));
+		assertTrue(courseVO2.getStudentsVO().stream().anyMatch(student ->
+			student.getFirstName().equals(STUDENT_FIRSTNAME_NEW) && student.getLastName().equals(STUDENT_LASTNAME_NEW)
+		));
 		
 		// withdraw both students from both courses
 		studentService.setCourse(studentVO2, courseVO2, ActionType.WITHDRAW);
@@ -400,7 +424,9 @@ public class StudentServiceTest {
 		studentService.setCourse(studentVO, courseVO2, ActionType.WITHDRAW);
 		studentService.setCourse(studentVO, courseVO, ActionType.WITHDRAW);
 		
+		// clear persistence context and sync with db
 		entityManager.flush();
+		entityManager.clear();
 		
 		// fetch again old student
 		studentVO = studentService.findById(2);
@@ -420,6 +446,8 @@ public class StudentServiceTest {
 		assertEquals(STUDENT_EMAIL_NEW, studentVO2.getEmail(),"studentVO2.getEmail() NOK");
 		assertEquals(0, studentVO2.getCoursesVO().size(), "studentVO2.getCourses size not 0");
 		
+		// clear persistence context and sync with db
+		entityManager.flush();
 		entityManager.clear();
 		
 		// fetch again courses
@@ -441,7 +469,7 @@ public class StudentServiceTest {
 		StudentVO nonExistingStudent = new StudentVO("firstName", "lastName", "email");
 		nonExistingStudent.setId(33);
 		
-//		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
+		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
 		final CourseVO finalCourseVO = courseVO;
 		
 		// assert not existing course
@@ -472,8 +500,7 @@ public class StudentServiceTest {
 	    assertTrue(actualMessage.contains(expectedMessage));	    
 	}
 	
-	private void validatePrimaryStudent(StudentVO studentVO) {
-		//log.info(studentVO.toString());
+	private void validateExistingStudent(StudentVO studentVO) {
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(2, studentVO.getId());
@@ -503,15 +530,57 @@ public class StudentServiceTest {
 		
 		// not neccessary
 		assertNotEquals("test", studentVO.getFirstName(),"studentVO.getFirstName() NOK");
+	}
+	
+	private void validateNewStudent(StudentVO studentVO) {
 		
-		// assert not existing student
-		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
-			studentService.findById(22);
-		});
+		assertNotNull(studentVO,"studentVO null");
+		//assertEquals(2, studentVO.getId());
+		assertNotNull(studentVO.getFirstName(),"getFirstName() null");
+		assertNotNull(studentVO.getLastName(),"getLastName() null");
+		assertNotNull(studentVO.getEmail(),"getEmail() null");
+		assertEquals(STUDENT_FIRSTNAME_NEW, studentVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME_NEW, studentVO.getLastName(),"getLastName() NOK");
+		assertEquals(STUDENT_EMAIL_NEW, studentVO.getEmail(),"getEmail() NOK");
+		assertEquals(STUDENT_STREET_NEW, studentVO.getStreet(),"getStreet() NOK");
+		assertEquals(STUDENT_CITY_NEW, studentVO.getCity(),"getCity() NOK");
+		assertEquals(STUDENT_ZIPCODE_NEW, studentVO.getZipCode(),"getZipCode() NOK");
+		assertEquals(STUDENT_STATUS_NEW, studentVO.getStatus(),"getStatus() NOK");
+		assertEquals(1, studentVO.getImages().size(), "getImages size not 2");
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_NEW, STUDENT_IMAGE_NEW));
+//		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");
+//		assertThat(studentVO.getCoursesVO(), contains(
+//		    hasProperty("id", is(1))
+//		));
+//		assertThat(studentVO.getCoursesVO(), contains(
+//			hasProperty("title", is("test course"))
+//		));
+//		assertTrue(studentVO.getCoursesVO().stream().anyMatch(course ->
+//			course.getTitle().equals(COURSE) && course.getId() == 1
+//		));
 		
-		String expectedMessage = "Student with id=22 not found.";
-		String actualMessage = exception.getMessage();
-
-	    assertTrue(actualMessage.contains(expectedMessage));
+		// not neccessary
+		assertNotEquals("test", studentVO.getFirstName(),"getFirstName() NOK");
+	}
+	
+	private void validateUpdatedStudent(StudentVO studentVO) {
+		
+		assertNotNull(studentVO,"studentVO null");
+		assertNotNull(studentVO.getFirstName(),"getFirstName() null");
+		assertNotNull(studentVO.getLastName(),"getLastName() null");
+		assertNotNull(studentVO.getEmail(),"getEmail() null");
+		assertEquals(2, studentVO.getId());
+		assertEquals(STUDENT_FIRSTNAME_UPDATED, studentVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME_UPDATED, studentVO.getLastName(),"getLastName() NOK");
+		assertEquals(STUDENT_EMAIL_UPDATED, studentVO.getEmail(),"getEmailAddress() NOK");
+		assertEquals(STUDENT_STREET_UPDATED, studentVO.getStreet(),"getStreet() NOK");
+		assertEquals(STUDENT_CITY_UPDATED, studentVO.getCity(),"getCity() NOK");
+		assertEquals(STUDENT_ZIPCODE_UPDATED, studentVO.getZipCode(),"getZipCode() NOK");
+		assertEquals(STUDENT_STATUS_UPDATED, studentVO.getStatus(),"getStatus() NOK");
+		assertEquals(3, studentVO.getImages().size(), "studentVO.getImages size not 3");
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
+		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_UPDATED, STUDENT_IMAGE_UPDATED));
+		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");		
 	}
 }
