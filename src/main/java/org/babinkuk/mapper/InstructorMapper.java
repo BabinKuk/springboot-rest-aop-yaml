@@ -73,7 +73,7 @@ public interface InstructorMapper {
 	// for insert
 	@Named("toEntity")
 //	@Mapping(source = "email", target = "email")
-	@Mapping(source = "instructorVO", target= "instructorDetail", qualifiedByName = "setDetails")
+	@Mapping(source = "instructorVO", target = "instructorDetail", qualifiedByName = "setDetails")
 	Instructor toEntity(InstructorVO instructorVO);
 	
 	// for update
@@ -83,10 +83,10 @@ public interface InstructorMapper {
 	
 	// when saving course
 	@Named("toEntity")
-	@Mapping(target = "firstName", ignore= true)
-	@Mapping(target = "lastName", ignore= true)
-	@Mapping(target = "email", ignore= true)
-	@Mapping(target = "instructorDetail", ignore= true)
+	@Mapping(target = "firstName", ignore = true)
+	@Mapping(target = "lastName", ignore = true)
+	@Mapping(target = "email", ignore = true)
+	@Mapping(target = "instructorDetail", ignore = true)
 	Instructor toEntity(CourseVO courseVO);
     
 	@Named("toVO")

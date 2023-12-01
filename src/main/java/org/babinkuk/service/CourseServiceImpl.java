@@ -94,7 +94,8 @@ public class CourseServiceImpl implements CourseService {
 			//log.info("mapping for update");
 			
 			// mapping
-			course = courseMapper.toEntity(courseVO, course);
+			//course = courseMapper.toEntity(courseVO, course);
+			course.setTitle(courseVO.getTitle());
 		} else {
 			// course not found
 			//log.info("mapping for insert");

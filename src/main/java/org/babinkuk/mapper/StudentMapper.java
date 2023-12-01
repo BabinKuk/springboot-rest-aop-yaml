@@ -66,9 +66,7 @@ public interface StudentMapper {
 	@Mapping(source = "address.street", target = "street")
 	@Mapping(source = "address.city", target = "city")
 	@Mapping(source = "address.zipCode", target = "zipCode")
-	@Mapping(source = "courses", target= "coursesVO")
-	//@Mapping(target = "courses.reviewsVO", ignore= true)
-	//@Mapping(target = "courses.studentsVO", ignore= true)
+	@Mapping(source = "courses", target = "coursesVO")
 	StudentVO toVO(Student student);
 	
 //	@Named("toVODetails")

@@ -234,7 +234,7 @@ public class StudentServiceTest {
 		StudentVO studentVO = studentService.findById(2);
 		
 		// update with new data
-		ApplicationTestUtils.updateExistingStudent(studentVO);
+		studentVO = ApplicationTestUtils.updateExistingStudent(studentVO);
 		
 		studentService.saveStudent(studentVO);
 		

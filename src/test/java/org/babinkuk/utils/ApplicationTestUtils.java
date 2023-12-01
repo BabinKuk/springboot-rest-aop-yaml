@@ -16,7 +16,6 @@ public class ApplicationTestUtils {
 	public static final Logger log = LogManager.getLogger(ApplicationTestUtils.class);
 	
 	public static InstructorVO updateExistingInstructor(InstructorVO instructorVO) {
-		//log.info("updateExistingInstructor");
 		
 		// update with new data
 		instructorVO.setFirstName(INSTRUCTOR_FIRSTNAME_UPDATED);
@@ -32,7 +31,6 @@ public class ApplicationTestUtils {
 	}
 	
 	public static InstructorVO createInstructor() {
-		//log.info("createInstructor");
 		
 		// set id 0: this is to force a save of new item ... instead of update
 		InstructorVO instructorVO = new InstructorVO(
@@ -54,7 +52,6 @@ public class ApplicationTestUtils {
 	}
 	
 	public static StudentVO updateExistingStudent(StudentVO studentVO) {
-		//log.info("updateExistingStudent");
 		
 		// update with new data
 		studentVO.setFirstName(STUDENT_FIRSTNAME_UPDATED);
@@ -70,7 +67,6 @@ public class ApplicationTestUtils {
 	}
 	
 	public static StudentVO createStudent() {
-		//log.info("createStudent");
 		
 		// set id 0: this is to force a save of new item ... instead of update
 		StudentVO studentVO = new StudentVO(
@@ -93,6 +89,7 @@ public class ApplicationTestUtils {
 	}
 	
 	public static CourseVO createCourse() {
+		
 		// create course
 		// set id 0: this is to force a save of new item ... instead of update
 		CourseVO courseVO = new CourseVO(COURSE_NEW);
@@ -101,14 +98,11 @@ public class ApplicationTestUtils {
 		return courseVO;
 	}
 	
-	public static CourseVO updateExistingCourse(CourseVO courseVO, StudentVO studentVO, InstructorVO instructorVO) {
-		//log.info("updateExistingCourse");
+	public static CourseVO updateExistingCourse(CourseVO courseVO) {
 		
 		// update with new data
 		courseVO.setTitle(COURSE_UPDATED);
-		courseVO.setInstructorVO(instructorVO);
-		courseVO.addStudentVO(studentVO);
-		
+		log.info(courseVO);
 		return courseVO;
 	}
 }
