@@ -5,11 +5,14 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.common.ApiResponse;
+import org.babinkuk.dao.CourseRepository;
 import org.babinkuk.dao.ReviewRepository;
+import org.babinkuk.entity.Course;
 import org.babinkuk.entity.Review;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.mapper.ReviewMapper;
+import org.babinkuk.validator.ActionType;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +43,12 @@ public class ReviewServiceImpl implements ReviewService {
 	private MessageSource messageSource;
 	
 	@Autowired
-	private CourseService courseService;
+	private CourseRepository courseRepository;
 	
 	@Autowired
-	public ReviewServiceImpl(ReviewRepository reviewRepository) {
+	public ReviewServiceImpl(ReviewRepository reviewRepository, CourseRepository courseRepository) {
 		this.reviewRepository = reviewRepository;
+		this.courseRepository = courseRepository;
 	}
 	
 	public ReviewServiceImpl() {
@@ -115,14 +119,31 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
-	public ApiResponse saveReview(CourseVO courseVO) throws ObjectException {
+	public ApiResponse saveReview(CourseVO courseVO, ReviewVO reviewVO) throws ObjectException {
 		
 		ApiResponse response = new ApiResponse();
 		
 		response.setStatus(HttpStatus.OK);
 		response.setMessage(getMessage(REVIEW_SAVE_SUCCESS));
 		
-		courseService.saveCourse(courseVO);
+		Optional<Course> entity = courseRepository.findById(courseVO.getId());
+		
+		Course course = null;
+		
+		if (entity.isPresent()) {
+			course = entity.get();
+			//log.info("courseVO ({})", courseVO);
+			
+			// add review
+			course.addReview(reviewMapper.toEntity(reviewVO));
+		} else {
+			// not found
+			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
+			log.warn(message);
+			throw new ObjectNotFoundException(message);
+		}
+		
+		courseRepository.save(course);
 		
 		return response;
 	}

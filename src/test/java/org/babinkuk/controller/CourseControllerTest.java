@@ -6,7 +6,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.service.CourseService;
-import org.babinkuk.service.CourseServiceImpl;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.service.ReviewService;
 import org.babinkuk.service.StudentService;
@@ -14,8 +13,6 @@ import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.validator.ValidatorCodes;
 import org.babinkuk.vo.CourseVO;
-import org.babinkuk.vo.InstructorVO;
-import org.babinkuk.vo.StudentVO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -96,6 +93,9 @@ public class CourseControllerTest {
 	@Value("${sql.script.course.delete}")
 	private String sqlDeleteCourse;
 	
+	@Value("${sql.script.course.update}")
+	private String sqlUpdateCourse;
+	
 	@Value("${sql.script.user.insert-instructor}")
 	private String sqlAddUserInstructor;
 	
@@ -148,7 +148,6 @@ public class CourseControllerTest {
 	
 	@BeforeAll
 	public static void setup() {
-		log.info("BeforeAll");
 
 		// init
 		request = new MockHttpServletRequest();
@@ -156,7 +155,6 @@ public class CourseControllerTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 		
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -174,7 +172,6 @@ public class CourseControllerTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
@@ -196,7 +193,6 @@ public class CourseControllerTest {
 	
 	@Test
 	void getAllCourses() throws Exception {
-		//log.info("getAllCourses");
 		
 		// get all courses
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES)
@@ -251,7 +247,6 @@ public class CourseControllerTest {
 	
 	@Test
 	void getCourse() throws Exception {
-		//log.info("getCourse");
 		
 		// get course with id=1
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES + "/{id}", 1)
@@ -377,7 +372,6 @@ public class CourseControllerTest {
 	}
 	
 	private void addCourseSuccess(String validationRole) throws Exception {
-		//log.info("addCourseSuccess {}", validationRole);
 		
 		// create course
 		CourseVO courseVO = ApplicationTestUtils.createCourse();
@@ -417,7 +411,6 @@ public class CourseControllerTest {
 	}
 	
 	private void addCourseFail(String validationRole) throws Exception {
-		//log.info("addCourseFail {}", validationRole);
 		
 		// create course
 		CourseVO courseVO = ApplicationTestUtils.createCourse();
@@ -446,7 +439,6 @@ public class CourseControllerTest {
 	
 	@Test
 	void addCourseRoleNotExist() throws Exception {
-		//log.info("addCourseRoleNotExist");
 		
 		// create course
 		CourseVO courseVO = ApplicationTestUtils.createCourse();
@@ -470,7 +462,6 @@ public class CourseControllerTest {
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$", hasSize(1))) // verify that json root element $ is still size 1
 			.andExpect(jsonPath("$[0].title", is(COURSE)))
-//			.andExpect(jsonPath("$[1].title", is("another course")))
 			;
 	}
 	
@@ -487,7 +478,6 @@ public class CourseControllerTest {
 	}
 	
 	private void updateCourseSuccess(String validationRole) throws Exception {
-		//log.info("updateCourseSuccess {}", validationRole);
 		
 		String courseTitle = COURSE_UPDATED;
 		
@@ -564,7 +554,6 @@ public class CourseControllerTest {
 	}
 	
 	private void updateCourseFail(String validationRole) throws Exception {
-		//log.info("updateCourseFail {}", validationRole);
 		
 		String courseTitle = COURSE_UPDATED;
 		
@@ -629,7 +618,6 @@ public class CourseControllerTest {
 	
 	@Test
 	void updateCourseRoleNotExist() throws Exception {
-		//log.info("updateCourseRoleNotExist");
 		
 		String courseTitle = COURSE_UPDATED;
 				
@@ -681,14 +669,12 @@ public class CourseControllerTest {
 	
 	@Test
 	void deleteCourseRoleAdmin() throws Exception {
-		//log.info("deleteCourseRoleAdmin");
 		
 		String validationRole = ROLE_ADMIN;
 		
 		// check if course id 1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		assertNotNull(courseVO,"courseVO null");
 		assertEquals(1, courseVO.getId());
@@ -714,6 +700,43 @@ public class CourseControllerTest {
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), id)))) //verify json element
 			;
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// get instructor with id=1
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
+				.param(VALIDATION_ROLE, validationRole)
+			).andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1))) // verify json root element id=1
+			.andExpect(jsonPath("$.firstName", is(INSTRUCTOR_FIRSTNAME))) // verify json element
+			;
+		
+		// get student with id=1 (coursesVO does not exist/empty)
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS + "/{id}", 2)
+				.param(VALIDATION_ROLE, validationRole)
+			).andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(2))) // verify json root element id=2
+			.andExpect(jsonPath("$.firstName", is(STUDENT_FIRSTNAME))) // verify json element
+			.andExpect(jsonPath("$.lastName", is(STUDENT_LASTNAME))) // verify json element
+			.andExpect(jsonPath("$.coursesVO").doesNotExist()) // verify json root element
+			;
+		
+		// get review with id=1
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 1)
+				.param(VALIDATION_ROLE, validationRole)
+			)
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), 1)))) // verify json element
+			;
+
 	}
 	
 	@Test
@@ -735,12 +758,10 @@ public class CourseControllerTest {
 	}
 	
 	private void deleteCourseFail(String validationRole) throws Exception {
-		//log.info("deleteCourseRoleFail {}", validationRole);
 		
 		// check if course id 1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		assertNotNull(courseVO,"courseVO null");
 		assertEquals(1, courseVO.getId());
@@ -749,7 +770,7 @@ public class CourseControllerTest {
 		assertNull(courseVO.getInstructorVO(),"courseVO.getInstructorVO() null");
 		assertEquals(1, courseVO.getStudentsVO().size());
 		
-		// delete student
+		// delete course
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + COURSES + "/{id}", id)
 				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
@@ -761,12 +782,10 @@ public class CourseControllerTest {
 	
 	@Test
 	void deleteCourseRoleNotExist() throws Exception {
-		//log.info("deleteCourseRoleNotExist");
 		
 		// check if course id 1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		assertNotNull(courseVO,"courseVO null");
 		assertEquals(1, courseVO.getId());
@@ -775,7 +794,7 @@ public class CourseControllerTest {
 		assertNull(courseVO.getInstructorVO(),"courseVO.getInstructorVO() null");
 		assertEquals(1, courseVO.getStudentsVO().size());
 		
-		// delete student
+		// delete course
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + COURSES + "/{id}", id)
 				.param(VALIDATION_ROLE, ROLE_NOT_EXIST)
 			).andDo(MockMvcResultHandlers.print())

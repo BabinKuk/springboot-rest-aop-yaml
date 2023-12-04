@@ -137,7 +137,6 @@ public class StudentControllerTest {
 	
 	@BeforeAll
 	public static void setup() {
-		log.info("BeforeAll");
 
 		// init
 		request = new MockHttpServletRequest();
@@ -145,7 +144,6 @@ public class StudentControllerTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 		
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -163,7 +161,6 @@ public class StudentControllerTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
@@ -185,8 +182,7 @@ public class StudentControllerTest {
 	
 	@Test
 	void getAllStudents() throws Exception {
-		log.info("getAllStudents");
-		
+
 		// get all students
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS)
 				.param(VALIDATION_ROLE, ROLE_ADMIN)
@@ -269,9 +265,8 @@ public class StudentControllerTest {
 	}
 	
 	private void getStudent(String validationRole) throws Exception {
-		//log.info("getStudent {}", validationRole);
 		
-		// get student with id=1
+		// get student with id=2
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS + "/{id}", 2)
 				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
@@ -281,7 +276,7 @@ public class StudentControllerTest {
 			.andExpect(jsonPath("$.lastName", is(STUDENT_LASTNAME))) // verify json element
 			;
 
-		// get student with id=2 (non existing)
+		// get student with id=22 (non existing)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS + "/{id}", 22)
 				.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
@@ -304,7 +299,6 @@ public class StudentControllerTest {
 	}
 	
 	private void addStudentSuccess(String validationRole) throws Exception {
-		//log.info("addStudentSuccess {}", validationRole);
 		
 		// create student
 		StudentVO studentVO = ApplicationTestUtils.createStudent();
@@ -358,7 +352,6 @@ public class StudentControllerTest {
 	}
 	
 	private void addStudentFail(String validationRole) throws Exception {
-		//log.info("addStudentFail {}", validationRole);
 		
 		// create student
 		StudentVO studentVO = ApplicationTestUtils.createStudent();
@@ -386,7 +379,6 @@ public class StudentControllerTest {
 	
 	@Test
 	void addStudentRoleNotExist() throws Exception {
-		//log.info("addStudentRoleNotExist");
 		
 		String validationRole = ROLE_NOT_EXIST;
 		
@@ -426,7 +418,6 @@ public class StudentControllerTest {
 	}
 	
 	private void updateStudentSuccess(String validationRole) throws Exception {
-		//log.info("updateStudentSuccess {}", validationRole);
 		
 		// check if student id 2 exists
 		StudentVO studentVO = studentService.findById(2);
@@ -486,7 +477,6 @@ public class StudentControllerTest {
 	}
 	
 	private void updateStudentFail(String validationRole) throws Exception {
-		//log.info("updateStudentFail {}", validationRole);
 		
 		// check if student id 2 exists
 		StudentVO studentVO = studentService.findById(2);
@@ -525,7 +515,6 @@ public class StudentControllerTest {
 	
 	@Test
 	void deleteStudentRoleAdmin() throws Exception {
-		//log.info("deleteStudentRoleAdmin");
 		
 		String validationRole = ROLE_ADMIN;
 		
@@ -556,6 +545,43 @@ public class StudentControllerTest {
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) //verify json element
 			;
+		
+		// clear persistence context and sync with db
+		entityManager.flush();
+		entityManager.clear();
+		
+		// get instructor with id=1
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
+				.param(VALIDATION_ROLE, validationRole)
+			).andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1))) // verify json root element id=1
+			.andExpect(jsonPath("$.firstName", is(INSTRUCTOR_FIRSTNAME))) // verify json element
+			;
+		
+		// get course with id=1 (validationRole ROLE_INSTRUCTOR)
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES + "/{id}", 1)
+				.param(VALIDATION_ROLE, ROLE_INSTRUCTOR)
+			).andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
+			.andExpect(jsonPath("$.title", is(COURSE))) // verify json element
+			.andExpect(jsonPath("$.reviewsVO", hasSize(1))) // verify json element
+			.andExpect(jsonPath("$.reviewsVO[0].comment", is(REVIEW)))
+			.andExpect(jsonPath("$.studentsVO").doesNotExist()) // verify json element
+			;
+		
+		// get review with id=1
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 1)
+				.param(VALIDATION_ROLE, validationRole)
+			).andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
+			.andExpect(jsonPath("$.comment", is(REVIEW))) // verify json element
+			;
 	}
 	
 	@Test
@@ -583,7 +609,6 @@ public class StudentControllerTest {
 	}
 	
 	private void deleteStudentFail(String validationRole) throws Exception {
-		//log.info("deleteStudentFail {}", validationRole);
 		
 		// check if student id 2 exists
 		int id = 2;
@@ -592,8 +617,8 @@ public class StudentControllerTest {
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(id, studentVO.getId());
-		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
-		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"assertEquals studentVO.getFirstName() failure");
+		assertNotNull(studentVO.getFirstName(),"getFirstName() null");
+		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"assertEquals getFirstName() failure");
 				
 		// delete student
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + STUDENTS + "/{id}", id)
@@ -1142,7 +1167,7 @@ public class StudentControllerTest {
 	}
 	
 	private void validateStudent() {
-		//log.info(studentVO.toString());
+
 		StudentVO studentVO = studentService.findById(2);
 		
 		assertNotNull(studentVO,"studentVO null");

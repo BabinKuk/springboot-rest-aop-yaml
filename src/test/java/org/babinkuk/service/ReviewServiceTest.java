@@ -168,7 +168,7 @@ public class ReviewServiceTest {
 		// add to course
 		courseVO.addReviewVO(reviewVO);
 		
-		reviewService.saveReview(courseVO);
+		reviewService.saveReview(courseVO, reviewVO);
 		
 		// clear persistence context and sync with db
 		entityManager.flush();
@@ -233,7 +233,7 @@ public class ReviewServiceTest {
 		// add to course
 		courseVO.addReviewVO(reviewVO);
 		
-		reviewService.saveReview(courseVO);
+		reviewService.saveReview(courseVO, reviewVO);
 		
 		// clear persistence context and sync with db
 		entityManager.flush();

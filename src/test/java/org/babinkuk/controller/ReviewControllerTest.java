@@ -180,7 +180,6 @@ public class ReviewControllerTest {
 	
 	@Test
 	void getAllReviews() throws Exception {
-		//log.info("getAllReviews");
 		
 		// get all reviews
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
@@ -203,7 +202,7 @@ public class ReviewControllerTest {
 		// add to course
 		courseVO.addReviewVO(reviewVO);
 		
-		reviewService.saveReview(courseVO);
+		reviewService.saveReview(courseVO, reviewVO);
 		
 		// get all reviews (different validationRole param)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
@@ -273,29 +272,26 @@ public class ReviewControllerTest {
 	}
 	
 	private void getReview(String validationRole) throws Exception {
-		//log.info("getReview {}", validationRole);
-	
-		//if (StringUtils.isBlank(validationRole) || validationRole.equals(TestUtils.ROLE_ADMIN) || validationRole.equals(TestUtils.ROLE_INSTRUCTOR) || validationRole.equals(TestUtils.ROLE_STUDENT)) {
-			// get review with id=1
-			mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 1)
-					.param(VALIDATION_ROLE, validationRole)
-				)
-				.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
-				.andExpect(jsonPath("$.comment", is(REVIEW))) // verify json element
-				;
+		
+		// get review with id=1
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 1)
+				.param(VALIDATION_ROLE, validationRole)
+			)
+			.andDo(MockMvcResultHandlers.print()).andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(1))) // verify json root element id is 1
+			.andExpect(jsonPath("$.comment", is(REVIEW))) // verify json element
+			;
 
-			// get review with id=2 (non existing)
-			mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 2)
-					.param(VALIDATION_ROLE, ROLE_ADMIN)
-				)
-				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), 2)))) // verify json element
-				;
-
+		// get review with id=2 (non existing)
+		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", 2)
+				.param(VALIDATION_ROLE, ROLE_ADMIN)
+			)
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), 2)))) // verify json element
+			;
 	}
 	@Test
 	void addReviewRoleAdmin() throws Exception {

@@ -31,7 +31,7 @@ public interface ReviewService {
 	 * @return
 	 * @throws ObjectException
 	 */
-	public ApiResponse saveReview(CourseVO courseVO) throws ObjectException;
+	public ApiResponse saveReview(CourseVO courseVO, ReviewVO reviewVO) throws ObjectException;
 	
 	/**
 	 * update existing review

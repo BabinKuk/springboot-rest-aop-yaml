@@ -209,9 +209,8 @@ public class StudentServiceImpl implements StudentService {
 			student.removeCourse(course);
 		}
 		
-		log.info("saving student id={}, courses={}", student.getId(), student.getCourses());
+		//log.info("saving student id={}, courses={}", student.getId(), student.getCourses());
 		studentRepository.save(student);
-		
 		
 		return response;
 	}

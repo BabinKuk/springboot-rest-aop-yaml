@@ -394,7 +394,7 @@ public class StudentServiceTest {
 		
 		// fetch again courses
 		courseVO = courseService.findById(1);
-		courseVO2 = courseService.findById(2);
+		courseVO2 = courseService.findByTitle(COURSE_NEW);
 		
 		// assert old course
 		assertEquals(COURSE, courseVO.getTitle(),"getTitle() NOK");

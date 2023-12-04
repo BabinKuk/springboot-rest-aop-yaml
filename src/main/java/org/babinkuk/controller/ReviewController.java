@@ -118,11 +118,11 @@ public class ReviewController {
 		// this is to force a save of new item ... instead of update
 		reviewVO.setId(0);
 		
-		courseVO.addReviewVO(reviewVO);
+		//courseVO.addReviewVO(reviewVO);
 		
 		validatorFactory.getValidator(validationRole).validate(reviewVO, ActionType.CREATE, ValidatorType.REVIEW);
 		
-		return ResponseEntity.of(Optional.ofNullable(reviewService.saveReview(courseVO)));
+		return ResponseEntity.of(Optional.ofNullable(reviewService.saveReview(courseVO, reviewVO)));
 	}
 	
 	/**

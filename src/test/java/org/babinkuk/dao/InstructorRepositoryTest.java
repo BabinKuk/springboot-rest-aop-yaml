@@ -252,9 +252,9 @@ public class InstructorRepositoryTest {
 		// delete instructor
 		instructorRepository.deleteById(1);
 		
-		// clear persistence context and sync with db
-		entityManager.flush();
-		entityManager.clear();
+//		// clear persistence context and sync with db
+//		entityManager.flush();
+//		entityManager.clear();
 		
 		instructor = instructorRepository.findById(1);
 		

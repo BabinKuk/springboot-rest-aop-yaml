@@ -183,7 +183,6 @@ public class InstructorControllerTest {
 	
 	@Test
 	void getAllInstructors() throws Exception {
-		//log.info("getAllInstructors");
 		
 		// get all instructors
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS)
@@ -268,7 +267,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void getInstructor(String validationRole) throws Exception {
-		//log.info("getInstructor {}", validationRole);
 		
 		// get instructor with id=1
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", 1)
@@ -302,7 +300,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void addInstructorSuccess(String validationRole) throws Exception {
-		//log.info("addInstructorSuccess {}", validationRole);
 		
 		// create instructor
 		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
@@ -329,14 +326,14 @@ public class InstructorControllerTest {
 		// additional check
 		instructorVO = instructorService.findByEmail(INSTRUCTOR_EMAIL_NEW);
 		
-		log.info(instructorVO.toString());
+		//log.info(instructorVO.toString());
 		
 		assertNotNull(instructorVO,"instructorVO null");
-		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertNotNull(instructorVO.getLastName(),"instructorVO.getLastName() null");
-		assertNotNull(instructorVO.getEmail(),"instructorVO.getEmail() null");
-		assertEquals(INSTRUCTOR_FIRSTNAME_NEW, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(INSTRUCTOR_LASTNAME_NEW, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
+		assertNotNull(instructorVO.getFirstName(),"getFirstName() null");
+		assertNotNull(instructorVO.getLastName(),"getLastName() null");
+		assertNotNull(instructorVO.getEmail(),"getEmail() null");
+		assertEquals(INSTRUCTOR_FIRSTNAME_NEW, instructorVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME_NEW, instructorVO.getLastName(),"getLastName() NOK");
 	}
 	
 	@Test
@@ -358,7 +355,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void addInstructorFail(String validationRole) throws Exception {
-		//log.info("addInstructorFail {}", validationRole);
 		
 		// create instructor
 		InstructorVO instructorVO = ApplicationTestUtils.createInstructor();
@@ -397,7 +393,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void updateInstructorSuccess(String validationRole) throws Exception {
-		//log.info("updateInstructorSuccess {}", validationRole);
 		
 		// check if instructor id 1 exists
 		InstructorVO instructorVO = instructorService.findById(1);
@@ -405,8 +400,8 @@ public class InstructorControllerTest {
 		
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
-		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals instructorVO.getFirstName() failure");
+		assertNotNull(instructorVO.getFirstName(),"getFirstName() null");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"assertEquals getFirstName() failure");
 		
 		// update instructor
 		instructorVO = ApplicationTestUtils.updateExistingInstructor(instructorVO);
@@ -457,7 +452,6 @@ public class InstructorControllerTest {
 	}
 	
 	private	void updateInstructorFail(String validationRole) throws Exception {
-		//log.info("updateInstructorFail {}", validationRole);
 		
 		// check if instructor id 1 exists
 		InstructorVO instructorVO = instructorService.findById(1);
@@ -527,7 +521,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void deleteInstructorSuccess(String validationRole) throws Exception {
-		//log.info("deleteInstructorSuccess {}", validationRole);
 		
 		// check if instructor id 1 exists
 		int id = 1;
@@ -561,7 +554,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void deleteInstructorFail(String validationRole) throws Exception {
-		//log.info("deleteInstructor {}", validationRole);
 		
 		// check if instructor id 1 exists
 		int id = 1;
@@ -591,7 +583,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void enrollCourseSuccess(String validationRole) throws Exception {
-		//log.info("enrollCourseSuccess {}", validationRole);
 		
 		int id = 1;
 		
@@ -667,7 +658,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void enrollCourseFail(String validationRole) throws Exception {
-		//log.info("enrollCourseFail {}", validationRole);
 		
 		int id = 1;
 		
@@ -727,7 +717,6 @@ public class InstructorControllerTest {
 	
 	@Test
 	void enrollInstructorRoleNotExist() throws Exception {
-		//log.info("enrollInstructorRoleNotExist");
 		
 		int id = 1;
 		
@@ -792,7 +781,6 @@ public class InstructorControllerTest {
 	}
 	
 	private void withdrawCourseSuccess(String validationRole) throws Exception {
-		//log.info("withdrawCourseSuccess");
 		
 		int id = 1;
 		
