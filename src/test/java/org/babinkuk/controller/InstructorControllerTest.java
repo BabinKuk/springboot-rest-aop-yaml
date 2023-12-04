@@ -135,7 +135,6 @@ public class InstructorControllerTest {
 	
 	@BeforeAll
 	public static void setup() {
-		log.info("BeforeAll");
 
 		// init
 		request = new MockHttpServletRequest();
@@ -143,7 +142,6 @@ public class InstructorControllerTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 		
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -161,7 +159,6 @@ public class InstructorControllerTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
