@@ -306,7 +306,7 @@ public class StudentValidatorTest {
 			;
 		
 		// additional check
-		// get all instructors
+		// get all students
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS)
 				.param(VALIDATION_ROLE, validationRole)
 			)
@@ -334,7 +334,7 @@ public class StudentValidatorTest {
 		
 		int id = 22;
 		
-		// check if student id 22 exists
+		// check if student id=22 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + STUDENTS + "/{id}", id)
 				.param(VALIDATION_ROLE, validationRole)
 			)
@@ -375,7 +375,7 @@ public class StudentValidatorTest {
 		
 		int id = 2;
 		
-		// check if student id 2 exists
+		// check if student id=2 exists
 		StudentVO studentVO = studentService.findById(id);
 		
 		assertNotNull(studentVO,"studentVO null");
@@ -383,7 +383,7 @@ public class StudentValidatorTest {
 		assertNotNull(studentVO.getFirstName(),"getFirstName() null");
 		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"assertEquals getFirstName() failure");
 		
-		// update instructor
+		// update student
 		studentVO.setFirstName("");
 		studentVO.setLastName("");
 		studentVO.setEmail("");
@@ -420,7 +420,7 @@ public class StudentValidatorTest {
 		
 		int id = 2;
 		
-		// check if student id 2 exists
+		// check if student id=2 exists
 		StudentVO studentVO = studentService.findById(id);
 		
 		assertNotNull(studentVO,"studentVO null");
@@ -461,7 +461,7 @@ public class StudentValidatorTest {
 		
 		int id = 2;
 		
-		// check if student id 2 exists
+		// check if student id=2 exists
 		StudentVO studentVO = studentService.findById(id);
 		
 		assertNotNull(studentVO,"studentVO null");

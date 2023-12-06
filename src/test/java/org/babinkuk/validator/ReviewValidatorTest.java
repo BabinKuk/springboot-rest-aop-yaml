@@ -5,7 +5,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.service.CourseService;
 import org.babinkuk.service.ReviewService;
 import org.babinkuk.vo.ReviewVO;
 import org.junit.jupiter.api.AfterEach;
@@ -30,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.babinkuk.utils.ApplicationTestConstants.*;
-import static org.babinkuk.config.Api.REVIEWS;
-import static org.babinkuk.config.Api.ROOT;
+import static org.babinkuk.config.Api.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,9 +61,6 @@ public class ReviewValidatorTest {
 	
 	@Autowired
 	private ReviewService reviewService;
-	
-	@Autowired
-	private CourseService courseService;
 	
 	@Value("${sql.script.review.insert}")
 	private String sqlAddReview;
@@ -195,10 +190,10 @@ public class ReviewValidatorTest {
 	private void addEmptyReview(String validationRole) throws Exception {
 		
 		// create invalid review 
-		ReviewVO reviewVO = new ReviewVO("");
+		ReviewVO reviewVO = new ReviewVO();
 		
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + REVIEWS + "/{courseId}", 1)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 			)
@@ -214,7 +209,7 @@ public class ReviewValidatorTest {
 		// additional check
 		// get all reviews
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -233,7 +228,7 @@ public class ReviewValidatorTest {
 		ReviewVO reviewVO = new ReviewVO("");
 		
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + REVIEWS + "/{courseId}", 1)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 			)
@@ -249,7 +244,7 @@ public class ReviewValidatorTest {
 		// additional check
 		// get all reviews
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
@@ -281,9 +276,9 @@ public class ReviewValidatorTest {
 		// create invalid review 
 		ReviewVO reviewVO = new ReviewVO("review");
 		
-		// invalid course id 2
+		// invalid course id=2
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + REVIEWS + "/{courseId}", 2)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 			)
@@ -295,7 +290,7 @@ public class ReviewValidatorTest {
 		// additional check
 		// get all reviews
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -308,14 +303,12 @@ public class ReviewValidatorTest {
 	@Test
 	void addReviewRoleInvalidCourseNoRole() throws Exception {
 		
-		//String validationRole = ROLE_ADMIN;
-		
 		// create invalid review 
 		ReviewVO reviewVO = new ReviewVO("review");
 		
-		// invalid course id 2
+		// invalid course id=2
 		mockMvc.perform(MockMvcRequestBuilders.post(ROOT + REVIEWS + "/{courseId}", 2)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 			)
@@ -327,7 +320,7 @@ public class ReviewValidatorTest {
 		// additional check
 		// get all reviews
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -359,9 +352,9 @@ public class ReviewValidatorTest {
 		
 		int id = 2;
 		
-		// check if review id 2 exists
+		// check if review id=2 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", id)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -369,13 +362,13 @@ public class ReviewValidatorTest {
 			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
 			;
 		
-		// create invalid review (set invalid id 2)
+		// create invalid review (set invalid id=2)
 		ReviewVO reviewVO = new ReviewVO("review");
 		reviewVO.setId(id);
 		
 		if (validationRole.equals(ROLE_STUDENT)) {
 			mockMvc.perform(MockMvcRequestBuilders.put(ROOT + REVIEWS)
-					.param("validationRole", validationRole)
+					.param(VALIDATION_ROLE, validationRole)
 					.contentType(APPLICATION_JSON_UTF8)
 					.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 				)
@@ -386,7 +379,7 @@ public class ReviewValidatorTest {
 				;
 		} else {
 			mockMvc.perform(MockMvcRequestBuilders.put(ROOT + REVIEWS)
-					.param("validationRole", validationRole)
+					.param(VALIDATION_ROLE, validationRole)
 					.contentType(APPLICATION_JSON_UTF8)
 					.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 				)
@@ -400,12 +393,11 @@ public class ReviewValidatorTest {
 	@Test
 	void updateInvalidReviewNoRole() throws Exception {
 		
-		//String validationRole = ROLE_STUDENT;
 		int id = 2;
 		
-		// check if review id 2 exists
+		// check if review id=2 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", id)
-			//	.param("validationRole", validationRole)
+			//	.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -418,7 +410,7 @@ public class ReviewValidatorTest {
 		reviewVO.setId(id);
 		
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + REVIEWS)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(reviewVO)) // generate json from java object
 			)
@@ -451,9 +443,9 @@ public class ReviewValidatorTest {
 		
 		int id = 2;
 		
-		// check if review id 2 exists
+		// check if review id =2 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", id)
-				.param("validationRole", validationRole)
+				.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -464,7 +456,7 @@ public class ReviewValidatorTest {
 		// delete review
 		if (validationRole.equals(ROLE_ADMIN)) {
 			mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + REVIEWS + "/{id}", id)
-					.param("validationRole", validationRole)
+					.param(VALIDATION_ROLE, validationRole)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
@@ -473,7 +465,7 @@ public class ReviewValidatorTest {
 				;
 		} else {
 			mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + REVIEWS + "/{id}", id)
-					.param("validationRole", validationRole)
+					.param(VALIDATION_ROLE, validationRole)
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().is4xxClientError())
@@ -489,9 +481,9 @@ public class ReviewValidatorTest {
 		
 		int id = 2;
 		
-		// check if review id 2 exists
+		// check if review id=2 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + REVIEWS + "/{id}", id)
-				//.param("validationRole", validationRole)
+				//.param(VALIDATION_ROLE, validationRole)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
@@ -501,7 +493,7 @@ public class ReviewValidatorTest {
 				
 		// delete review
 		mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + REVIEWS + "/{id}", id)
-			//	.param("validationRole", ROLE_STUDENT)
+			//	.param(VALIDATION_ROLE, ROLE_STUDENT)
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().is4xxClientError())

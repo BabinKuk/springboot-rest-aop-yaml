@@ -2,7 +2,6 @@ package org.babinkuk.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.entity.Instructor;
 import org.babinkuk.entity.Status;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
@@ -25,10 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.babinkuk.utils.ApplicationTestConstants.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -286,7 +282,7 @@ public class InstructorServiceTest {
 		
 	    assertTrue(actualMessage.contains(expectedMessage));
 	    
-		// delete not existing instructor
+		// delete non-existing instructor
 		exception = assertThrows(EmptyResultDataAccessException.class, () -> {
 			instructorService.deleteInstructor(2);
 		});
@@ -344,7 +340,7 @@ public class InstructorServiceTest {
 		validateExistingInstructor(instructorVO);
 		
 		// assert instructor -> course
-		assertEquals(1, instructorVO.getCourses().size(), "instrucrs.getCourses size not 1");
+		assertEquals(1, instructorVO.getCourses().size(), "instrucors.getCourses size not 1");
 		assertTrue(instructorVO.getCourses().stream().anyMatch(course ->
 			course.getTitle().equals(COURSE) && course.getId() == 1
 		));
@@ -446,7 +442,7 @@ public class InstructorServiceTest {
 		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
 		final InstructorVO insVO = instructorVO;
 		
-		// assert not existing course
+		// assert non-existing course
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
 			instructorService.setCourse(insVO, courseVO3, ActionType.ENROLL);
 		});
@@ -463,7 +459,7 @@ public class InstructorServiceTest {
  		insVO2.setId(22);
  		
  		final CourseVO crsVO2 = courseVO;
- 		// assert not existing instructor
+ 		// assert non-existing instructor
  		exception = assertThrows(ObjectNotFoundException.class, () -> {
  			instructorService.setCourse(insVO2, crsVO2, ActionType.ENROLL);
  		});
@@ -475,32 +471,31 @@ public class InstructorServiceTest {
 	}
 	
 	private void validateExistingInstructor(InstructorVO instructorVO) {
-		//log.info(instructorVO.toString());
 		
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
-		assertNotNull(instructorVO.getFirstName(),"instructorVO.getFirstName() null");
-		assertNotNull(instructorVO.getLastName(),"instructorVO.getLastName() null");
-		assertNotNull(instructorVO.getEmail(),"instructorVO.getEmail() null");
-		assertNotNull(instructorVO.getSalary(),"instructorVO.getSalary() null");
-		assertNotNull(instructorVO.getStatus(),"instructorVO.getStatus() null");
-		assertNotNull(instructorVO.getImages(),"instructorVO.getImages() null");
-		assertNotNull(instructorVO.getYoutubeChannel(),"instructorVO.getYoutubeChannel() null");
-		assertNotNull(instructorVO.getHobby(),"instructorVO.getHobby() null");
-		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"instructorVO.getFirstName() NOK");
-		assertEquals(INSTRUCTOR_LASTNAME, instructorVO.getLastName(),"instructorVO.getLastName() NOK");
-		assertEquals(INSTRUCTOR_EMAIL, instructorVO.getEmail(),"instructorVO.getEmail() NOK");
-		assertEquals(1000, instructorVO.getSalary(),"instructorVO.getSalary() NOK");
-		assertEquals(Status.ACTIVE, instructorVO.getStatus(),"instructorVO.getStatus() NOK");
-		assertEquals(2, instructorVO.getImages().size(), "instructors.getImages size not 2");
+		assertNotNull(instructorVO.getFirstName(),"getFirstName() null");
+		assertNotNull(instructorVO.getLastName(),"getLastName() null");
+		assertNotNull(instructorVO.getEmail(),"getEmail() null");
+		assertNotNull(instructorVO.getSalary(),"getSalary() null");
+		assertNotNull(instructorVO.getStatus(),"getStatus() null");
+		assertNotNull(instructorVO.getImages(),"getImages() null");
+		assertNotNull(instructorVO.getYoutubeChannel(),"getYoutubeChannel() null");
+		assertNotNull(instructorVO.getHobby(),"getHobby() null");
+		assertEquals(INSTRUCTOR_FIRSTNAME, instructorVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(INSTRUCTOR_LASTNAME, instructorVO.getLastName(),"getLastName() NOK");
+		assertEquals(INSTRUCTOR_EMAIL, instructorVO.getEmail(),"getEmail() NOK");
+		assertEquals(1000, instructorVO.getSalary(),"getSalary() NOK");
+		assertEquals(Status.ACTIVE, instructorVO.getStatus(),"getStatus() NOK");
+		assertEquals(2, instructorVO.getImages().size(), "getImages size not 2");
 		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_1, INSTRUCTOR_IMAGE_1));
 		assertThat(instructorVO.getImages(), IsMapContaining.hasEntry(INSTRUCTOR_FILE_11, INSTRUCTOR_IMAGE_11));
-		assertEquals(INSTRUCTOR_YOUTUBE, instructorVO.getYoutubeChannel(),"instructorVO.getYoutubeChannel() NOK");
-		assertEquals(INSTRUCTOR_HOBBY, instructorVO.getHobby(),"instructorVO.getHobby() NOK");
+		assertEquals(INSTRUCTOR_YOUTUBE, instructorVO.getYoutubeChannel(),"getYoutubeChannel() NOK");
+		assertEquals(INSTRUCTOR_HOBBY, instructorVO.getHobby(),"getHobby() NOK");
 		// not neccessary
-		assertNotEquals("test hobb", instructorVO.getHobby(),"instructorVO.getHobby() NOK");
+		assertNotEquals("test hobb", instructorVO.getHobby(),"getHobby() NOK");
 		
-		// assert not existing instructor
+		// assert non-existing instructor
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
 			instructorService.findById(22);
 		});

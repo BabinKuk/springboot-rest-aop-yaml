@@ -324,7 +324,6 @@ public class ReviewControllerTest {
 	}
 	
 	private void addReview(String validationRole) throws Exception {
-		//log.info("addReview {}", validationRole);
 		
 		// create review
 		ReviewVO reviewVO = new ReviewVO("another review");
@@ -407,11 +406,9 @@ public class ReviewControllerTest {
 	}
 	
 	private void updateReview(String validationRole) throws Exception {
-		log.info("updateReview {}", validationRole);
 		
-		// check if review id 1 exists
+		// check if review id=1 exists
 		ReviewVO reviewVO = reviewService.findById(1);
-		log.info(reviewVO.toString());
 		
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());
@@ -498,12 +495,10 @@ public class ReviewControllerTest {
 	}
 
 	private void deleteReview(String validationRole) throws Exception {
-		//log.info("deleteReview {}", validationRole);
 		
-		// check if review id 1 exists
+		// check if review id=1 exists
 		int id = 1;
 		ReviewVO reviewVO = reviewService.findById(id);
-		//log.info(reviewVO.toString());
 		
 		assertNotNull(reviewVO,"reviewVO null");
 		assertEquals(1, reviewVO.getId());

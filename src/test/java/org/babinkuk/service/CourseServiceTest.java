@@ -2,12 +2,9 @@ package org.babinkuk.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.entity.Course;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.CourseVO;
-import org.babinkuk.vo.InstructorVO;
-import org.babinkuk.vo.StudentVO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -111,7 +108,6 @@ public class CourseServiceTest {
 	
 	@BeforeEach
     public void setupDatabase() {
-		log.info("BeforeEach");
 
 		jdbc.execute(sqlAddInstructorDetail);
 		jdbc.execute(sqlAddUserInstructor);
@@ -129,7 +125,6 @@ public class CourseServiceTest {
 	
 	@AfterEach
 	public void setupAfterTransaction() {
-		log.info("AfterEach");
 
 		jdbc.execute(sqlDeleteCourseStudent);
 		jdbc.execute(sqlDeleteStudent);
@@ -351,13 +346,5 @@ public class CourseServiceTest {
 		assertEquals(COURSE_NEW, courseVO.getTitle(),"getTitle() NOK");
 		assertEquals(0, courseVO.getStudentsVO().size(), "getStudents size not 0");
 		assertEquals(0, courseVO.getReviewsVO().size(), "getReviews size not 0");
-	}
-	
-	private CourseVO updateCourse(CourseVO courseVO) {
-				
-		// update with new data
-		courseVO.setTitle(COURSE_UPDATED);
-		
-		return courseVO;
 	}
 }

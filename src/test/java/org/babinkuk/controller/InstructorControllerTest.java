@@ -391,7 +391,7 @@ public class InstructorControllerTest {
 	
 	private void updateInstructorSuccess(String validationRole) throws Exception {
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		InstructorVO instructorVO = instructorService.findById(1);
 		//log.info(instructorVO.toString());
 		
@@ -450,7 +450,7 @@ public class InstructorControllerTest {
 	
 	private	void updateInstructorFail(String validationRole) throws Exception {
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		InstructorVO instructorVO = instructorService.findById(1);
 		//log.info(instructorVO.toString());
 		
@@ -519,7 +519,7 @@ public class InstructorControllerTest {
 	
 	private void deleteInstructorSuccess(String validationRole) throws Exception {
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		int id = 1;
 		InstructorVO instructorVO = instructorService.findById(id);
 		//log.info(instructorVO.toString());
@@ -552,7 +552,7 @@ public class InstructorControllerTest {
 	
 	private void deleteInstructorFail(String validationRole) throws Exception {
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		int id = 1;
 		InstructorVO instructorVO = instructorService.findById(id);
 		//log.info(instructorVO.toString());
@@ -940,7 +940,7 @@ public class InstructorControllerTest {
 	
 	private void validateCourse() {
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
 		//log.info(courseVO.toString());
@@ -955,7 +955,7 @@ public class InstructorControllerTest {
 	
 	private void validateInstructor() {
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		int id = 1;
 		InstructorVO instructorVO = instructorService.findById(id);
 		//log.info(instructorVO.toString());

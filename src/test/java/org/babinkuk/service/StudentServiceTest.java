@@ -6,7 +6,6 @@ import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.vo.CourseVO;
-import org.babinkuk.vo.InstructorVO;
 import org.babinkuk.vo.StudentVO;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.jupiter.api.AfterEach;
@@ -472,7 +471,7 @@ public class StudentServiceTest {
 		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
 		final CourseVO finalCourseVO = courseVO;
 		
-		// assert not existing course
+		// assert non existing course
 		Exception exception = assertThrows(ObjectNotFoundException.class, () -> {
 			studentService.setCourse(nonExistingStudent, finalCourseVO, ActionType.ENROLL);
 		});
@@ -489,7 +488,7 @@ public class StudentServiceTest {
 		// for avoiding Local variable instructorVO defined in an enclosing scope must be final or effectively final
 		final StudentVO finalStudentVO = studentVO;
 		
-		// assert not existing course
+		// assert non existing course
 		exception = assertThrows(ObjectNotFoundException.class, () -> {
 			studentService.setCourse(finalStudentVO, nonExistingCourseVO, ActionType.ENROLL);
 		});
@@ -504,20 +503,20 @@ public class StudentServiceTest {
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(2, studentVO.getId());
-		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
-		assertNotNull(studentVO.getLastName(),"studentVO.getLastName() null");
-		assertNotNull(studentVO.getEmail(),"studentVO.getEmail() null");
-		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"studentVO.getFirstName() NOK");
-		assertEquals(STUDENT_LASTNAME, studentVO.getLastName(),"studentVO.getLastName() NOK");
-		assertEquals(STUDENT_EMAIL, studentVO.getEmail(),"studentVO.getEmail() NOK");
-		assertEquals(STUDENT_STREET, studentVO.getStreet(),"studentVO.getStreet() NOK");
-		assertEquals(STUDENT_CITY, studentVO.getCity(),"studentVO.getCity() NOK");
-		assertEquals(STUDENT_ZIPCODE, studentVO.getZipCode(),"studentVO.getZipCode() NOK");
-		assertEquals(STUDENT_STATUS, studentVO.getStatus(),"studentVO.getStatus() NOK");
-		assertEquals(2, studentVO.getImages().size(), "studentVO.getImages size not 2");
+		assertNotNull(studentVO.getFirstName(),"getFirstName() null");
+		assertNotNull(studentVO.getLastName(),"getLastName() null");
+		assertNotNull(studentVO.getEmail(),"getEmail() null");
+		assertEquals(STUDENT_FIRSTNAME, studentVO.getFirstName(),"getFirstName() NOK");
+		assertEquals(STUDENT_LASTNAME, studentVO.getLastName(),"getLastName() NOK");
+		assertEquals(STUDENT_EMAIL, studentVO.getEmail(),"getEmail() NOK");
+		assertEquals(STUDENT_STREET, studentVO.getStreet(),"getStreet() NOK");
+		assertEquals(STUDENT_CITY, studentVO.getCity(),"getCity() NOK");
+		assertEquals(STUDENT_ZIPCODE, studentVO.getZipCode(),"getZipCode() NOK");
+		assertEquals(STUDENT_STATUS, studentVO.getStatus(),"getStatus() NOK");
+		assertEquals(2, studentVO.getImages().size(), "getImages size not 2");
 		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
 		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
-		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");
+		assertEquals(1, studentVO.getCoursesVO().size(), "getCourses size not 1");
 //		assertThat(studentVO.getCoursesVO(), contains(
 //		    hasProperty("id", is(1))
 //		));
@@ -529,7 +528,7 @@ public class StudentServiceTest {
 		));
 		
 		// not neccessary
-		assertNotEquals("test", studentVO.getFirstName(),"studentVO.getFirstName() NOK");
+		assertNotEquals("test", studentVO.getFirstName(),"getFirstName() NOK");
 	}
 	
 	private void validateNewStudent(StudentVO studentVO) {
@@ -581,6 +580,6 @@ public class StudentServiceTest {
 		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_2, STUDENT_IMAGE_2));
 		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_22, STUDENT_IMAGE_22));
 		assertThat(studentVO.getImages(), IsMapContaining.hasEntry(STUDENT_FILE_UPDATED, STUDENT_IMAGE_UPDATED));
-		assertEquals(1, studentVO.getCoursesVO().size(), "studentVO.getCourses size not 1");		
+		assertEquals(1, studentVO.getCoursesVO().size(), "getCourses size not 1");		
 	}
 }

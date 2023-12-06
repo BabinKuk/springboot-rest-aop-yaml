@@ -325,8 +325,6 @@ public class StudentControllerTest {
 		// additional check
 		studentVO = studentService.findByEmail(STUDENT_EMAIL_NEW);
 		
-		//log.info(studentVO.toString());
-		
 		assertNotNull(studentVO,"studentVO null");
 		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
 		assertNotNull(studentVO.getLastName(),"studentVO.getLastName() null");
@@ -421,7 +419,6 @@ public class StudentControllerTest {
 		
 		// check if student id 2 exists
 		StudentVO studentVO = studentService.findById(2);
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(2, studentVO.getId());
@@ -480,7 +477,6 @@ public class StudentControllerTest {
 		
 		// check if student id 2 exists
 		StudentVO studentVO = studentService.findById(2);
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(2, studentVO.getId());
@@ -521,7 +517,6 @@ public class StudentControllerTest {
 		// check if student id 2 exists
 		int id = 2;
 		StudentVO studentVO = studentService.findById(id);
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(id, studentVO.getId());
@@ -613,7 +608,6 @@ public class StudentControllerTest {
 		// check if student id 2 exists
 		int id = 2;
 		StudentVO studentVO = studentService.findById(id);
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertEquals(id, studentVO.getId());
@@ -653,7 +647,6 @@ public class StudentControllerTest {
 		
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -686,8 +679,6 @@ public class StudentControllerTest {
 		
 		// additional check
 		studentVO = studentService.findByEmail(STUDENT_EMAIL_NEW);
-		
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
@@ -775,7 +766,6 @@ public class StudentControllerTest {
 
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -802,8 +792,6 @@ public class StudentControllerTest {
 		
 		// additional check
 		studentVO = studentService.findByEmail(STUDENT_EMAIL_NEW);
-		
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
@@ -876,7 +864,6 @@ public class StudentControllerTest {
 		
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -903,8 +890,6 @@ public class StudentControllerTest {
 		
 		// additional check
 		studentVO = studentService.findByEmail(STUDENT_EMAIL_NEW);
-		
-		//log.info(studentVO.toString());
 		
 		assertNotNull(studentVO,"studentVO null");
 		assertNotNull(studentVO.getFirstName(),"studentVO.getFirstName() null");
@@ -989,7 +974,6 @@ public class StudentControllerTest {
 		
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -1060,7 +1044,6 @@ public class StudentControllerTest {
 		
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -1117,7 +1100,6 @@ public class StudentControllerTest {
 		
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
-		//log.info(courseVO.toString());
 		
 		validateStudent();
 		
@@ -1199,8 +1181,7 @@ public class StudentControllerTest {
 	
 	private void validateCourse(CourseVO courseVO) {
 		
-		// check if course id 1 exists
-		
+		// check if course id=1 exists
 		assertNotNull(courseVO,"courseVO null");
 		assertEquals(1, courseVO.getId());
 		assertNotNull(courseVO.getTitle(),"courseVO.getTitle() null");

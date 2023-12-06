@@ -194,25 +194,25 @@ public class CourseValidatorTest {
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(courseVO)) // generate json from java object
 			)
-		.andDo(MockMvcResultHandlers.print())
-		.andExpect(status().is4xxClientError())
-		.andExpect(status().isBadRequest()) // verify json root element status $ is 400 BAD_REQUEST
-		.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
-		.andExpect(jsonPath("$.fieldErrors", hasSize(1))) // verify that json root element $ is size 1
-        .andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_TITLE_EMPTY.getMessage()), ActionType.CREATE))))
-		;
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().is4xxClientError())
+			.andExpect(status().isBadRequest()) // verify json root element status $ is 400 BAD_REQUEST
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
+			.andExpect(jsonPath("$.fieldErrors", hasSize(1))) // verify that json root element $ is size 1
+			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_TITLE_EMPTY.getMessage()), ActionType.CREATE))))
+			;
 		
 		// additional check
 		// get all courses
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES)
 				.param(VALIDATION_ROLE, validationRole)
 			)
-		.andDo(MockMvcResultHandlers.print())
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$", hasSize(1))) // verify that json root element $ is size 1
-		.andDo(MockMvcResultHandlers.print())
-		;
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$", hasSize(1))) // verify that json root element $ is size 1
+			.andDo(MockMvcResultHandlers.print())
+			;
 	}
 	
 	@Test
@@ -231,7 +231,7 @@ public class CourseValidatorTest {
 		
 		int id = 1;
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		CourseVO courseVO = courseService.findById(id);
 		
 		assertNotNull(courseVO,"courseVO null");
@@ -248,25 +248,24 @@ public class CourseValidatorTest {
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMApper.writeValueAsString(newCourseVO)) // generate json from java object
 			)
-		.andDo(MockMvcResultHandlers.print())
-		.andExpect(status().is4xxClientError())
-		.andExpect(status().isBadRequest()) // verify json root element status $ is 400 BAD_REQUEST
-		.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
-		.andExpect(jsonPath("$.errors", hasSize(1))) // verify that json root element $ is size 1
-		.andExpect(jsonPath("$.errors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_TITLE_ALREADY_EXIST.getMessage()), ActionType.CREATE))))
-		;
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().is4xxClientError())
+			.andExpect(status().isBadRequest()) // verify json root element status $ is 400 BAD_REQUEST
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
+			.andExpect(jsonPath("$.errors", hasSize(1))) // verify that json root element $ is size 1
+			.andExpect(jsonPath("$.errors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_TITLE_ALREADY_EXIST.getMessage()), ActionType.CREATE))))
+			;
 		
 		// additional check 
 		// get all courses
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES)
 				.param(VALIDATION_ROLE, validationRole)
 			)
-		.andDo(MockMvcResultHandlers.print())
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$", hasSize(1))) // verify that json root element $ is size 1
-		.andDo(MockMvcResultHandlers.print())
-		;
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$", hasSize(1))) // verify that json root element $ is size 1
+			;
 	}
 	
 	@Test
@@ -283,7 +282,7 @@ public class CourseValidatorTest {
 	
 	private void updateCourseInvalidId(String validationRole) throws Exception {
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		CourseVO courseVO = courseService.findById(1);
 		
 		assertNotNull(courseVO,"courseVO null");
@@ -291,7 +290,7 @@ public class CourseValidatorTest {
 		assertNotNull(courseVO.getTitle(),"courseVO.getTitle() null");
 		assertEquals(COURSE, courseVO.getTitle(),"courseVO.getTitle() NOK");
 		
-		// check if course id 2 exists
+		// check if course id=2 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + COURSES + "/{id}", 2)
 				.param(VALIDATION_ROLE, validationRole)
 			)
@@ -328,7 +327,7 @@ public class CourseValidatorTest {
 		
 		int id = 1;
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		CourseVO courseVO = courseService.findById(id);
 		
 		assertNotNull(courseVO,"courseVO null");
@@ -368,7 +367,7 @@ public class CourseValidatorTest {
 		
 		int id = 1;
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		CourseVO courseVO = courseService.findById(id);
 		
 		assertNotNull(courseVO,"courseVO null");
@@ -398,7 +397,7 @@ public class CourseValidatorTest {
 		assertNotNull(dbNewCourseVO.getTitle(),"dbNewCourseVO.getTitle() null");
 		assertEquals(newCourseVO.getTitle(), dbNewCourseVO.getTitle(),"assertEquals dbNewCourseVO.getTitle() failure");
 		
-		// update course title (value belong to course id 1)
+		// update course title (same value as course id=1)
 		String courseTitle = courseVO.getTitle();
 		
 		// update course with new title

@@ -5,8 +5,6 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.babinkuk.entity.Status;
-import org.babinkuk.service.CourseService;
 import org.babinkuk.service.InstructorService;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.vo.InstructorVO;
@@ -68,9 +66,6 @@ public class InstructorValidatorTest {
 	@Autowired
 	private InstructorService instructorService;
 		
-	@Autowired
-	private CourseService courseService;
-	
 	@Value("${sql.script.review.insert}")
 	private String sqlAddReview;
 	
@@ -336,7 +331,7 @@ public class InstructorValidatorTest {
 		
 		int id = 22;
 		
-		// check if instructor id 22 exists
+		// check if instructor id=22 exists
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", id)
 				.param(VALIDATION_ROLE, validationRole)
 			)
@@ -377,7 +372,7 @@ public class InstructorValidatorTest {
 		
 		int id = 1;
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		InstructorVO instructorVO = instructorService.findById(id);
 		
 		assertNotNull(instructorVO,"instructorVO null");
@@ -425,9 +420,8 @@ public class InstructorValidatorTest {
 		
 		int id = 1;
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		InstructorVO instructorVO = instructorService.findById(id);
-		//log.info(instructorVO.toString());
 		
 		assertNotNull(instructorVO,"instructorVO null");
 		assertEquals(1, instructorVO.getId());
@@ -466,7 +460,7 @@ public class InstructorValidatorTest {
 		
 		int id = 1;
 		
-		// check if instructor id 1 exists
+		// check if instructor id=1 exists
 		InstructorVO instructorVO = instructorService.findById(id);
 		
 		assertNotNull(instructorVO,"instructorVO null");
@@ -530,7 +524,7 @@ public class InstructorValidatorTest {
 		
 		int id = 22;
 		
-		// get instructor with id=2 (non existing)
+		// get instructor with id=22 (non existing)
 		mockMvc.perform(MockMvcRequestBuilders.get(ROOT + INSTRUCTORS + "/{id}", id)
 				.param(VALIDATION_ROLE, validationRole)
 			)

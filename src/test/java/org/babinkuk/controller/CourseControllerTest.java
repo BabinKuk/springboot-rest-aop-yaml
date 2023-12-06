@@ -6,9 +6,6 @@ import javax.persistence.PersistenceContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.babinkuk.service.CourseService;
-import org.babinkuk.service.InstructorService;
-import org.babinkuk.service.ReviewService;
-import org.babinkuk.service.StudentService;
 import org.babinkuk.utils.ApplicationTestUtils;
 import org.babinkuk.validator.ActionType;
 import org.babinkuk.validator.ValidatorCodes;
@@ -71,15 +68,6 @@ public class CourseControllerTest {
 	
 	@Autowired
 	private CourseService courseService;
-	
-	@Autowired
-	private InstructorService instructorService;
-	
-	@Autowired
-	private StudentService studentService;
-	
-	@Autowired
-	private ReviewService reviewService;
 	
 	@Value("${sql.script.review.insert}")
 	private String sqlAddReview;
@@ -481,7 +469,7 @@ public class CourseControllerTest {
 		
 		String courseTitle = COURSE_UPDATED;
 		
-		// update course id 1 with new title
+		// update course id=1 with new title
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, validationRole)
 				.param("title", courseTitle)
@@ -516,7 +504,7 @@ public class CourseControllerTest {
 			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element
 			;
 		
-		// update course id 1 without title (required parameter)
+		// update course id=1 without title (required parameter)
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, validationRole)
 				//.param("title", courseTitle)
@@ -527,7 +515,7 @@ public class CourseControllerTest {
 			//.andExpect(jsonPath("$.message", is("Required String parameter 'title' is not present"))) // verify json element
 			;
 			
-		// update course id 1 with empty title (required parameter)
+		// update course id=1 with empty title (required parameter)
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, validationRole)
 				.param("title", "")
@@ -557,7 +545,7 @@ public class CourseControllerTest {
 		
 		String courseTitle = COURSE_UPDATED;
 		
-		// update course id 1 with new title
+		// update course id=1 with new title
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, validationRole)
 				.param("title", courseTitle)
@@ -593,7 +581,7 @@ public class CourseControllerTest {
 			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element
 			;
 		
-		// update course id 1 without title (required parameter)
+		// update course id=1 without title (required parameter)
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, validationRole)
 				//.param("title", courseTitle)
@@ -621,7 +609,7 @@ public class CourseControllerTest {
 		
 		String courseTitle = COURSE_UPDATED;
 				
-		// update course id 1 with new title
+		// update course id=1 with new title
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, ROLE_NOT_EXIST)
 				.param("title", courseTitle)
@@ -643,7 +631,7 @@ public class CourseControllerTest {
 			//.andExpect(jsonPath("$.message", is(String.format(messageSource.getMessage(ValidatorCodes.ERROR_CODE_ACTION_INVALID.getMessage(), new Object[] {}, LocaleContextHolder.getLocale()), ActionType.UPDATE)))) // verify json root element message
 			;
 		
-		// update course id 1 without title (required parameter)
+		// update course id=1 without title (required parameter)
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, ROLE_NOT_EXIST)
 				//.param("title", courseTitle)
@@ -655,7 +643,7 @@ public class CourseControllerTest {
 			//.andExpect(jsonPath("$.message", is(String.format(messageSource.getMessage(ValidatorCodes.ERROR_CODE_ACTION_INVALID.getMessage(), new Object[] {}, LocaleContextHolder.getLocale()), ActionType.UPDATE)))) // verify json root element message
 			;
 		
-		// update course id 1 with empty title (required parameter)
+		// update course id=1 with empty title (required parameter)
 		mockMvc.perform(MockMvcRequestBuilders.put(ROOT + COURSES + "/{id}", 1)
 				.param(VALIDATION_ROLE, ROLE_NOT_EXIST)
 				.param("title", "")
@@ -672,7 +660,7 @@ public class CourseControllerTest {
 		
 		String validationRole = ROLE_ADMIN;
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
 		
@@ -759,7 +747,7 @@ public class CourseControllerTest {
 	
 	private void deleteCourseFail(String validationRole) throws Exception {
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
 		
@@ -783,7 +771,7 @@ public class CourseControllerTest {
 	@Test
 	void deleteCourseRoleNotExist() throws Exception {
 		
-		// check if course id 1 exists
+		// check if course id=1 exists
 		int id = 1;
 		CourseVO courseVO = courseService.findById(id);
 		
