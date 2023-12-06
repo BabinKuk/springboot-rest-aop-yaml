@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.babinkuk.utils.ApplicationTestConstants.*;
 import static org.babinkuk.config.Api.REVIEWS;
 import static org.babinkuk.config.Api.ROOT;
 import static org.hamcrest.Matchers.hasSize;
@@ -42,11 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ReviewValidatorTest {
 	
 	public static final Logger log = LogManager.getLogger(ReviewValidatorTest.class);
-	
-	private static String ROLE_ADMIN = "ROLE_ADMIN";
-	private static String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
-	private static String ROLE_STUDENT = "ROLE_STUDENT";
-	private static String VALIDATION_FAILED = "validation_failed";
 	
 	private static MockHttpServletRequest request;
 	

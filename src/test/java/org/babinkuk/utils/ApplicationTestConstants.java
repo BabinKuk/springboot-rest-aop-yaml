@@ -85,5 +85,6 @@ public final class ApplicationTestConstants {
 	public static final String COURSE = "test course";
 	public static final String COURSE_NEW = "new test";
 	public static final String COURSE_UPDATED = "updated test";
+	public static String VALIDATION_FAILED = "validation_failed";
 	
 }
