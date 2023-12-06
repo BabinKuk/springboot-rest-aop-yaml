@@ -282,7 +282,7 @@ public class StudentControllerTest {
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), 22)))) // verify json element
 			;
 	}
 	
@@ -538,7 +538,7 @@ public class StudentControllerTest {
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) //verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), id)))) //verify json element
 			;
 		
 		// clear persistence context and sync with db
@@ -730,7 +730,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 22)))) // verify json element
 			;
 				
 		// set course (non existing student)
@@ -739,7 +739,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), 22)))) // verify json element
 			;
 	}
 	
@@ -844,7 +844,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 22)))) // verify json element
 			;
 				
 		// set course (non existing student)
@@ -853,7 +853,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), 22)))) // verify json element
 			;
 	}
 	
@@ -1009,7 +1009,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 22)))) // verify json element
 			;
 				
 		// set course (non existing student)
@@ -1018,7 +1018,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), 22)))) // verify json element
 			;
 	}
 	
@@ -1080,7 +1080,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 22)))) // verify json element
 			;
 				
 		// set course (non existing student)
@@ -1089,7 +1089,7 @@ public class StudentControllerTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), 22)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), 22)))) // verify json element
 			;
 	}
 	

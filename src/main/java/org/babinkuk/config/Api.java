@@ -22,6 +22,15 @@ public final class Api {
 	public static final String STUDENT_SAVE_SUCCESS = "student_save_success";
 	public static final String STUDENT_DELETE_SUCCESS = "student_delete_success";
 	
+	public static final String STUDENT_ID_NOT_FOUND = "error_code_student_id_not_found";
+	public static final String COURSE_ID_NOT_FOUND = "error_code_course_id_not_found";
+	public static final String INSTRUCTOR_ID_NOT_FOUND = "error_code_instructor_id_not_found";
+	public static final String REVIEW_ID_NOT_FOUND = "error_code_review_id_not_found";
+	
+	public static final String STUDENT_EMAIL_NOT_FOUND = "error_code_student_email_not_found";
+	public static final String INSTRUCTOR_EMAIL_NOT_FOUND = "error_code_instructor_email_not_found";
+	public static final String COURSE_TITLE_NOT_FOUND = "error_code_course_title_not_found";
+	
 	public Api() {
 		// TODO Auto-generated constructor stub
 	}

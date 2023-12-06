@@ -40,7 +40,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		List<ValidatorException> exceptionList = new LinkedList<ValidatorException>();
 		
 		if (ActionType.DELETE == action) {
-			log.info("delete action disabled");
+			//log.info("delete action disabled");
 			
 			String message = String.format(messageSource.getMessage(ValidatorCodes.ERROR_CODE_ACTION_INVALID.getMessage(), new Object[] {}, LocaleContextHolder.getLocale()), action);
 			ObjectValidationException e = new ObjectValidationException(message);
@@ -73,7 +73,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// READ/CREATE/UPDATE actions enabled
 		if (ActionType.READ == action || ActionType.CREATE == action || ActionType.UPDATE == action) {
-			log.info("read/create/update actions only");
+			//log.info("read/create/update actions only");
 			exceptionList.addAll(validatorHelper.validate(vo, action, validatorType));
 			
 			String message = String.format(messageSource.getMessage("validation_failed", new Object[] {}, LocaleContextHolder.getLocale()), action);
@@ -109,7 +109,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// READ/CREATE/UPDATE actions enabled
 		if (ActionType.READ == action || ActionType.CREATE == action || ActionType.UPDATE == action) {
-			log.info("read/create/update actions only");
+			//log.info("read/create/update actions only");
 			exceptionList.addAll(validatorHelper.validate(vo, action, validatorType));
 			
 			String message = String.format(messageSource.getMessage("validation_failed", new Object[] {}, LocaleContextHolder.getLocale()), action);
@@ -139,7 +139,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// DELETE action disabled
 		if (ActionType.DELETE == action) {
-			log.info("delete action disabled");
+			//log.info("delete action disabled");
 			
 			String message = String.format(messageSource.getMessage(ValidatorCodes.ERROR_CODE_ACTION_INVALID.getMessage(), new Object[] {}, LocaleContextHolder.getLocale()), action);
 			ObjectValidationException e = new ObjectValidationException(message);

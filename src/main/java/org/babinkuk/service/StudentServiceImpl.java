@@ -81,7 +81,7 @@ public class StudentServiceImpl implements StudentService {
 			return studentVO;
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_student_id_not_found"), id);
+			String message = String.format(getMessage(STUDENT_ID_NOT_FOUND), id);
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -104,7 +104,7 @@ public class StudentServiceImpl implements StudentService {
 			//log.info("studentVO ({})", studentVO);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_student_email_not_found"), email);
+			String message = String.format(getMessage(STUDENT_EMAIL_NOT_FOUND), email);
 			log.warn(message);
 			//throw new ObjectNotFoundException(message);
 		}
@@ -182,7 +182,7 @@ public class StudentServiceImpl implements StudentService {
 			//log.info("student ({})", student);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_student_id_not_found"), studentVO.getId());
+			String message = String.format(getMessage(STUDENT_ID_NOT_FOUND), studentVO.getId());
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -196,7 +196,7 @@ public class StudentServiceImpl implements StudentService {
 			//log.info("courseVO ({})", courseVO);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
+			String message = String.format(getMessage(COURSE_ID_NOT_FOUND), courseVO.getId());
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -209,7 +209,6 @@ public class StudentServiceImpl implements StudentService {
 			student.removeCourse(course);
 		}
 		
-		//log.info("saving student id={}, courses={}", student.getId(), student.getCourses());
 		studentRepository.save(student);
 		
 		return response;

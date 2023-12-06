@@ -297,7 +297,7 @@ public class CourseValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 2)))) // verify json element
 			;
 		
 		// update course with id=2 (non existing)
@@ -307,7 +307,7 @@ public class CourseValidatorTest {
 				.contentType(APPLICATION_JSON_UTF8)
 			).andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 2)))) // verify json element
 			;
 	}
 	

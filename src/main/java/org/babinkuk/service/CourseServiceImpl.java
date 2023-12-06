@@ -70,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
 			return courseVO;
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_course_id_not_found"), id);
+			String message = String.format(getMessage(COURSE_ID_NOT_FOUND), id);
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -144,7 +144,7 @@ public class CourseServiceImpl implements CourseService {
 			//log.info("courseVO ({})", courseVO);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_course_title_not_found"), title);
+			String message = String.format(getMessage(COURSE_TITLE_NOT_FOUND), title);
 			log.warn(message);
 			//throw new ObjectNotFoundException(message);
 		}

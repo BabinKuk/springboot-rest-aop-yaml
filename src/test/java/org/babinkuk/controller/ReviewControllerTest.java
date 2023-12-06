@@ -531,7 +531,7 @@ public class ReviewControllerTest {
 				).andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) //verify json element
+				.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) //verify json element
 				;
 		} else {
 			// non existing role

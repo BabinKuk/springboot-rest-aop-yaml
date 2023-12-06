@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.transaction.Transactional;
-import javax.persistence.EntityManager;
-
 import static org.babinkuk.config.Api.*;
 
 @Service
@@ -53,13 +51,9 @@ public class InstructorServiceImpl implements InstructorService {
 	private MessageSource messageSource;
 	
 	@Autowired
-	private EntityManager entityManager;
-	
-	@Autowired
-	public InstructorServiceImpl(InstructorRepository instructorRepository, CourseRepository courseRepository, EntityManager entityManager) {
+	public InstructorServiceImpl(InstructorRepository instructorRepository, CourseRepository courseRepository) {
 		this.instructorRepository = instructorRepository;
 		this.courseRepository = courseRepository;
-		this.entityManager = entityManager;
 	}
 	
 	public InstructorServiceImpl() {
@@ -90,7 +84,7 @@ public class InstructorServiceImpl implements InstructorService {
 			return instructorVO;
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_instructor_id_not_found"), id);
+			String message = String.format(getMessage(INSTRUCTOR_ID_NOT_FOUND), id);
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -114,7 +108,7 @@ public class InstructorServiceImpl implements InstructorService {
 			//log.info("instructorVO ({})", instructorVO);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_instructor_email_not_found"), email);
+			String message = String.format(getMessage(INSTRUCTOR_EMAIL_NOT_FOUND), email);
 			log.warn(message);
 			//throw new ObjectNotFoundException(message);
 		}
@@ -214,7 +208,7 @@ public class InstructorServiceImpl implements InstructorService {
 			//instructor = instructorMapper.toEntity(instructorVO, instructor);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_instructor_id_not_found"), instructorVO.getId());
+			String message = String.format(getMessage(INSTRUCTOR_ID_NOT_FOUND), instructorVO.getId());
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -228,22 +222,19 @@ public class InstructorServiceImpl implements InstructorService {
 			//log.info("courseVO ({})", courseVO);
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
+			String message = String.format(getMessage(COURSE_ID_NOT_FOUND), courseVO.getId());
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
 		
 		if (action.equals(ActionType.ENROLL)) {
-			//log.info(ActionType.ENROLL);
 			instructor.addCourse(course);
 		}
 		
 		if (action.equals(ActionType.WITHDRAW)) {
-			//log.info(ActionType.WITHDRAW);
 			instructor.removeCourse(course);
 		}
 		
-		//log.info("saving instructor");
 		instructorRepository.save(instructor);
 		
 		return response;

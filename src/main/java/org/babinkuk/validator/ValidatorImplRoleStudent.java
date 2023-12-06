@@ -41,7 +41,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// only READ action enabled
 		if (ActionType.READ == action) {
-			log.info("read action only");
+			//log.info("read action only");
 			exceptionList.addAll(validatorHelper.validate(vo, action, validatorType));
 			
 			String message = String.format(messageSource.getMessage("validation_failed", new Object[] {}, LocaleContextHolder.getLocale()), action);
@@ -73,7 +73,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// only READ action enabled
 		if (ActionType.READ == action) {
-			log.info("read action only");
+			//log.info("read action only");
 			exceptionList.addAll(validatorHelper.validate(vo, action, validatorType));
 			
 			String message = String.format(messageSource.getMessage("validation_failed", new Object[] {}, LocaleContextHolder.getLocale()), action);
@@ -103,7 +103,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// only READ and CREATE actions enabled
 		if (ActionType.READ == action || ActionType.CREATE == action) {
-			log.info("read/create actions only");
+			//log.info("read/create actions only");
 			exceptionList.addAll(validatorHelper.validate(vo, action, validatorType));
 			
 			String message = String.format(messageSource.getMessage("validation_failed", new Object[] {}, LocaleContextHolder.getLocale()), action);
@@ -133,7 +133,7 @@ private final Logger log = LogManager.getLogger(getClass());
 		
 		// only READ action enabled
 		if (ActionType.READ == action) {
-			log.info("read action only");
+			//log.info("read action only");
 			
 			exceptionList.addAll(validatorHelper.validate(id, validatorType));
 			

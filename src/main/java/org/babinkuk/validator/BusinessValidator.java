@@ -117,7 +117,8 @@ public class BusinessValidator {
 	}
 
 	/**
-	 * validate if email already exist must be unique (call repository findByEmail)
+	 * validate if email already exist 
+	 * must be unique (call repository findByEmail)
 	 * 
 	 * @param vo
 	 * @param isInsert
@@ -125,7 +126,7 @@ public class BusinessValidator {
 	 * @throws ValidatorException
 	 */
 	public void emailExists(UserVO vo) throws ValidatorException {
-		log.info("email " + vo.toString());
+		//log.info("email " + vo.toString());
 		UserVO dbVO = null;
 		if (vo instanceof InstructorVO) {
 			dbVO = instructorService.findByEmail(vo.getEmail());
@@ -151,7 +152,8 @@ public class BusinessValidator {
 	}
 	
 	/**
-	 * validate if course title already exist must be unique (call repository findByTitle)
+	 * validate if course title already exist 
+	 * must be unique (call repository findByTitle)
 	 * 
 	 * @param vo
 	 * @param isInsert
@@ -159,7 +161,7 @@ public class BusinessValidator {
 	 * @throws ValidatorException
 	 */
 	public void titleExists(CourseVO vo) throws ValidatorException {
-		log.info("course " + vo.toString());
+		//log.info("course " + vo.toString());
 		CourseVO dbVO = null;
 		
 		dbVO = courseService.findByTitle(vo.getTitle());
@@ -192,7 +194,7 @@ public class BusinessValidator {
 		
 		Object result;
 		if (vo instanceof InstructorVO) {
-			log.info("validate instructor on update");
+			//log.info("validate instructor on update");
 			result = objectExists(((UserVO) vo).getId(), validatorType);
 			
 			if (result != null) {
@@ -204,7 +206,7 @@ public class BusinessValidator {
 				throw new ValidatorException(ValidatorCodes.ERROR_CODE_INSTRUCTOR_INVALID);
 			}
 		} else if (vo instanceof StudentVO) {
-			log.info("validate student on update");
+			//log.info("validate student on update");
 			result = objectExists(((UserVO) vo).getId(), validatorType);
 			
 			if (result != null) {
@@ -216,7 +218,7 @@ public class BusinessValidator {
 				throw new ValidatorException(ValidatorCodes.ERROR_CODE_STUDENT_INVALID);
 			}
 		} else if (vo instanceof CourseVO) {
-			log.info("validate course on update");
+			//log.info("validate course on update");
 			result = objectExists(((CourseVO) vo).getId(), validatorType);
 			
 			if (result != null) {
@@ -228,7 +230,7 @@ public class BusinessValidator {
 				throw new ValidatorException(ValidatorCodes.ERROR_CODE_COURSE_INVALID);
 			}
 		} else if (vo instanceof ReviewVO) {
-			log.info("validate review on update");
+			//log.info("validate review on update");
 			result = objectExists(((ReviewVO) vo).getId(), validatorType);
 			
 			if (result != null) {

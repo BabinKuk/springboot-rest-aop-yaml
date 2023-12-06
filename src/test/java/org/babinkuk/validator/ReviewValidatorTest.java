@@ -284,7 +284,7 @@ public class ReviewValidatorTest {
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 2)))) // verify json element.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
 			;
 		
 		// additional check
@@ -314,7 +314,7 @@ public class ReviewValidatorTest {
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_course_id_not_found"), 2)))) // verify json element.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(COURSE_ID_NOT_FOUND), 2)))) // verify json element.andExpect(jsonPath("$.message", is(String.format(getMessage(VALIDATION_FAILED), ActionType.CREATE)))) // verify json root element message
 			;
 		
 		// additional check
@@ -359,7 +359,7 @@ public class ReviewValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) // verify json element
 			;
 		
 		// create invalid review (set invalid id=2)
@@ -385,7 +385,7 @@ public class ReviewValidatorTest {
 				)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
+				.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) // verify json element
 				;
 		}	
 	}
@@ -402,7 +402,7 @@ public class ReviewValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) // verify json element
 			;
 		
 		// create invalid review (set invalid id 2)
@@ -450,7 +450,7 @@ public class ReviewValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) // verify json element
 			;
 		
 		// delete review
@@ -461,7 +461,7 @@ public class ReviewValidatorTest {
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) //verify json element
+				.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) //verify json element
 				;
 		} else {
 			mockMvc.perform(MockMvcRequestBuilders.delete(ROOT + REVIEWS + "/{id}", id)
@@ -488,7 +488,7 @@ public class ReviewValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_review_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(REVIEW_ID_NOT_FOUND), id)))) // verify json element
 			;
 				
 		// delete review

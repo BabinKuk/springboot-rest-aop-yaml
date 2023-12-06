@@ -12,7 +12,6 @@ import org.babinkuk.entity.Review;
 import org.babinkuk.exception.ObjectException;
 import org.babinkuk.exception.ObjectNotFoundException;
 import org.babinkuk.mapper.ReviewMapper;
-import org.babinkuk.validator.ActionType;
 import org.babinkuk.vo.CourseVO;
 import org.babinkuk.vo.ReviewVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
 			return reviewVO;
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_review_id_not_found"), id);
+			String message = String.format(getMessage(REVIEW_ID_NOT_FOUND), id);
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}
@@ -138,7 +137,7 @@ public class ReviewServiceImpl implements ReviewService {
 			course.addReview(reviewMapper.toEntity(reviewVO));
 		} else {
 			// not found
-			String message = String.format(getMessage("error_code_course_id_not_found"), courseVO.getId());
+			String message = String.format(getMessage(COURSE_ID_NOT_FOUND), courseVO.getId());
 			log.warn(message);
 			throw new ObjectNotFoundException(message);
 		}

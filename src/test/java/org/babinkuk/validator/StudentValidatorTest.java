@@ -45,10 +45,6 @@ public class StudentValidatorTest {
 	
 	public static final Logger log = LogManager.getLogger(StudentValidatorTest.class);
 	
-	private static String ROLE_ADMIN = "ROLE_ADMIN";
-	private static String ROLE_INSTRUCTOR = "ROLE_INSTRUCTOR";
-	private static String VALIDATION_FAILED = "validation_failed";
-	
 	private static MockHttpServletRequest request;
 	
 	@PersistenceContext
@@ -206,7 +202,7 @@ public class StudentValidatorTest {
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_FIRST_NAME_EMPTY.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_LAST_NAME_EMPTY.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_EMAIL_EMPTY.getMessage()), ActionType.CREATE))))
-			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage("error_code_status_invalid"), ActionType.CREATE))))
+			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_STATUS_INVALID.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.errorCount", is(4))) // verify that json root element $ is size 4
 			;
 		
@@ -255,7 +251,7 @@ public class StudentValidatorTest {
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_FIRST_NAME_EMPTY.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_LAST_NAME_EMPTY.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_EMAIL_INVALID.getMessage()), ActionType.CREATE))))
-			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage("error_code_status_invalid"), ActionType.CREATE))))
+			.andExpect(jsonPath("$.fieldErrors", hasItem(String.format(getMessage(ValidatorCodes.ERROR_CODE_STATUS_INVALID.getMessage()), ActionType.CREATE))))
 			.andExpect(jsonPath("$.errorCount", is(4))) // verify that json root element $ is size 4
 			;
 		
@@ -341,7 +337,7 @@ public class StudentValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), id)))) // verify json element
 			;
 		
 		// create invalid student 
@@ -355,7 +351,7 @@ public class StudentValidatorTest {
 			)
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), id)))) // verify json element
 			;
 	}
 	
@@ -533,7 +529,7 @@ public class StudentValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), id)))) // verify json element
 			;
 		
 		// create new student
@@ -548,7 +544,7 @@ public class StudentValidatorTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-			.andExpect(jsonPath("$.message", is(String.format(getMessage("error_code_student_id_not_found"), id)))) // verify json element
+			.andExpect(jsonPath("$.message", is(String.format(getMessage(STUDENT_ID_NOT_FOUND), id)))) // verify json element
 			;
 	}
 	
